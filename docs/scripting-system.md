@@ -1,6 +1,6 @@
 # Scripting System
 
-## Official Funkin — HScript Modules (.hxs)
+## Official Funkin — HScript Modules (.hxc)
 
 - Based on Haxe syntax via Polymod's scripting integration
 - Scripts placed in `scripts/` or registered via modules
@@ -48,7 +48,7 @@ Psych Engine offers **two scripting languages** that can be used independently o
 
 | Aspect                 | Official Funkin                       | Psych Engine (Lua)                                 | Psych Engine (HScript Iris)                   | Codename Engine                       |
 | ---------------------- | ------------------------------------- | -------------------------------------------------- | --------------------------------------------- | ------------------------------------- |
-| **Language**           | HScript (.hxs)                        | Lua (.lua)                                         | HScript Iris (.hx)                            | HScript Improved (.hx)                |
+| **Language**           | HScript (.hxc)                        | Lua (.lua)                                         | HScript Iris (.hx)                            | HScript Improved (.hx)                |
 | **Library**            | Polymod HScript sandbox               | LuaJIT                                             | `hscript-iris` v1.1.3                         | Custom `hscript-improved` fork        |
 | **Typing**             | Optional Haxe types                   | Dynamic (Lua)                                      | Optional Haxe types                           | Optional Haxe types                   |
 | **Object access**      | Direct field access                   | String-tag reflection API                          | Direct field access via `game.*`              | Direct field access (injected)        |
