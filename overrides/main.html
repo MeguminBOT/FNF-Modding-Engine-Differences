@@ -1,21 +1,37 @@
 {% extends "base.html" %}
 
-{% block announce %}
+{% block content %}
+  {{ super() }}
   <style>
-    .md-banner {
-      color: var(--md-footer-fg-color--lighter);
+    .md-last-updated {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      font-size: 0.55rem;
+      color: var(--md-primary-bg-color--light);
+      white-space: nowrap;
+      opacity: 0.8;
+    }
+    .md-header__source {
+      position: relative;
     }
   </style>
-  <span id="last-updated">Last updated: {{ config.extra.last_updated }}</span>
   {% if config.extra.last_updated_iso %}
   <script>
     (function() {
+      var source = document.querySelector(".md-header__source");
+      if (!source) return;
+      var el = document.createElement("span");
+      el.className = "md-last-updated";
       var iso = "{{ config.extra.last_updated_iso }}";
       var d = new Date(iso);
       if (!isNaN(d)) {
         var opts = { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" };
-        document.getElementById("last-updated").textContent = "Last updated: " + d.toLocaleString(undefined, opts);
+        el.textContent = "Last updated: " + d.toLocaleString(undefined, opts);
+      } else {
+        el.textContent = "Last updated: {{ config.extra.last_updated }}";
       }
+      source.appendChild(el);
     })();
   </script>
   {% endif %}
