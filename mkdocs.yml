@@ -1,0 +1,79 @@
+site_name: FNF Engine Modding API Differences
+site_description: Comparing modding APIs across Friday Night Funkin' engines
+site_url: ""
+repo_url: https://github.com/MeguminBOT/FNF-Modding-Engine-Differences
+repo_name: FNF-Modding-Engine-Differences
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: pink
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: pink
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Documentation:
+      - Engine Overview: engine-overview.md
+      - Mod Folder Structure: mod-folder-structure.md
+      - Data Formats:
+          - Overview: data-formats.md
+          - Chart / Song Format: chart-format.md
+          - Character Format: character-format.md
+          - Stage Format: stage-format.md
+          - Week / Level Format: week-format.md
+      - Audio Conventions: audio-conventions.md
+      - Scripting:
+          - Scripting System: scripting-system.md
+          - Script Callbacks: script-callbacks.md
+          - Common Patterns: scripting-patterns.md
+          - "Psych: Lua \u2194 HScript Interop": lua-hscript-interop.md
+      - Gameplay:
+          - Events System: events-system.md
+          - Note Types: note-types.md
+          - Health Icons: health-icons.md
+      - Additional Features: additional-features.md
+      - Cross-Engine Conversion: cross-engine-conversion.md
+  - Tools:
+      - Character Converter: tools/character-converter.md
+      - Week / Level Converter: tools/week-converter.md
+      - Chart / Song Converter: tools/chart-converter.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/MeguminBOT/FNF-Modding-Engine-Differences/issues/new/choose
+      name: Report an Issue
+
+extra_javascript:
+  - js/character-converter.js
+  - js/week-converter.js
+  - js/chart-converter.js

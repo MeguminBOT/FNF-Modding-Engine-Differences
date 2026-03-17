@@ -1,0 +1,52 @@
+name: "Outdated Information"
+description: Report information that is no longer up to date with the latest engine version.
+labels: ["outdated info"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Which page contains the outdated information?
+      placeholder: e.g. Scripting System, Events System, Engine Overview
+    validations:
+      required: true
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Which engine is affected?
+      options:
+        - Official Funkin
+        - Psych Engine
+        - Codename Engine
+        - Multiple / All
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Current Engine Version
+      description: What is the latest version where this information is outdated?
+      placeholder: e.g. v0.9.0, v1.1.0
+    validations:
+      required: false
+  - type: textarea
+    id: outdated
+    attributes:
+      label: What is outdated?
+      description: Quote or describe what has changed since the documentation was written.
+    validations:
+      required: true
+  - type: textarea
+    id: updated
+    attributes:
+      label: What is the current behavior?
+      description: Describe how it works now, with sources or links if possible.
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Links to changelogs, commits, or other supporting details.
+    validations:
+      required: false

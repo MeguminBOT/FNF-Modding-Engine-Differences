@@ -1,0 +1,33 @@
+name: "Incorrect Information"
+description: Report incorrect or inaccurate information in the documentation.
+labels: ["incorrect info"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Which page contains the incorrect information?
+      placeholder: e.g. Character Format, Stage Format, Cross-Engine Conversion
+    validations:
+      required: true
+  - type: textarea
+    id: incorrect
+    attributes:
+      label: What is incorrect?
+      description: Quote or describe the incorrect information.
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What should it say?
+      description: Provide the correct information, with sources if possible.
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Links, screenshots, or other supporting details.
+    validations:
+      required: false

@@ -1,0 +1,9 @@
+# Audio File Conventions
+
+| Aspect                   | Official Funkin                                                      | Psych Engine                                                                          | Codename Engine                                                   |
+| ------------------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| **Instrumental**         | `songs/<id>/Inst.ogg`                                                | `songs/<Song>/Inst.ogg`                                                               | `songs/<song>/song/Inst.ogg`                                      |
+| **Vocals**               | Split per-character: `Voices-bf.ogg`, `Voices-pico.ogg`              | Single `Voices.ogg` (or optionally split: `Voices-Player.ogg`, `Voices-Opponent.ogg`) | Single `Voices.ogg` (or split: `Voices-bf.ogg`, `Voices-dad.ogg`) |
+| **Per-difficulty audio** | Separate variations system                                           | Separate song folders per difficulty                                                  | Same folder, suffix: `Inst-erect.ogg`, `Voices-erect.ogg`         |
+| **Format**               | OGG Vorbis                                                           | OGG Vorbis                                                                            | OGG Vorbis                                                        |
+| **Song variations**      | Full variation system (`erect`, `pico`, etc.) with separate metadata | Not natively supported                                                                | Difficulty-suffixed audio files                                   |
