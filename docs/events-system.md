@@ -1,5 +1,7 @@
 # Events System
 
+For the complete event class and callback references, see: [Codename Engine Events Reference](reference/codename-events.md) · [Official Funkin Events Reference](reference/official-events.md) · [Cross-Engine Callbacks](reference/callbacks-map.md).
+
 ## Built-in Events
 
 | Event Purpose            | Official Funkin           | Psych Engine              | Codename Engine                      |

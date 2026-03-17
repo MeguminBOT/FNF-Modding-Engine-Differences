@@ -1,0 +1,1230 @@
+version: 1.0.0
+description: Complete Psych Engine Lua/HScript API reference for script conversion
+functions:
+    script_management:
+        getRunningScripts:
+            params[0]:
+            returns: Array<String>
+            file: FunkinLua.hx
+        callScript:
+            params[3]: "luaFile:String","funcName:String","?args:Array<Dynamic>"
+            returns: Dynamic
+            file: FunkinLua.hx
+        isRunning:
+            params[1]: "scriptFile:String"
+            returns: Bool
+            file: FunkinLua.hx
+        setVar:
+            params[2]: "varName:String","value:Dynamic"
+            returns: Dynamic
+            file: FunkinLua.hx
+        getVar:
+            params[1]: "varName:String"
+            returns: Dynamic
+            file: FunkinLua.hx
+        addLuaScript:
+            params[2]: "luaFile:String","?ignoreAlreadyRunning:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        addHScript:
+            params[2]: "scriptFile:String","?ignoreAlreadyRunning:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        removeLuaScript:
+            params[1]: "luaFile:String"
+            returns: Bool
+            file: FunkinLua.hx
+        removeHScript:
+            params[1]: "scriptFile:String"
+            returns: Bool
+            file: FunkinLua.hx
+        setOnScripts:
+            params[4]: "varName:String","arg:Dynamic","?ignoreSelf:Bool","?exclusions:Array<String>"
+            returns: Void
+            file: FunkinLua.hx
+        setOnHScript:
+            params[4]: "varName:String","arg:Dynamic","?ignoreSelf:Bool","?exclusions:Array<String>"
+            returns: Void
+            file: FunkinLua.hx
+        setOnLuas:
+            params[4]: "varName:String","arg:Dynamic","?ignoreSelf:Bool","?exclusions:Array<String>"
+            returns: Void
+            file: FunkinLua.hx
+        callOnScripts:
+            params[5]: "funcName:String","?args:Array<Dynamic>","?ignoreStops:Bool","?excludeScripts:Array<String>","?excludeValues:Array<Dynamic>"
+            returns: Dynamic
+            file: FunkinLua.hx
+        callOnLuas:
+            params[5]: "funcName:String","?args:Array<Dynamic>","?ignoreStops:Bool","?excludeScripts:Array<String>","?excludeValues:Array<Dynamic>"
+            returns: Dynamic
+            file: FunkinLua.hx
+        callOnHScript:
+            params[5]: "funcName:String","?args:Array<Dynamic>","?ignoreStops:Bool","?excludeScripts:Array<String>","?excludeValues:Array<Dynamic>"
+            returns: Dynamic
+            file: FunkinLua.hx
+        close:
+            params[0]:
+            returns: Bool
+            file: FunkinLua.hx
+        runHaxeCode:
+            params[4]: "codeToRun:String","?varsToBring:Any","?funcToRun:String","?funcArgs:Array<Dynamic>"
+            returns: Dynamic
+            file: HScript.hx
+        runHaxeFunction:
+            params[2]: "funcToRun:String","?funcArgs:Array<Dynamic>"
+            returns: Dynamic
+            file: HScript.hx
+    song_control:
+        loadSong:
+            params[2]: "?name:String","?difficultyNum:Int"
+            returns: Void
+            file: FunkinLua.hx
+        triggerEvent:
+            params[3]: "name:String","?value1:String","?value2:String"
+            returns: Bool
+            file: FunkinLua.hx
+        startCountdown:
+            params[0]:
+            returns: Bool
+            file: FunkinLua.hx
+        endSong:
+            params[0]:
+            returns: Bool
+            file: FunkinLua.hx
+        restartSong:
+            params[1]: "?skipTransition:Bool"
+            returns: Bool
+            file: FunkinLua.hx
+        exitSong:
+            params[1]: "?skipTransition:Bool"
+            returns: Bool
+            file: FunkinLua.hx
+        getSongPosition:
+            params[0]:
+            returns: Float
+            file: FunkinLua.hx
+    scoring:
+        addScore:
+            params[1]: "value:Int"
+            returns: Void
+            file: FunkinLua.hx
+        addMisses:
+            params[1]: "value:Int"
+            returns: Void
+            file: FunkinLua.hx
+        addHits:
+            params[1]: "value:Int"
+            returns: Void
+            file: FunkinLua.hx
+        setScore:
+            params[1]: "value:Int"
+            returns: Void
+            file: FunkinLua.hx
+        setMisses:
+            params[1]: "value:Int"
+            returns: Void
+            file: FunkinLua.hx
+        setHits:
+            params[1]: "value:Int"
+            returns: Void
+            file: FunkinLua.hx
+        setHealth:
+            params[1]: "value:Float"
+            returns: Void
+            file: FunkinLua.hx
+        addHealth:
+            params[1]: "value:Float"
+            returns: Void
+            file: FunkinLua.hx
+        getHealth:
+            params[0]:
+            returns: Float
+            file: FunkinLua.hx
+        setRatingPercent:
+            params[1]: "value:Float"
+            returns: Void
+            file: FunkinLua.hx
+        setRatingName:
+            params[1]: "value:String"
+            returns: Void
+            file: FunkinLua.hx
+        setRatingFC:
+            params[1]: "value:String"
+            returns: Void
+            file: FunkinLua.hx
+        updateScoreText:
+            params[0]:
+            returns: Void
+            file: FunkinLua.hx
+    sprites:
+        makeLuaSprite:
+            params[4]: "tag:String","?image:String","?x:Float","?y:Float"
+            returns: Void
+            file: FunkinLua.hx
+        makeAnimatedLuaSprite:
+            params[5]: "tag:String","?image:String","?x:Float","?y:Float","?spriteType:String"
+            returns: Void
+            file: FunkinLua.hx
+        makeGraphic:
+            params[4]: "obj:String","width:Int","height:Int","color:String"
+            returns: Void
+            file: FunkinLua.hx
+        addLuaSprite:
+            params[2]: "tag:String","?inFront:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        removeLuaSprite:
+            params[3]: "tag:String","destroy:Bool","?group:String"
+            returns: Void
+            file: FunkinLua.hx
+        luaSpriteExists:
+            params[1]: "tag:String"
+            returns: Bool
+            file: FunkinLua.hx
+        loadGraphic:
+            params[4]: "variable:String","image:String","?gridX:Int","?gridY:Int"
+            returns: Void
+            file: FunkinLua.hx
+        loadFrames:
+            params[3]: "variable:String","image:String","spriteType:String"
+            returns: Void
+            file: FunkinLua.hx
+        setGraphicSize:
+            params[4]: "obj:String","x:Float","y:Float","updateHitbox:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        scaleObject:
+            params[4]: "obj:String","x:Float","y:Float","updateHitbox:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        updateHitbox:
+            params[1]: "obj:String"
+            returns: Void
+            file: FunkinLua.hx
+        screenCenter:
+            params[2]: "obj:String","pos:String"
+            returns: Void
+            file: FunkinLua.hx
+        setScrollFactor:
+            params[3]: "obj:String","scrollX:Float","scrollY:Float"
+            returns: Void
+            file: FunkinLua.hx
+        setObjectCamera:
+            params[2]: "obj:String","camera:String"
+            returns: Bool
+            file: FunkinLua.hx
+        setBlendMode:
+            params[2]: "obj:String","blend:String"
+            returns: Bool
+            file: FunkinLua.hx
+        objectsOverlap:
+            params[2]: "obj1:String","obj2:String"
+            returns: Bool
+            file: FunkinLua.hx
+        getObjectOrder:
+            params[2]: "obj:String","?group:String"
+            returns: Int
+            file: FunkinLua.hx
+        setObjectOrder:
+            params[3]: "obj:String","position:Int","?group:String"
+            returns: Void
+            file: FunkinLua.hx
+        getPixelColor:
+            params[3]: "obj:String","x:Int","y:Int"
+            returns: Int
+            file: FunkinLua.hx
+    animations:
+        addAnimationByPrefix:
+            params[5]: "obj:String","name:String","prefix:String","framerate:Float","loop:Bool"
+            returns: Bool
+            file: FunkinLua.hx
+        addAnimation:
+            params[5]: "obj:String","name:String","frames:Any","framerate:Float","loop:Bool"
+            returns: Bool
+            file: FunkinLua.hx
+        addAnimationByIndices:
+            params[6]: "obj:String","name:String","prefix:String","indices:Any","framerate:Float","loop:Bool"
+            returns: Bool
+            file: FunkinLua.hx
+        playAnim:
+            params[5]: "obj:String","name:String","?forced:Bool","?reverse:Bool","?startFrame:Int"
+            returns: Bool
+            file: FunkinLua.hx
+        addOffset:
+            params[4]: "obj:String","anim:String","x:Float","y:Float"
+            returns: Bool
+            file: FunkinLua.hx
+    flxanimate:
+        makeFlxAnimateSprite:
+            params[4]: "tag:String","?x:Float","?y:Float","?loadFolder:String"
+            returns: Void
+            file: FlxAnimateFunctions.hx
+        loadAnimateAtlas:
+            params[4]: "tag:String","folderOrImg:String","?spriteJson:String","?animationJson:String"
+            returns: Void
+            file: FlxAnimateFunctions.hx
+        addAnimationBySymbol:
+            params[7]: "tag:String","name:String","symbol:String","?framerate:Float","?loop:Bool","?matX:Float","?matY:Float"
+            returns: Bool
+            file: FlxAnimateFunctions.hx
+        addAnimationBySymbolIndices:
+            params[8]: "tag:String","name:String","symbol:String","?indices:Any","?framerate:Float","?loop:Bool","?matX:Float","?matY:Float"
+            returns: Bool
+            file: FlxAnimateFunctions.hx
+    tweens:
+        startTween:
+            params[5]: "tag:String","vars:String","values:Any","duration:Float","?options:Any"
+            returns: String
+            file: FunkinLua.hx
+        doTweenX:
+            params[5]: "tag:String","vars:String","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        doTweenY:
+            params[5]: "tag:String","vars:String","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        doTweenAngle:
+            params[5]: "tag:String","vars:String","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        doTweenAlpha:
+            params[5]: "tag:String","vars:String","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        doTweenZoom:
+            params[5]: "tag:String","camera:String","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        doTweenColor:
+            params[5]: "tag:String","vars:String","targetColor:String","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        noteTweenX:
+            params[5]: "tag:String","note:Int","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        noteTweenY:
+            params[5]: "tag:String","note:Int","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        noteTweenAngle:
+            params[5]: "tag:String","note:Int","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        noteTweenAlpha:
+            params[5]: "tag:String","note:Int","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        noteTweenDirection:
+            params[5]: "tag:String","note:Int","value:Dynamic","duration:Float","?ease:String"
+            returns: String
+            file: FunkinLua.hx
+        cancelTween:
+            params[1]: "tag:String"
+            returns: Void
+            file: FunkinLua.hx
+    timers:
+        runTimer:
+            params[3]: "tag:String","time:Float","loops:Int"
+            returns: String
+            file: FunkinLua.hx
+        cancelTimer:
+            params[1]: "tag:String"
+            returns: Void
+            file: FunkinLua.hx
+    sound:
+        playMusic:
+            params[3]: "sound:String","?volume:Float","?loop:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        playSound:
+            params[4]: "sound:String","?volume:Float","?tag:String","?loop:Bool"
+            returns: String
+            file: FunkinLua.hx
+        stopSound:
+            params[1]: "tag:String"
+            returns: Void
+            file: FunkinLua.hx
+        pauseSound:
+            params[1]: "tag:String"
+            returns: Void
+            file: FunkinLua.hx
+        resumeSound:
+            params[1]: "tag:String"
+            returns: Void
+            file: FunkinLua.hx
+        soundFadeIn:
+            params[4]: "tag:String","duration:Float","fromValue:Float","toValue:Float"
+            returns: Void
+            file: FunkinLua.hx
+        soundFadeOut:
+            params[3]: "tag:String","duration:Float","toValue:Float"
+            returns: Void
+            file: FunkinLua.hx
+        soundFadeCancel:
+            params[1]: "tag:String"
+            returns: Void
+            file: FunkinLua.hx
+        getSoundVolume:
+            params[1]: "tag:String"
+            returns: Float
+            file: FunkinLua.hx
+        setSoundVolume:
+            params[2]: "tag:String","value:Float"
+            returns: Void
+            file: FunkinLua.hx
+        getSoundTime:
+            params[1]: "tag:String"
+            returns: Float
+            file: FunkinLua.hx
+        setSoundTime:
+            params[2]: "tag:String","value:Float"
+            returns: Void
+            file: FunkinLua.hx
+        getSoundPitch:
+            params[1]: "tag:String"
+            returns: Float
+            file: FunkinLua.hx
+            notes: FLX_PITCH only
+        setSoundPitch:
+            params[3]: "tag:String","value:Float","?doPause:Bool"
+            returns: Void
+            file: FunkinLua.hx
+            notes: FLX_PITCH only
+        luaSoundExists:
+            params[1]: "tag:String"
+            returns: Bool
+            file: FunkinLua.hx
+    camera:
+        cameraSetTarget:
+            params[1]: "target:String"
+            returns: Void
+            file: FunkinLua.hx
+            notes: "target: gf/dad/boyfriend"
+        setCameraScroll:
+            params[2]: "x:Float","y:Float"
+            returns: Void
+            file: FunkinLua.hx
+        setCameraFollowPoint:
+            params[2]: "x:Float","y:Float"
+            returns: Void
+            file: FunkinLua.hx
+        addCameraScroll:
+            params[2]: "?x:Float","?y:Float"
+            returns: Void
+            file: FunkinLua.hx
+        addCameraFollowPoint:
+            params[2]: "?x:Float","?y:Float"
+            returns: Void
+            file: FunkinLua.hx
+        getCameraScrollX:
+            params[0]:
+            returns: Float
+            file: FunkinLua.hx
+        getCameraScrollY:
+            params[0]:
+            returns: Float
+            file: FunkinLua.hx
+        getCameraFollowX:
+            params[0]:
+            returns: Float
+            file: FunkinLua.hx
+        getCameraFollowY:
+            params[0]:
+            returns: Float
+            file: FunkinLua.hx
+        cameraShake:
+            params[3]: "camera:String","intensity:Float","duration:Float"
+            returns: Void
+            file: FunkinLua.hx
+        cameraFlash:
+            params[4]: "camera:String","color:String","duration:Float","forced:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        cameraFade:
+            params[5]: "camera:String","color:String","duration:Float","forced:Bool","?fadeOut:Bool"
+            returns: Void
+            file: FunkinLua.hx
+    characters:
+        getCharacterX:
+            params[1]: "type:String"
+            returns: Float
+            file: FunkinLua.hx
+            notes: "type: dad/gf/boyfriend"
+        setCharacterX:
+            params[2]: "type:String","value:Float"
+            returns: Void
+            file: FunkinLua.hx
+        getCharacterY:
+            params[1]: "type:String"
+            returns: Float
+            file: FunkinLua.hx
+        setCharacterY:
+            params[2]: "type:String","value:Float"
+            returns: Void
+            file: FunkinLua.hx
+        characterDance:
+            params[1]: "character:String"
+            returns: Void
+            file: FunkinLua.hx
+        addCharacterToList:
+            params[2]: "name:String","type:String"
+            returns: Void
+            file: FunkinLua.hx
+    text:
+        makeLuaText:
+            params[5]: "tag:String","?text:String","?width:Int","?x:Float","?y:Float"
+            returns: Void
+            file: TextFunctions.hx
+        setTextString:
+            params[2]: "tag:String","text:String"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextSize:
+            params[2]: "tag:String","size:Int"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextWidth:
+            params[2]: "tag:String","width:Float"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextHeight:
+            params[2]: "tag:String","height:Float"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextAutoSize:
+            params[2]: "tag:String","value:Bool"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextBorder:
+            params[4]: "tag:String","size:Float","color:String","?style:String"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextColor:
+            params[2]: "tag:String","color:String"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextFont:
+            params[2]: "tag:String","newFont:String"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextItalic:
+            params[2]: "tag:String","italic:Bool"
+            returns: Bool
+            file: TextFunctions.hx
+        setTextAlignment:
+            params[2]: "tag:String","alignment:String"
+            returns: Bool
+            file: TextFunctions.hx
+        getTextString:
+            params[1]: "tag:String"
+            returns: String
+            file: TextFunctions.hx
+        getTextSize:
+            params[1]: "tag:String"
+            returns: Int
+            file: TextFunctions.hx
+        getTextFont:
+            params[1]: "tag:String"
+            returns: String
+            file: TextFunctions.hx
+        getTextWidth:
+            params[1]: "tag:String"
+            returns: Float
+            file: TextFunctions.hx
+        addLuaText:
+            params[1]: "tag:String"
+            returns: Void
+            file: TextFunctions.hx
+        removeLuaText:
+            params[2]: "tag:String","destroy:Bool"
+            returns: Void
+            file: TextFunctions.hx
+        luaTextExists:
+            params[1]: "tag:String"
+            returns: Bool
+            file: FunkinLua.hx
+    shaders:
+        removeSpriteShader:
+            params[1]: "obj:String"
+            returns: Bool
+            file: ShaderFunctions.hx
+        getShaderBool:
+            params[2]: "obj:String","prop:String"
+            returns: Bool
+            file: ShaderFunctions.hx
+        getShaderBoolArray:
+            params[2]: "obj:String","prop:String"
+            returns: Array<Bool>
+            file: ShaderFunctions.hx
+        getShaderInt:
+            params[2]: "obj:String","prop:String"
+            returns: Int
+            file: ShaderFunctions.hx
+        getShaderIntArray:
+            params[2]: "obj:String","prop:String"
+            returns: Array<Int>
+            file: ShaderFunctions.hx
+        getShaderFloat:
+            params[2]: "obj:String","prop:String"
+            returns: Float
+            file: ShaderFunctions.hx
+        getShaderFloatArray:
+            params[2]: "obj:String","prop:String"
+            returns: Array<Float>
+            file: ShaderFunctions.hx
+        setShaderBool:
+            params[3]: "obj:String","prop:String","value:Bool"
+            returns: Bool
+            file: ShaderFunctions.hx
+        setShaderBoolArray:
+            params[3]: "obj:String","prop:String","values:Dynamic"
+            returns: Bool
+            file: ShaderFunctions.hx
+        setShaderInt:
+            params[3]: "obj:String","prop:String","value:Int"
+            returns: Bool
+            file: ShaderFunctions.hx
+        setShaderIntArray:
+            params[3]: "obj:String","prop:String","values:Dynamic"
+            returns: Bool
+            file: ShaderFunctions.hx
+        setShaderFloat:
+            params[3]: "obj:String","prop:String","value:Float"
+            returns: Bool
+            file: ShaderFunctions.hx
+        setShaderFloatArray:
+            params[3]: "obj:String","prop:String","values:Dynamic"
+            returns: Bool
+            file: ShaderFunctions.hx
+        setShaderSampler2D:
+            params[3]: "obj:String","prop:String","bitmapdataPath:String"
+            returns: Bool
+            file: ShaderFunctions.hx
+    reflection:
+        getProperty:
+            params[2]: "variable:String","?allowMaps:Bool"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        setProperty:
+            params[4]: "variable:String","value:Dynamic","?allowMaps:Bool","?allowInstances:Bool"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        getPropertyFromClass:
+            params[3]: "classVar:String","variable:String","?allowMaps:Bool"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        setPropertyFromClass:
+            params[5]: "classVar:String","variable:String","value:Dynamic","?allowMaps:Bool","?allowInstances:Bool"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        getPropertyFromGroup:
+            params[4]: "group:String","index:Int","variable:Dynamic","?allowMaps:Bool"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        setPropertyFromGroup:
+            params[6]: "group:String","index:Int","variable:Dynamic","value:Dynamic","?allowMaps:Bool","?allowInstances:Bool"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        addToGroup:
+            params[3]: "group:String","tag:String","?index:Int"
+            returns: Void
+            file: ReflectionFunctions.hx
+        removeFromGroup:
+            params[4]: "group:String","?index:Int","?tag:String","?destroy:Bool"
+            returns: Void
+            file: ReflectionFunctions.hx
+        callMethod:
+            params[2]: "funcToRun:String","?args:Array<Dynamic>"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        callMethodFromClass:
+            params[3]: "className:String","funcToRun:String","?args:Array<Dynamic>"
+            returns: Dynamic
+            file: ReflectionFunctions.hx
+        createInstance:
+            params[3]: "variableToSave:String","className:String","?args:Array<Dynamic>"
+            returns: Bool
+            file: ReflectionFunctions.hx
+        addInstance:
+            params[2]: "objectName:String","?inFront:Bool"
+            returns: Void
+            file: ReflectionFunctions.hx
+        instanceArg:
+            params[2]: "instanceName:String","?className:String"
+            returns: String
+            file: ReflectionFunctions.hx
+    input:
+        mouseClicked:
+            params[1]: "?button:String"
+            returns: Bool
+            file: FunkinLua.hx
+        mousePressed:
+            params[1]: "?button:String"
+            returns: Bool
+            file: FunkinLua.hx
+        mouseReleased:
+            params[1]: "?button:String"
+            returns: Bool
+            file: FunkinLua.hx
+        getMouseX:
+            params[1]: "?camera:String"
+            returns: Float
+            file: FunkinLua.hx
+        getMouseY:
+            params[1]: "?camera:String"
+            returns: Float
+            file: FunkinLua.hx
+        keyboardJustPressed:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        keyboardPressed:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        keyboardReleased:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        keyJustPressed:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        keyPressed:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        keyReleased:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        anyGamepadJustPressed:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        anyGamepadPressed:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        anyGamepadReleased:
+            params[1]: "name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        gamepadAnalogX:
+            params[2]: "id:Int","?leftStick:Bool"
+            returns: Float
+            file: ExtraFunctions.hx
+        gamepadAnalogY:
+            params[2]: "id:Int","?leftStick:Bool"
+            returns: Float
+            file: ExtraFunctions.hx
+        gamepadJustPressed:
+            params[2]: "id:Int","name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        gamepadPressed:
+            params[2]: "id:Int","name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        gamepadReleased:
+            params[2]: "id:Int","name:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+    position_queries:
+        getMidpointX:
+            params[1]: "variable:String"
+            returns: Float
+            file: FunkinLua.hx
+        getMidpointY:
+            params[1]: "variable:String"
+            returns: Float
+            file: FunkinLua.hx
+        getGraphicMidpointX:
+            params[1]: "variable:String"
+            returns: Float
+            file: FunkinLua.hx
+        getGraphicMidpointY:
+            params[1]: "variable:String"
+            returns: Float
+            file: FunkinLua.hx
+        getScreenPositionX:
+            params[2]: "variable:String","?camera:String"
+            returns: Float
+            file: FunkinLua.hx
+        getScreenPositionY:
+            params[2]: "variable:String","?camera:String"
+            returns: Float
+            file: FunkinLua.hx
+    save_data:
+        initSaveData:
+            params[2]: "name:String","?folder:String"
+            returns: Void
+            file: ExtraFunctions.hx
+        flushSaveData:
+            params[1]: "name:String"
+            returns: Void
+            file: ExtraFunctions.hx
+        getDataFromSave:
+            params[3]: "name:String","field:String","?defaultValue:Dynamic"
+            returns: Dynamic
+            file: ExtraFunctions.hx
+        setDataFromSave:
+            params[3]: "name:String","field:String","value:Dynamic"
+            returns: Void
+            file: ExtraFunctions.hx
+        eraseSaveData:
+            params[1]: "name:String"
+            returns: Void
+            file: ExtraFunctions.hx
+    file_management:
+        checkFileExists:
+            params[2]: "filename:String","?absolute:Bool"
+            returns: Bool
+            file: ExtraFunctions.hx
+        saveFile:
+            params[3]: "path:String","content:String","?absolute:Bool"
+            returns: Bool
+            file: ExtraFunctions.hx
+        deleteFile:
+            params[3]: "path:String","?ignoreModFolders:Bool","?absolute:Bool"
+            returns: Bool
+            file: ExtraFunctions.hx
+        getTextFromFile:
+            params[2]: "path:String","?ignoreModFolders:Bool"
+            returns: String
+            file: ExtraFunctions.hx
+        directoryFileList:
+            params[1]: "folder:String"
+            returns: Array<String>
+            file: ExtraFunctions.hx
+    string_utils:
+        stringStartsWith:
+            params[2]: "str:String","start:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        stringEndsWith:
+            params[2]: "str:String","end:String"
+            returns: Bool
+            file: ExtraFunctions.hx
+        stringSplit:
+            params[2]: "str:String","split:String"
+            returns: Array<String>
+            file: ExtraFunctions.hx
+        stringTrim:
+            params[1]: "str:String"
+            returns: String
+            file: ExtraFunctions.hx
+    random:
+        getRandomInt:
+            params[3]: "min:Int","max:Int","exclude:String"
+            returns: Int
+            file: ExtraFunctions.hx
+        getRandomFloat:
+            params[3]: "min:Float","max:Float","exclude:String"
+            returns: Float
+            file: ExtraFunctions.hx
+        getRandomBool:
+            params[1]: "chance:Float"
+            returns: Bool
+            file: ExtraFunctions.hx
+    colors:
+        FlxColor:
+            params[1]: "color:String"
+            returns: Int
+            file: FunkinLua.hx
+        getColorFromName:
+            params[1]: "color:String"
+            returns: Int
+            file: FunkinLua.hx
+        getColorFromString:
+            params[1]: "color:String"
+            returns: Int
+            file: FunkinLua.hx
+        getColorFromHex:
+            params[1]: "color:String"
+            returns: Int
+            file: FunkinLua.hx
+        setHealthBarColors:
+            params[2]: "left:String","right:String"
+            returns: Void
+            file: FunkinLua.hx
+        setTimeBarColors:
+            params[2]: "left:String","right:String"
+            returns: Void
+            file: FunkinLua.hx
+    precache:
+        precacheImage:
+            params[2]: "name:String","?allowGPU:Bool"
+            returns: Void
+            file: FunkinLua.hx
+        precacheSound:
+            params[1]: "name:String"
+            returns: Void
+            file: FunkinLua.hx
+        precacheMusic:
+            params[1]: "name:String"
+            returns: Void
+            file: FunkinLua.hx
+    dialogue_and_video:
+        startDialogue:
+            params[2]: "dialogueFile:String","?music:String"
+            returns: Bool
+            file: FunkinLua.hx
+        startVideo:
+            params[5]: "videoFile:String","?canSkip:Bool","?forMidSong:Bool","?shouldLoop:Bool","?playOnLoad:Bool"
+            returns: Bool
+            file: FunkinLua.hx
+    custom_substates:
+        openCustomSubstate:
+            params[2]: "name:String","?pauseGame:Bool"
+            returns: Void
+            file: CustomSubstate.hx
+        closeCustomSubstate:
+            params[0]:
+            returns: Bool
+            file: CustomSubstate.hx
+        insertToCustomSubstate:
+            params[2]: "tag:String","?pos:Int"
+            returns: Bool
+            file: CustomSubstate.hx
+    debug:
+        debugPrint:
+            params[2]: "text:Dynamic","color:String"
+            returns: Void
+            file: FunkinLua.hx
+globalVariables:
+    version_metadata:
+        version: String
+        scriptName: String
+        modFolder: String
+    function_constants:
+        Function_StopLua: String
+        Function_StopHScript: String
+        Function_StopAll: String
+        Function_Stop: String
+        Function_Continue: String
+    debug:
+        luaDebugMode: "Bool (default: false)"
+        luaDeprecatedWarnings: "Bool (default: true)"
+    song_data:
+        curBpm: Float
+        bpm: Float
+        scrollSpeed: Float
+        crochet: Float
+        stepCrochet: Float
+        songLength: Float
+        songName: String
+        songPath: String
+        loadedSongName: String
+        loadedSongPath: String
+        chartPath: String
+        curStage: String
+    difficulty:
+        isStoryMode: Bool
+        difficulty: Int
+        difficultyName: String
+        difficultyPath: String
+        difficultyNameTranslation: String
+        weekRaw: Int
+        week: String
+        seenCutscene: Bool
+        hasVocals: Bool
+    screen:
+        screenWidth: Int
+        screenHeight: Int
+    gameplay_state:
+        curSection: Int
+        curBeat: Int
+        curStep: Int
+        curDecBeat: Float
+        curDecStep: Float
+        score: Int
+        misses: Int
+        hits: Int
+        combo: Int
+        deaths: Int
+        rating: Float
+        ratingName: String
+        ratingFC: String
+        totalPlayed: Int
+        totalNotesHit: Int
+        inGameOver: Bool
+        mustHitSection: Bool
+        altAnim: Bool
+        gfSection: Bool
+        healthGainMult: Float
+        healthLossMult: Float
+        playbackRate: Float
+        guitarHeroSustains: Bool
+        instakillOnMiss: Bool
+        botPlay: Bool
+        practice: Bool
+    character_positions:
+        defaultBoyfriendX: Float
+        defaultBoyfriendY: Float
+        defaultOpponentX: Float
+        defaultOpponentY: Float
+        defaultGirlfriendX: Float
+        defaultGirlfriendY: Float
+        boyfriendName: String
+        dadName: String
+        gfName: String
+    strum_positions:
+        defaultPlayerStrumX0: Float
+        defaultPlayerStrumX1: Float
+        defaultPlayerStrumX2: Float
+        defaultPlayerStrumX3: Float
+        defaultOpponentStrumX0: Float
+        defaultOpponentStrumX1: Float
+        defaultOpponentStrumX2: Float
+        defaultOpponentStrumX3: Float
+        defaultPlayerStrumY0: Float
+        defaultPlayerStrumY1: Float
+        defaultPlayerStrumY2: Float
+        defaultPlayerStrumY3: Float
+        defaultOpponentStrumY0: Float
+        defaultOpponentStrumY1: Float
+        defaultOpponentStrumY2: Float
+        defaultOpponentStrumY3: Float
+    ui_settings:
+        downscroll: Bool
+        middlescroll: Bool
+        framerate: Int
+        ghostTapping: Bool
+        hideHud: Bool
+        timeBarType: String
+        scoreZoom: Bool
+        cameraZoomOnBeat: Bool
+        flashingLights: Bool
+        noteOffset: Float
+        healthBarAlpha: Float
+        noResetButton: Bool
+        lowQuality: Bool
+        shadersEnabled: Bool
+        currentModDirectory: String
+    noteskins:
+        noteSkin: String
+        noteSkinPostfix: String
+        splashSkin: String
+        splashSkinPostfix: String
+        splashAlpha: Float
+    system:
+        buildTarget: String
+callbacks:
+    lifecycle[5]:
+        - name: onCreate
+            params[0]:
+            notes: "Script loaded, after variables set"
+        - name: onCreatePost
+            params[0]:
+            notes: After everything created
+        - name: onUpdate
+            params[1]: "elapsed:Float"
+            notes: Every frame
+        - name: onUpdatePost
+            params[1]: "elapsed:Float"
+            notes: After updates
+        - name: onDestroy
+            params[0]:
+            notes: State destroyed
+    song[5]:
+        - name: onStartCountdown
+            params[0]:
+            notes: Before countdown. Return false to cancel
+            cancellable: true
+        - name: onCountdownStarted
+            params[0]:
+            notes: Countdown actually began
+        - name: onCountdownTick
+            params[1]: "swagCounter:Int"
+            notes: Each countdown tick
+        - name: onSongStart
+            params[0]:
+            notes: Song begins playing
+        - name: onEndSong
+            params[0]:
+            notes: Song completed. Return false to cancel
+            cancellable: true
+    timing[3]:
+        - name: onStepHit
+            params[0]:
+            notes: Each step hit. curStep via global
+        - name: onBeatHit
+            params[0]:
+            notes: Each beat hit. curBeat via global
+        - name: onSectionHit
+            params[0]:
+            notes: Section boundary crossed
+    notes[7]:
+        - name: onSpawnNote
+            params[5]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool","strumTime:Float"
+            notes: Note spawned
+        - name: goodNoteHitPre
+            params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            notes: Before player hit
+        - name: goodNoteHit
+            params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            notes: Player hit note
+        - name: opponentNoteHitPre
+            params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            notes: Before opponent hit
+        - name: opponentNoteHit
+            params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            notes: Opponent hit note
+        - name: noteMiss
+            params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            notes: Note missed
+        - name: noteMissPress
+            params[1]: "direction:Int"
+            notes: Pressed key with no notes (ghost miss)
+    input[5]:
+        - name: onKeyPressPre
+            params[1]: "key:Int"
+            notes: "Before key pressed, return to block"
+        - name: onKeyPress
+            params[1]: "key:Int"
+            notes: Key pressed
+        - name: onKeyReleasePre
+            params[1]: "key:Int"
+            notes: Before key released
+        - name: onKeyRelease
+            params[1]: "key:Int"
+            notes: Key released
+        - name: onGhostTap
+            params[1]: "key:Int"
+            notes: Key pressed with no notes
+    events[3]:
+        - name: onEvent
+            params[4]: "eventName:String","value1:String","value2:String","strumTime:Float"
+            notes: Event triggered
+        - name: onEventPushed
+            params[4]: "eventName:String","value1:String","value2:String","strumTime:Float"
+            notes: Event loaded from chart
+        - name: eventEarlyTrigger
+            params[4]: "eventName:String","value1:String","value2:String","strumTime:Float"
+            notes: Return Float to offset trigger time
+    camera[1]:
+        - name: onMoveCamera
+            params[1]: "character:String"
+            notes: Camera moved to character (dad/gf/boyfriend)
+    pause_gameover[7]:
+        - name: onPause
+            params[0]:
+            notes: Before pause. Return false to cancel
+            cancellable: true
+        - name: onResume
+            params[0]:
+            notes: After resume
+        - name: onGameOver
+            params[0]:
+            notes: Before game over. Return false to cancel
+            cancellable: true
+        - name: onGameOverStart
+            params[0]:
+            notes: Game over state entered
+        - name: onGameOverUpdate
+            params[1]: "elapsed:Float"
+            notes: Game over frame
+        - name: onGameOverUpdatePost
+            params[1]: "elapsed:Float"
+            notes: After game over update
+        - name: onGameOverConfirm
+            params[1]: "returnToMenu:Bool"
+            notes: Exit confirmed
+    dialogue[2]:
+        - name: onNextDialogue
+            params[1]: "dialogueCount:Int"
+            notes: Next dialogue line
+        - name: onSkipDialogue
+            params[1]: "dialogueCount:Int"
+            notes: Dialogue skipped
+    rating[2]:
+        - name: onRecalculateRating
+            params[0]:
+            notes: Before rating recalculated
+        - name: onUpdateScore
+            params[1]: "miss:Bool"
+            notes: Score updated
+    tween_timer[3]:
+        - name: onTweenCompleted
+            params[2]: "tag:String","vars:String"
+            notes: Tween finished
+        - name: onTimerCompleted
+            params[3]: "tag:String","loops:Int","loopsLeft:Int"
+            notes: Timer finished
+        - name: onSoundFinished
+            params[1]: "tag:String"
+            notes: Sound finished
+    custom_substates[5]:
+        - name: onCustomSubstateCreate
+            params[1]: "name:String"
+            notes: Substate created
+        - name: onCustomSubstateCreatePost
+            params[1]: "name:String"
+            notes: After substate created
+        - name: onCustomSubstateUpdate
+            params[2]: "name:String","elapsed:Float"
+            notes: Substate update
+        - name: onCustomSubstateUpdatePost
+            params[2]: "name:String","elapsed:Float"
+            notes: After substate update
+        - name: onCustomSubstateDestroy
+            params[1]: "name:String"
+            notes: Substate destroyed
+hscript:
+    availableClasses[24]: Type,File,FileSystem,FlxG,FlxMath,FlxSprite,FlxText,FlxCamera,PsychCamera,FlxTimer,FlxTween,FlxEase,FlxColor,PlayState,Paths,Conductor,ClientPrefs,Character,Alphabet,Note,CustomSubstate,FlxRuntimeShader,StringTools,FlxAnimate
+    functions:
+        setVar:
+            params[2]: "name:String","value:Dynamic"
+            returns: Dynamic
+        getVar:
+            params[1]: "name:String"
+            returns: Dynamic
+        removeVar:
+            params[1]: "name:String"
+            returns: Bool
+        debugPrint:
+            params[2]: "text:String","?color:FlxColor"
+            returns: Void
+        getModSetting:
+            params[2]: "saveTag:String","?modName:String"
+            returns: Dynamic
+        addHaxeLibrary:
+            params[2]: "libName:String","?libPackage:String"
+            returns: Void
+        createGlobalCallback:
+            params[2]: "name:String","func:Dynamic"
+            returns: Void
+        createCallback:
+            params[3]: "name:String","func:Dynamic",?funk
+            returns: Void
+    luaBridge:
+        runHaxeCode:
+            params[4]: "codeToRun:String","?varsToBring:Any","?funcToRun:String","?funcArgs:Array<Dynamic>"
+            returns: Dynamic
+        runHaxeFunction:
+            params[2]: "funcToRun:String","?funcArgs:Array<Dynamic>"
+            returns: Dynamic
+deprecated:
+    addAnimationByIndicesLoop:
+        replacement: addAnimationByIndices (with loop=true)
+    objectPlayAnimation:
+        replacement: playAnim
+    characterPlayAnim:
+        replacement: playAnim with character name
+    luaSpriteMakeGraphic:
+        replacement: makeGraphic
+    luaSpriteAddAnimationByPrefix:
+        replacement: addAnimationByPrefix
+    luaSpriteAddAnimationByIndices:
+        replacement: addAnimationByIndices
+    luaSpritePlayAnimation:
+        replacement: playAnim
+    setLuaSpriteCamera:
+        replacement: setObjectCamera
+    setLuaSpriteScrollFactor:
+        replacement: setScrollFactor
+    scaleLuaSprite:
+        replacement: scaleObject

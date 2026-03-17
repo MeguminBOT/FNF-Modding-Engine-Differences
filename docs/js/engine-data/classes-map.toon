@@ -1,0 +1,729 @@
+version: 1.0.0
+description: Cross-engine class equivalence mapping for FNF script conversion
+classes:
+    Conductor:
+        psych:
+            package: backend
+            class: Conductor
+            file: source/backend/Conductor.hx
+            access: Conductor (static)
+            fields:
+                bpm:
+                    type: Float
+                    static: true
+                crochet:
+                    type: Float
+                    static: true
+                    notes: Beat duration in ms
+                stepCrochet:
+                    type: Float
+                    static: true
+                    notes: Step duration in ms
+                songPosition:
+                    type: Float
+                    static: true
+                offset:
+                    type: Float
+                    static: true
+                safeZoneOffset:
+                    type: Float
+                    static: true
+                bpmChangeMap:
+                    type: Array<BPMChangeEvent>
+                    static: true
+            methods:
+                judgeNote:
+                    params[2]: "arr:Array<Rating>","diff:Float"
+                    returns: Rating
+                    static: true
+                beatToSeconds:
+                    params[1]: "beat:Float"
+                    returns: Float
+                    static: true
+                getStep:
+                    params[1]: "time:Float"
+                    returns: Float
+                    static: true
+                getBeat:
+                    params[1]: "time:Float"
+                    returns: Float
+                    static: true
+                mapBPMChanges:
+                    params[1]: "song:SwagSong"
+                    returns: Void
+                    static: true
+        codename:
+            package: funkin.backend.system
+            class: Conductor
+            file: source/funkin/backend/system/Conductor.hx
+            access: Conductor (static)
+            fields:
+                bpm:
+                    type: Float
+                    static: true
+                    getter: true
+                startingBPM:
+                    type: Float
+                    static: true
+                    getter: true
+                crochet:
+                    type: Float
+                    static: true
+                    getter: true
+                stepCrochet:
+                    type: Float
+                    static: true
+                    getter: true
+                songPosition:
+                    type: Float
+                    static: true
+                    getter: true
+                songOffset:
+                    type: Float
+                    static: true
+                curStepFloat:
+                    type: Float
+                    static: true
+                    getter: true
+                curBeatFloat:
+                    type: Float
+                    static: true
+                    getter: true
+                curMeasureFloat:
+                    type: Float
+                    static: true
+                    getter: true
+                beatsPerMeasure:
+                    type: Float
+                    static: true
+                    getter: true
+                stepsPerBeat:
+                    type: Int
+                    static: true
+                    getter: true
+                bpmChangeMap:
+                    type: Array<BPMChangeEvent>
+                    static: true
+            methods:
+                changeBPM:
+                    params[3]: "bpm:Float","beatsPerMeasure:Float","stepsPerBeat:Int"
+                    returns: Void
+                    static: true
+                setupSong:
+                    params[1]: "SONG:ChartData"
+                    returns: Void
+                    static: true
+                mapBPMChanges:
+                    params[1]: "song:ChartData"
+                    returns: Void
+                    static: true
+                reset:
+                    params[0]:
+                    returns: Void
+                    static: true
+            signals:
+                onMeasureHit: FlxTypedSignal<Int->Void>
+                onBeatHit: FlxTypedSignal<Int->Void>
+                onStepHit: FlxTypedSignal<Int->Void>
+                onBPMChange: "FlxTypedSignal<(Float,Float)->Void>"
+                onTimeSignatureChange: FlxTypedSignal
+        official:
+            package: funkin
+            class: Conductor
+            file: source/funkin/Conductor.hx
+            access: Conductor.instance
+            fields:
+                songPosition:
+                    type: Float
+                bpm:
+                    type: Float
+                beatLengthMs:
+                    type: Float
+                    notes: Equivalent to crochet
+                stepLengthMs:
+                    type: Float
+                    notes: Equivalent to stepCrochet
+                measureLengthMs:
+                    type: Float
+                timeSignatureNum:
+                    type: Int
+                timeSignatureDen:
+                    type: Int
+                currentTimeChange:
+                    type: SongTimeChange
+            methods:
+                update:
+                    params[1]: "songPosition:Float"
+                    returns: Void
+                getTimeFromStep:
+                    params[1]: "step:Int"
+                    returns: Float
+                getStepFromTime:
+                    params[1]: "time:Float"
+                    returns: Int
+                forceBPM:
+                    params[1]: "bpm:Float"
+                    returns: Void
+                clearForcedBPM:
+                    params[0]:
+                    returns: Void
+            notes: Instance-based (not static). Access via Conductor.instance
+    Paths:
+        psych:
+            package: backend
+            class: Paths
+            file: source/backend/Paths.hx
+            access: Paths (static)
+            methods:
+                image:
+                    params[2]: "key:String","?allowGPU:Bool"
+                    returns: Dynamic
+                sound:
+                    params[1]: "key:String"
+                    returns: Dynamic
+                music:
+                    params[1]: "key:String"
+                    returns: Dynamic
+                getSparrowAtlas:
+                    params[1]: "key:String"
+                    returns: FlxFramesCollection
+                getAtlas:
+                    params[1]: "key:String"
+                    returns: FlxFramesCollection
+                json:
+                    params[2]: "key:String","?folder:String"
+                    returns: String
+                xml:
+                    params[2]: "key:String","?folder:String"
+                    returns: String
+                txt:
+                    params[2]: "key:String","?folder:String"
+                    returns: String
+                lua:
+                    params[2]: "key:String","?folder:String"
+                    returns: String
+                shaderFragment:
+                    params[1]: "key:String"
+                    returns: String
+                shaderVertex:
+                    params[1]: "key:String"
+                    returns: String
+            constants:
+                SOUND_EXT: ogg (desktop) / mp3 (web)
+                VIDEO_EXT: mp4
+        codename:
+            package: funkin.backend.assets
+            class: Paths
+            file: source/funkin/backend/assets/Paths.hx
+            access: Paths (static)
+            methods:
+                image:
+                    params[4]: "key:String","?library:String","?checkForAtlas:Bool","?ext:String"
+                    returns: String
+                sound:
+                    params[3]: "key:String","?library:String","?ext:String"
+                    returns: String
+                music:
+                    params[3]: "key:String","?library:String","?ext:String"
+                    returns: String
+                voices:
+                    params[4]: "song:String","?difficulty:String","?suffix:String","?ext:String"
+                    returns: String
+                inst:
+                    params[4]: "song:String","?difficulty:String","?suffix:String","?ext:String"
+                    returns: String
+                json:
+                    params[2]: "key:String","?library:String"
+                    returns: String
+                xml:
+                    params[2]: "key:String","?library:String"
+                    returns: String
+                txt:
+                    params[2]: "key:String","?library:String"
+                    returns: String
+                getSparrowAtlas:
+                    params[3]: "key:String","?library:String","?ext:String"
+                    returns: FlxAtlasFrames
+                getPackerAtlas:
+                    params[3]: "key:String","?library:String","?ext:String"
+                    returns: FlxAtlasFrames
+                getFrames:
+                    params[3]: "key:String","?assetsPath:Bool","?library:String"
+                    returns: FlxFramesCollection
+                video:
+                    params[2]: "key:String","?ext:String"
+                    returns: String
+                script:
+                    params[2]: "key:String","?library:String"
+                    returns: String
+                character:
+                    params[1]: "character:String"
+                    returns: String
+                chart:
+                    params[3]: "song:String","?difficulty:String","?variant:String"
+                    returns: String
+        official:
+            package: funkin
+            class: Paths
+            file: source/funkin/Paths.hx
+            access: Paths (static)
+            methods:
+                image:
+                    params[1]: "key:String"
+                    returns: String
+                sound:
+                    params[1]: "key:String"
+                    returns: String
+                music:
+                    params[1]: "key:String"
+                    returns: String
+                voices:
+                    params[1]: "song:String"
+                    returns: String
+                inst:
+                    params[1]: "song:String"
+                    returns: String
+                json:
+                    params[1]: "key:String"
+                    returns: String
+                getSparrowAtlas:
+                    params[1]: "key:String"
+                    returns: FlxAtlasFrames
+                animateAtlas:
+                    params[1]: "path:String"
+                    returns: String
+    PlayState:
+        psych:
+            package: states
+            class: PlayState
+            file: source/states/PlayState.hx
+            access: PlayState.instance
+            fields:
+                SONG:
+                    type: SwagSong
+                    static: true
+                instance:
+                    type: PlayState
+                    static: true
+                isStoryMode:
+                    type: Bool
+                    static: true
+                storyDifficulty:
+                    type: Int
+                    static: true
+                health:
+                    type: Float
+                combo:
+                    type: Int
+                songScore:
+                    type: Int
+                songMisses:
+                    type: Int
+                songHits:
+                    type: Int
+                boyfriend:
+                    type: Character
+                dad:
+                    type: Character
+                gf:
+                    type: Character
+                boyfriendGroup:
+                    type: FlxSpriteGroup
+                dadGroup:
+                    type: FlxSpriteGroup
+                gfGroup:
+                    type: FlxSpriteGroup
+                camGame:
+                    type: FlxCamera
+                camHUD:
+                    type: FlxCamera
+                camOther:
+                    type: FlxCamera
+                playerStrums:
+                    type: FlxTypedGroup<StrumNote>
+                opponentStrums:
+                    type: FlxTypedGroup<StrumNote>
+                startedCountdown:
+                    type: Bool
+                generatedMusic:
+                    type: Bool
+        codename:
+            package: funkin.game
+            class: PlayState
+            file: source/funkin/game/PlayState.hx
+            access: PlayState.instance
+            fields:
+                SONG:
+                    type: ChartData
+                    static: true
+                instance:
+                    type: PlayState
+                    static: true
+                isStoryMode:
+                    type: Bool
+                    static: true
+                difficulty:
+                    type: String
+                    static: true
+                variation:
+                    type: Null<String>
+                    static: true
+                opponentMode:
+                    type: Bool
+                    static: true
+                coopMode:
+                    type: Bool
+                    static: true
+                health:
+                    type: Float
+                maxHealth:
+                    type: Float
+                combo:
+                    type: Int
+                boyfriend:
+                    type: Character
+                    getter: true
+                dad:
+                    type: Character
+                    getter: true
+                gf:
+                    type: Character
+                    getter: true
+                bf:
+                    type: Character
+                    getter: true
+                    notes: Alias for boyfriend
+                strumLines:
+                    type: FlxTypedGroup<StrumLine>
+                playerStrums:
+                    type: StrumLine
+                    getter: true
+                cpuStrums:
+                    type: StrumLine
+                    getter: true
+                player:
+                    type: StrumLine
+                    getter: true
+                cpu:
+                    type: StrumLine
+                    getter: true
+                stage:
+                    type: Stage
+                scrollSpeed:
+                    type: Float
+                downscroll:
+                    type: Bool
+                    getter: true
+                inst:
+                    type: FlxSound
+                vocals:
+                    type: FlxSound
+                iconP1:
+                    type: HealthIcon
+                iconP2:
+                    type: HealthIcon
+                startingSong:
+                    type: Bool
+                generatedMusic:
+                    type: Bool
+                curSong:
+                    type: String
+                scripts:
+                    type: ScriptPack
+        official:
+            package: funkin.play
+            class: PlayState
+            file: source/funkin/play/PlayState.hx
+            access: PlayState.instance
+            fields:
+                instance:
+                    type: PlayState
+                    static: true
+                currentSong:
+                    type: Song
+                currentDifficulty:
+                    type: String
+                currentVariation:
+                    type: String
+                currentStage:
+                    type: Null<Stage>
+                health:
+                    type: Float
+                songScore:
+                    type: Int
+                playbackRate:
+                    type: Float
+                instrumentalVolume:
+                    type: Float
+                playerVocalsVolume:
+                    type: Float
+                opponentVocalsVolume:
+                    type: Float
+                cameraFollowPoint:
+                    type: FlxObject
+                deathCounter:
+                    type: Int
+            characterAccess:
+                boyfriend: "currentStage.getBoyfriend():BaseCharacter"
+                dad: "currentStage.getDad():BaseCharacter"
+                girlfriend: "currentStage.getGirlfriend():BaseCharacter"
+            notes: "Characters accessed via currentStage methods, not direct properties"
+    GameOverSubState:
+        psych:
+            package: substates
+            class: GameOverSubstate
+            file: source/substates/GameOverSubstate.hx
+        codename:
+            package: funkin.game
+            class: GameOverSubstate
+            file: source/funkin/game/GameOverSubstate.hx
+        official:
+            package: funkin.play
+            class: GameOverSubState
+            file: source/funkin/play/GameOverSubState.hx
+    PauseSubState:
+        psych:
+            package: substates
+            class: PauseSubState
+            file: source/substates/PauseSubState.hx
+        codename:
+            package: funkin.menus
+            class: PauseSubState
+            file: source/funkin/menus/PauseSubState.hx
+        official:
+            package: funkin.play
+            class: PauseSubState
+            file: source/funkin/play/PauseSubState.hx
+    Song:
+        psych:
+            package: backend
+            class: Song
+            file: source/backend/Song.hx
+            typedef: SwagSong
+            fields:
+                song: String
+                notes: Array<SwagSection>
+                events: Array<Dynamic>
+                bpm: Float
+                needsVoices: Bool
+                speed: Float
+                offset: Float
+                player1: String
+                player2: String
+                gfVersion: String
+                stage: String
+        codename:
+            package: funkin.backend.chart
+            class: ChartData
+            file: source/funkin/backend/chart/
+            notes: Chart data is parsed from various formats into ChartData
+        official:
+            package: funkin.play.song
+            class: Song
+            file: source/funkin/play/song/Song.hx
+            notes: "Song is a rich class with metadata, chart data, variations support"
+    Stage:
+        psych:
+            package: backend
+            class: BaseStage
+            file: source/backend/BaseStage.hx
+            dataClass: StageData
+            dataFile: source/backend/StageData.hx
+        codename:
+            package: funkin.game
+            class: Stage
+            file: source/funkin/game/Stage.hx
+            notes: "XML-based stage definition, script-extensible"
+        official:
+            package: funkin.play.stage
+            class: Stage
+            file: source/funkin/play/stage/Stage.hx
+            scriptedClass: ScriptedStage
+            scriptedFile: source/funkin/play/stage/ScriptedStage.hx
+    Character:
+        psych:
+            package: objects
+            class: Character
+            file: source/objects/Character.hx
+            fields:
+                curCharacter: String
+                isPlayer: Bool
+                healthIcon: String
+                animationsArray: Array<AnimArray>
+                singDuration: Float
+                positionArray: Array<Float>
+                cameraPosition: Array<Float>
+                healthColorArray: Array<Int>
+                danceIdle: Bool
+                idleSuffix: String
+        codename:
+            package: funkin.game
+            class: Character
+            file: source/funkin/game/Character.hx
+            fields:
+                curCharacter: String
+                isPlayer: Bool
+                icon: String
+                iconColor: Null<FlxColor>
+                holdTime: Float
+                danceOnBeat: Bool
+                idleSuffix: String
+                cameraOffset: FlxPoint
+                globalOffset: FlxPoint
+                gameOverCharacter: String
+                xml: Access
+        official:
+            package: funkin.play.character
+            class: BaseCharacter
+            file: source/funkin/play/character/BaseCharacter.hx
+            scriptedClass: ScriptedCharacter
+            fields:
+                characterId: String
+                characterName: String
+                characterType: CharacterType
+                holdTimer: Float
+                isDead: Bool
+                cameraFocusPoint: FlxPoint
+            methods:
+                playAnimation[2]: "name:String","force:Bool"
+                singNote[2]: "direction:NoteDirection","length:Float"
+                holdNote[1]: "direction:NoteDirection"
+                playDeath[0]:
+                resetCharacter[1]: "resetAnimations:Bool"
+    Note:
+        psych:
+            package: objects
+            class: Note
+            file: source/objects/Note.hx
+            fields:
+                strumTime: Float
+                noteData: Int
+                mustPress: Bool
+                isSustainNote: Bool
+                sustainLength: Float
+                noteType: String
+                canBeHit: Bool
+                wasGoodHit: Bool
+                missed: Bool
+                gfNote: Bool
+                noAnimation: Bool
+                hitHealth: Float
+                missHealth: Float
+                texture: String
+        codename:
+            package: funkin.game
+            class: Note
+            file: source/funkin/game/Note.hx
+            fields:
+                strumTime: Float
+                noteData: Int
+                mustPress: Bool (getter)
+                isSustainNote: Bool
+                sustainLength: Float
+                noteType: String (getter)
+                canBeHit: Bool
+                wasGoodHit: Bool
+                tooLate: Bool
+                strumLine: StrumLine
+                strumID: Int (getter)
+                animSuffix: String
+                extra: "Map<String,Dynamic>"
+                prevNote: Note
+                nextNote: Note
+        official:
+            package: funkin.play.notes
+            class: NoteSprite
+            file: source/funkin/play/notes/NoteSprite.hx
+            fields:
+                strumTime: Float
+                direction: NoteDirection
+                length: Float
+                kind: Null<String>
+                noteData: SongNoteData
+                isHoldNote: Bool (computed)
+                scoreable: Bool
+                hasBeenHit: Bool
+                hasMissed: Bool
+    Strumline:
+        psych:
+            package: objects
+            class: StrumNote
+            file: source/objects/StrumNote.hx
+            notes: Individual strum receptor. Group accessed via playerStrums/opponentStrums on PlayState
+            fields:
+                noteData: Int
+                direction: Float
+                downScroll: Bool
+                resetAnim: Float
+                texture: String
+        codename:
+            package: funkin.game
+            class: StrumLine
+            file: source/funkin/game/StrumLine.hx
+            notes: "Full strum line group with notes, characters, and signals"
+            fields:
+                characters: Array<Character>
+                cpu: Bool
+                opponentSide: Bool
+                notes: NoteGroup
+                controls: Controls
+                vocals: FlxSound
+                ghostTapping: Null<Bool>
+                strumScale: Float
+            signals:
+                onHit: FlxTypedSignal<NoteHitEvent->Void>
+                onMiss: FlxTypedSignal<NoteMissEvent->Void>
+        official:
+            package: funkin.play.notes
+            class: Strumline
+            file: source/funkin/play/notes/Strumline.hx
+            fields:
+                isPlayer: Bool
+                scrollSpeed: Float
+                notes: FlxTypedSpriteGroup<NoteSprite>
+                holdNotes: FlxTypedSpriteGroup<SustainTrail>
+                strumlineNotes: FlxTypedSpriteGroup<StrumlineNote>
+            constants:
+                KEY_COUNT: 4
+                STRUMLINE_SIZE: 104
+                NOTE_SPACING: 112
+    Scoring:
+        psych:
+            package: backend
+            class: Rating
+            file: source/backend/Rating.hx
+            fields:
+                name: String
+                image: String
+                hitWindow: Null<Float>
+                ratingMod: Float
+                score: Int
+                noteSplash: Bool
+                hits: Int
+            notes: "Array of Rating objects: [sick, good, bad, shit]. loadDefault() creates them."
+        codename:
+            package: funkin.game.scoring
+            classes:
+                RatingManager:
+                    file: source/funkin/game/scoring/RatingManager.hx
+                    methods:
+                        judgeNote[1]: "time:Float"
+                        addRating[1]: "data:Dynamic"
+                        removeRating[1]: "name:String"
+                        getHitWindow[1]: "name:String"
+                HitWindowData:
+                    file: source/funkin/game/scoring/HitWindowData.hx
+        official:
+            package: funkin.play.scoring
+            class: Scoring
+            file: source/funkin/play/scoring/Scoring.hx
+    Countdown:
+        psych:
+            notes: "Built into PlayState. Lua callback: onCountdownTick(swagCounter)"
+        codename:
+            notes: "Built into PlayState. Events: onStartCountdown, onCountdown(CountdownEvent), onPostCountdown"
+        official:
+            package: funkin.play
+            class: Countdown
+            file: source/funkin/play/Countdown.hx
+            notes: "Separate class. Events: COUNTDOWN_START, COUNTDOWN_STEP, COUNTDOWN_END"

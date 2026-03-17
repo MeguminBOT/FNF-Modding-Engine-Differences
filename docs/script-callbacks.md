@@ -1,5 +1,7 @@
 # Script Callbacks
 
+For the complete expanded callback reference with parameter details, see [Cross-Engine Callbacks Reference](reference/callbacks-map.md). For a full list of Psych-specific callbacks and functions, see the [Psych Engine Lua API Reference](reference/psych-lua-api.md).
+
 ## Lifecycle Callbacks
 
 | Event             | Official Funkin         | Psych Engine (Lua)      | Psych Engine (HScript Iris)   | Codename Engine                                                |
@@ -61,3 +63,6 @@
 | **Pre-update score**   | N/A             | N/A                     | `preUpdateScore(miss:Bool)` | N/A                     |
 | **Update score**       | N/A             | `onUpdateScore(miss)`   | `onUpdateScore(miss:Bool)`  | N/A                     |
 | **Recalculate rating** | N/A             | `onRecalculateRating()` | `onRecalculateRating()`     | `onRatingUpdate(event)` |
+
+!!! tip "Looking for more detail?"
+    The [Cross-Engine Callbacks Reference](reference/callbacks-map.md) includes event object field tables, cancellation patterns, and engine-specific notes for every callback listed above.

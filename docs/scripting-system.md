@@ -63,3 +63,6 @@ Psych Engine offers **two scripting languages** that can be used independently o
 | **Import system**      | `import` via Polymod                  | N/A                                                | `import` + `addHaxeLibrary()`                 | Native `import`                       |
 | **Interop**            | N/A                                   | Can embed HScript via `runHaxeCode`                | Can create Lua-callable functions             | N/A                                   |
 | **IDE support**        | Limited                               | VS Code extension (unofficial)                     | Follows Haxe conventions                      | Follows Haxe conventions              |
+
+!!! tip "Full API references"
+    For complete function listings, see: [Psych Engine Lua API](reference/psych-lua-api.md) (250+ functions) · [Codename Engine Events](reference/codename-events.md) · [Official Funkin Events](reference/official-events.md) · [Cross-Engine Class Map](reference/classes-map.md)

@@ -1,0 +1,366 @@
+version: 1.0.0
+description: Cross-engine callback/event mapping for FNF script conversion
+mappings:
+    lifecycle:
+        onCreate:
+            psych:
+                callback: onCreate
+                timing: "Script init, after variables set"
+            codename:
+                callback: create
+                timing: State create()
+            official:
+                callback: onCreate
+                timing: ScriptEvent.CREATE dispatched
+                eventType: ScriptEvent
+        onCreatePost:
+            psych:
+                callback: onCreatePost
+                timing: After create() completes
+            codename:
+                callback: postCreate
+                timing: After create()
+            official:
+                callback: onCreatePost
+                timing: After create completes
+                eventType: ScriptEvent
+        onUpdate:
+            psych:
+                callback: onUpdate
+                params[1]: "elapsed:Float"
+                timing: Each frame
+            codename:
+                callback: update
+                params[1]: "elapsed:Float"
+                timing: Each frame
+            official:
+                callback: onUpdate
+                timing: UpdateScriptEvent
+                eventType: UpdateScriptEvent
+                eventFields[1]: "elapsed:Float"
+        onUpdatePost:
+            psych:
+                callback: onUpdatePost
+                params[1]: "elapsed:Float"
+                timing: After update()
+            codename:
+                callback: postUpdate
+                params[1]: "elapsed:Float"
+                timing: After update()
+            official:
+                callback: onUpdatePost
+                eventType: UpdateScriptEvent
+        onDestroy:
+            psych:
+                callback: onDestroy
+                timing: State destroy
+            codename:
+                callback: destroy
+                timing: State destroy
+            official:
+                callback: onDestroy
+                timing: ScriptEvent.DESTROY
+                eventType: ScriptEvent
+        onDraw:
+            psych: null
+            codename:
+                callback: draw
+                timing: Each frame draw
+            official: null
+    song_lifecycle:
+        onSongStart:
+            psych:
+                callback: onSongStart
+                timing: "After countdown, song begins"
+            codename:
+                callback: onSongStart
+                timing: Song starts playing
+            official:
+                callback: onSongStart
+                eventType: ScriptEvent
+        onEndSong:
+            psych:
+                callback: onEndSong
+                timing: Song completed
+                cancellable: true
+            codename:
+                callback: onSongEnd
+                timing: Song completed
+            official:
+                callback: onSongEnd
+                eventType: ScriptEvent
+        onStartCountdown:
+            psych:
+                callback: onStartCountdown
+                timing: Before countdown begins
+                cancellable: true
+            codename:
+                callback: onStartCountdown
+                timing: Before countdown
+                cancellable: true
+            official:
+                callback: onCountdownStart
+                eventType: CountdownScriptEvent
+                cancellable: true
+        onCountdownTick:
+            psych:
+                callback: onCountdownTick
+                params[1]: "counter:Int"
+                timing: Each countdown tick
+            codename:
+                callback: onCountdown
+                timing: Each tick
+                eventType: CountdownEvent
+                eventFields[1]: "swagCounter:Int"
+            official:
+                callback: onCountdownStep
+                eventType: CountdownScriptEvent
+                eventFields[1]: "step:Int"
+    beat_and_step:
+        onBeatHit:
+            psych:
+                callback: onBeatHit
+                access: curBeat via global
+            codename:
+                callback: beatHit
+                params[1]: "beat:Int"
+                alternateAccess: Also via Conductor signal
+            official:
+                callback: onBeatHit
+                eventType: SongTimeScriptEvent
+                eventFields[2]: "beat:Int","step:Int"
+        onStepHit:
+            psych:
+                callback: onStepHit
+                access: curStep via global
+            codename:
+                callback: stepHit
+                params[1]: "step:Int"
+                alternateAccess: Also via Conductor signal
+            official:
+                callback: onStepHit
+                eventType: SongTimeScriptEvent
+                eventFields[2]: "beat:Int","step:Int"
+        onSectionHit:
+            psych:
+                callback: onSectionHit
+                timing: When a chart section boundary is crossed
+            codename:
+                callback: measureHit
+                params[1]: "measure:Int"
+                notes: "Called per measure, not section"
+            official: null
+    note_events:
+        goodNoteHit:
+            psych:
+                callback: goodNoteHit
+                params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            codename:
+                callback: onNoteHit
+                eventType: NoteHitEvent
+                eventFields[9]: "note:Note","rating:String","score:Int","character:Character","strumLine:StrumLine","animSuffix:String","healthGain:Float","showRating:Bool","showSplash:Bool"
+                cancellable: true
+            official:
+                callback: onNoteHit
+                eventType: HitNoteScriptEvent
+                eventFields[5]: "note:NoteSprite","judgement:String","score:Int","healthChange:Float","comboChange:Int"
+        opponentNoteHit:
+            psych:
+                callback: opponentNoteHit
+                params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            codename:
+                callback: onNoteHit
+                notes: "Same callback, differentiate by event.strumLine.opponentSide"
+            official:
+                callback: onNoteHit
+                notes: "Same callback, differentiate by note ownership"
+        noteMiss:
+            psych:
+                callback: noteMiss
+                params[4]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool"
+            codename:
+                callback: onNoteMiss
+                eventType: NoteMissEvent
+                eventFields[7]: "note:Note","direction:Int","character:Character","strumLine:StrumLine","healthLoss:Float","playAnim:Bool","score:Int"
+                cancellable: true
+            official:
+                callback: onNoteMiss
+                eventType: NoteScriptEvent
+                eventFields[1]: "note:NoteSprite"
+        noteMissPress:
+            psych:
+                callback: noteMissPress
+                params[1]: "direction:Int"
+                notes: Ghost miss (pressed wrong key)
+            codename:
+                callback: onNoteMiss
+                notes: Same event with note=null
+            official:
+                callback: onGhostMiss
+                eventType: GhostMissNoteScriptEvent
+        onSpawnNote:
+            psych:
+                callback: onSpawnNote
+                params[5]: "membersIndex:Int","noteData:Int","noteType:String","isSustainNote:Bool","strumTime:Float"
+            codename:
+                callback: onNoteSpawn
+                eventType: NoteSpawnEvent
+            official: null
+    input:
+        onKeyPress:
+            psych:
+                callback: onKeyPress
+                params[1]: "key:Int"
+            codename:
+                callback: onKeyPress
+                params[1]: "key:Int"
+            official: null
+        onKeyRelease:
+            psych:
+                callback: onKeyRelease
+                params[1]: "key:Int"
+            codename:
+                callback: onKeyRelease
+                params[1]: "key:Int"
+            official: null
+        onGhostTap:
+            psych:
+                callback: onGhostTap
+                params[1]: "key:Int"
+            codename:
+                callback: onGhostTap
+                params[1]: "key:Int"
+            official: null
+    events:
+        onEvent:
+            psych:
+                callback: onEvent
+                params[4]: "eventName:String","value1:String","value2:String","strumTime:Float"
+            codename:
+                callback: onEvent
+                eventType: SongEvent
+                notes: Song events are separate system
+            official:
+                callback: onSongEvent
+                eventType: SongEventScriptEvent
+                eventFields[1]: "eventData:SongEventData"
+        onEventPushed:
+            psych:
+                callback: onEventPushed
+                params[4]: "eventName:String","value1:String","value2:String","strumTime:Float"
+            codename: null
+            official: null
+    camera:
+        onMoveCamera:
+            psych:
+                callback: onMoveCamera
+                params[1]: "character:String"
+                notes: "character is 'boyfriend','dad','gf'"
+            codename: null
+            official: null
+        isCameraOnForcedPos:
+            psych:
+                variable: isCameraOnForcedPos
+                type: Bool
+            codename: null
+            official: null
+    pause_and_gameover:
+        onPause:
+            psych:
+                callback: onPause
+                cancellable: true
+            codename:
+                callback: onPause
+                cancellable: true
+            official:
+                callback: onPause
+                eventType: PauseScriptEvent
+                cancellable: true
+        onResume:
+            psych:
+                callback: onResume
+            codename:
+                callback: onResume
+            official:
+                callback: onResume
+                eventType: ScriptEvent
+        onGameOver:
+            psych:
+                callback: onGameOver
+                cancellable: true
+            codename:
+                callback: onGameOver
+                eventType: GameOverEvent
+                cancellable: true
+            official:
+                callback: onGameOver
+                eventType: ScriptEvent
+                cancellable: true
+    dialogue:
+        onNextDialogue:
+            psych:
+                callback: onNextDialogue
+                params[1]: "dialogueCount:Int"
+            codename:
+                callback: onDialogueLine
+                notes: Dialogue events from DialogueBoxState
+            official:
+                callback: onDialogueStart
+                eventType: DialogueScriptEvent
+        onSkipDialogue:
+            psych:
+                callback: onSkipDialogue
+                params[1]: "dialogueCount:Int"
+            codename: null
+            official: null
+    rating:
+        onRecalculateRating:
+            psych:
+                callback: onRecalculateRating
+                cancellable: true
+            codename: null
+            official: null
+    timing_and_tweens:
+        onTweenCompleted:
+            psych:
+                callback: onTweenCompleted
+                params[2]: "tag:String","vars:Dynamic"
+            codename: null
+            official: null
+        onTimerCompleted:
+            psych:
+                callback: onTimerCompleted
+                params[3]: "tag:String","loops:Int","loopsLeft:Int"
+            codename: null
+            official: null
+        onSoundFinished:
+            psych:
+                callback: onSoundFinished
+                params[1]: "tag:String"
+            codename: null
+            official: null
+    custom_substates:
+        onCustomSubstateCreate:
+            psych:
+                callback: onCustomSubstateCreate
+                params[1]: "name:String"
+            codename: null
+            official: null
+        onCustomSubstateCreatePost:
+            psych:
+                callback: onCustomSubstateCreatePost
+                params[1]: "name:String"
+            codename: null
+            official: null
+        onCustomSubstateUpdate:
+            psych:
+                callback: onCustomSubstateUpdate
+                params[2]: "name:String","elapsed:Float"
+            codename: null
+            official: null
+        onCustomSubstateDestroy:
+            psych:
+                callback: onCustomSubstateDestroy
+                params[1]: "name:String"
+            codename: null
+            official: null

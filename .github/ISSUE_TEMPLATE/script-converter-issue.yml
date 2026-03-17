@@ -1,0 +1,51 @@
+name: "Script Converter Issue"
+description: Report a problem with the Script Converter tool.
+labels: ["bug", "tool: script-converter"]
+body:
+  - type: dropdown
+    id: direction
+    attributes:
+      label: Conversion Direction
+      options:
+        - Psych Lua -> Psych HScript Iris
+        - Psych Lua -> Official Funkin HScript
+        - Psych Lua -> Codename HScript
+        - Psych HScript Iris -> Psych Lua
+        - Psych HScript Iris -> Official Funkin HScript
+        - Psych HScript Iris -> Codename HScript
+        - Official Funkin HScript -> Psych Lua
+        - Official Funkin HScript -> Psych HScript Iris
+        - Official Funkin HScript -> Codename HScript
+        - Codename HScript -> Psych Lua
+        - Codename HScript -> Psych HScript Iris
+        - Codename HScript -> Official Funkin HScript
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Input Code
+      description: Paste the source script you used (or attach the file).
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output / Error
+      description: Paste the output you received, or describe the error.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+      description: What did you expect the output to look like?
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other details (browser, screenshots, specific API calls that failed to convert, etc.).
+    validations:
+      required: false

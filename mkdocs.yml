@@ -63,10 +63,19 @@ nav:
           - Health Icons: health-icons.md
       - Additional Features: additional-features.md
       - Cross-Engine Conversion: cross-engine-conversion.md
+  - Reference:
+      - Overview: reference/index.md
+      - Cross-Engine Class Map: reference/classes-map.md
+      - Cross-Engine Callbacks: reference/callbacks-map.md
+      - Psych Engine Lua API: reference/psych-lua-api.md
+      - Codename Engine Events: reference/codename-events.md
+      - Official Funkin Events: reference/official-events.md
   - Tools:
       - Character Converter: tools/character-converter.md
       - Week / Level Converter: tools/week-converter.md
       - Chart / Song Converter: tools/chart-converter.md
+      - Stage Converter: tools/stage-converter.md
+      - Script Converter: tools/script-converter.md
 
 hooks:
   - hooks/last_updated.py
@@ -81,3 +90,5 @@ extra_javascript:
   - js/character-converter.js
   - js/week-converter.js
   - js/chart-converter.js
+  - js/stage-converter.js
+  - js/script-converter.js

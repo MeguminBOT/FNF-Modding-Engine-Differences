@@ -1,0 +1,346 @@
+{
+  "version": "1.0.0",
+  "description": "Complete Codename Engine event system reference for script conversion",
+  "eventClasses": {
+    "base": {
+      "CancellableEvent": {
+        "package": "funkin.backend.system.events",
+        "fields": {
+          "cancelled": { "type": "Bool", "default": false },
+          "data": { "type": "Map<String,Dynamic>", "notes": "Custom properties for scripts" }
+        },
+        "methods": {
+          "preventDefault": { "params": [], "notes": "Cancel the default behavior" },
+          "cancel": { "params": [], "notes": "Alias for preventDefault" }
+        }
+      }
+    },
+
+    "root_events": {
+      "AmountEvent": { "fields": { "amount": "Float" } },
+      "DrawEvent": { "fields": {} },
+      "DynamicEvent": { "fields": { "value": "Dynamic" } },
+      "NameEvent": { "fields": { "name": "String" } },
+      "PointEvent": { "fields": { "x": "Float", "y": "Float" } },
+      "ResizeEvent": { "fields": { "width": "Int", "height": "Int" } },
+      "StateEvent": { "fields": { "state": "FlxState" } },
+      "TransitionCreationEvent": { "fields": { "transition": "Dynamic", "duration": "Float" } }
+    },
+
+    "gameplay": {
+      "CountdownEvent": {
+        "package": "funkin.backend.system.events.gameplay",
+        "fields": {
+          "swagCounter": "Int",
+          "sprite": "FlxSprite",
+          "sound": "FlxSound",
+          "volume": "Float",
+          "spritePath": "String",
+          "soundPath": "String"
+        }
+      },
+      "CamMoveEvent": {
+        "fields": {
+          "x": "Float",
+          "y": "Float",
+          "character": "Character",
+          "section": "Dynamic"
+        }
+      },
+      "EventGameEvent": {
+        "fields": {
+          "event": "Dynamic",
+          "name": "String",
+          "values": "Array<Dynamic>"
+        },
+        "notes": "Song event triggered during gameplay"
+      },
+      "GameOverEvent": {
+        "fields": {
+          "character": "Character",
+          "gameOverCharacter": "String",
+          "deathSound": "String",
+          "retrySound": "String",
+          "musicPath": "String",
+          "musicBPM": "Float"
+        }
+      },
+      "RatingUpdateEvent": {
+        "fields": {
+          "rating": "Dynamic",
+          "combo": "Int",
+          "score": "Int",
+          "showCombo": "Bool",
+          "showRating": "Bool",
+          "showComboNum": "Bool"
+        }
+      }
+    },
+
+    "notes": {
+      "NoteHitEvent": {
+        "package": "funkin.backend.system.events.notes",
+        "fields": {
+          "note": "Note",
+          "rating": "String",
+          "score": "Int",
+          "accuracy": "Float",
+          "character": "Character",
+          "strumLine": "StrumLine",
+          "animSuffix": "String",
+          "healthGain": "Float",
+          "showRating": "Bool",
+          "showSplash": "Bool",
+          "enableCamZooming": "Bool",
+          "ratingCounterIncrement": "Bool"
+        }
+      },
+      "NoteMissEvent": {
+        "fields": {
+          "note": "Note",
+          "direction": "Int",
+          "character": "Character",
+          "strumLine": "StrumLine",
+          "healthLoss": "Float",
+          "playAnim": "Bool",
+          "animSuffix": "String",
+          "score": "Int",
+          "muteSustainVocals": "Bool",
+          "muteVocals": "Bool",
+          "playSound": "Bool"
+        }
+      },
+      "NoteCreationEvent": {
+        "fields": {
+          "note": "Note",
+          "strumTime": "Float",
+          "noteData": "Int",
+          "noteType": "String",
+          "isSustainNote": "Bool"
+        }
+      },
+      "NoteSpawnEvent": {
+        "fields": {
+          "note": "Note"
+        }
+      },
+      "StrumCreationEvent": {
+        "fields": {
+          "strumIndex": "Int",
+          "strumPlayer": "Int",
+          "sprite": "FlxSprite"
+        }
+      },
+      "GhostTapEvent": {
+        "fields": {
+          "direction": "Int",
+          "strumLine": "StrumLine"
+        }
+      },
+      "NoteUpdateEvent": {
+        "fields": {
+          "note": "Note",
+          "elapsed": "Float"
+        }
+      }
+    },
+
+    "character": {
+      "CharacterXMLParsedEvent": { "fields": { "character": "Character", "xml": "Xml" } },
+      "CharacterNodeParsedEvent": { "fields": { "character": "Character", "node": "Xml", "anim": "Dynamic" } },
+      "PlayAnimEvent": { "fields": { "anim": "String", "force": "Bool", "reversed": "Bool", "startFrame": "Int" } },
+      "DanceEvent": { "fields": { "character": "Character", "beat": "Int", "danceAlt": "Bool" } }
+    },
+
+    "dialogue": {
+      "DialogueStartEvent": { "fields": { "dialoguePath": "String" } },
+      "DialogueLineEvent": { "fields": { "line": "Dynamic", "lineIndex": "Int" } },
+      "DialogueNextEvent": { "fields": { "currentLine": "Int" } },
+      "DialogueSkipEvent": { "fields": { "currentLine": "Int" } },
+      "DialogueEndEvent": { "fields": {} },
+      "DialogueCharEvent": { "fields": { "character": "Dynamic", "name": "String", "expression": "String" } },
+      "DialogueSoundEvent": { "fields": { "sound": "Dynamic", "volume": "Float" } },
+      "DialogueMusicEvent": { "fields": { "music": "Dynamic", "volume": "Float", "fadeIn": "Float" } },
+      "DialogueBoxEvent": { "fields": { "box": "Dynamic", "style": "String" } }
+    },
+
+    "stage": {
+      "StageXMLParsedEvent": { "fields": { "stage": "Stage", "xml": "Xml" } },
+      "StageNodeParsedEvent": { "fields": { "stage": "Stage", "node": "Xml", "sprite": "Dynamic" } }
+    },
+
+    "menu": {
+      "MenuChangeEvent": { "fields": { "index": "Int", "oldIndex": "Int", "name": "String" } },
+      "FreeplaySongSelectEvent": { "fields": { "song": "Dynamic", "index": "Int" } },
+      "WeekSelectEvent": { "fields": { "week": "Dynamic", "index": "Int" } },
+      "DifficultyChangeEvent": { "fields": { "difficulty": "String", "index": "Int" } },
+      "PauseOptionSelectEvent": { "fields": { "option": "String", "index": "Int" } },
+      "MenuScrollEvent": { "fields": { "direction": "Int", "amount": "Int" } },
+      "OptionsChangeEvent": { "fields": { "option": "String", "value": "Dynamic", "oldValue": "Dynamic" } }
+    },
+
+    "misc": {
+      "HealthIconBumpEvent": { "fields": { "icon": "HealthIcon", "scale": "Float" } },
+      "SplashEvent": { "fields": { "note": "Note", "x": "Float", "y": "Float" } },
+      "DiscordPresenceEvent": { "fields": { "details": "String", "state": "String", "largeImageKey": "String" } },
+      "ShaderEvent": { "fields": { "shader": "Dynamic", "name": "String" } },
+      "SoundTrayEvent": { "fields": { "volume": "Float" } },
+      "SoundTrayVisibilityEvent": { "fields": { "visible": "Bool" } }
+    }
+  },
+
+  "callbacks": {
+    "playstate": {
+      "lifecycle": [
+        "create", "postCreate", "preUpdate", "update", "postUpdate",
+        "draw", "postDraw", "destroy"
+      ],
+      "song": [
+        "onSongStart", "onSongEnd", "onStartCountdown", "onCountdown", "onPostCountdown"
+      ],
+      "timing": [
+        { "name": "beatHit", "params": ["beat:Int"] },
+        { "name": "stepHit", "params": ["step:Int"] },
+        { "name": "measureHit", "params": ["measure:Int"] }
+      ],
+      "notes": [
+        { "name": "onNoteHit", "eventType": "NoteHitEvent" },
+        { "name": "onPostNoteHit", "eventType": "NoteHitEvent" },
+        { "name": "onPlayerMiss", "eventType": "NoteMissEvent" },
+        { "name": "onPlayerHit", "eventType": "NoteHitEvent", "notes": "Player-specific hit" },
+        { "name": "onDadHit", "eventType": "NoteHitEvent", "notes": "Opponent-specific hit" },
+        { "name": "onNoteSpawn", "eventType": "NoteSpawnEvent" },
+        { "name": "onNoteCreation", "eventType": "NoteCreationEvent" },
+        { "name": "onGhostTap", "eventType": "GhostTapEvent" },
+        { "name": "onNoteUpdate", "eventType": "NoteUpdateEvent" }
+      ],
+      "characters": [
+        { "name": "onDance", "eventType": "DanceEvent" },
+        { "name": "onTryDance", "eventType": "DanceEvent" },
+        { "name": "onPlayAnim", "eventType": "PlayAnimEvent" },
+        { "name": "onCharacterXMLParsed", "eventType": "CharacterXMLParsedEvent" },
+        { "name": "onCharacterNodeParsed", "eventType": "CharacterNodeParsedEvent" }
+      ],
+      "stage": [
+        { "name": "onStageXMLParsed", "eventType": "StageXMLParsedEvent" },
+        { "name": "onStageNodeParsed", "eventType": "StageNodeParsedEvent" },
+        "onPostStageCreation"
+      ],
+      "events": [
+        { "name": "onEvent", "eventType": "EventGameEvent" },
+        { "name": "onPostEvent", "eventType": "EventGameEvent" },
+        { "name": "onCameraMove", "eventType": "CamMoveEvent" }
+      ],
+      "gameplay": [
+        { "name": "onGamePause", "cancellable": true },
+        { "name": "onGameOver", "eventType": "GameOverEvent", "cancellable": true },
+        { "name": "onRatingUpdate", "eventType": "RatingUpdateEvent" }
+      ],
+      "substates": [
+        { "name": "onSubstateOpen", "eventType": "StateEvent" },
+        { "name": "onSubstateClose", "eventType": "StateEvent" }
+      ]
+    },
+
+    "menus": {
+      "mainMenu": ["onSelectItem", "onChangeItem"],
+      "storyMenu": ["onGoBack", "onChangeWeek", "onChangeDifficulty", "onWeekSelect"],
+      "freeplay": ["onSelect", "onChangeDiff", "onChangeCoopMode", "onChangeSelection", "onUpdateOptionsAlpha"],
+      "pause": ["create", "postCreate", "update", "onSelectOption", "onChangeItem", "destroy"]
+    },
+
+    "musicBeatState": {
+      "lifecycle": ["create", "postCreate", "preUpdate", "update", "postUpdate"],
+      "drawing": ["draw", "postDraw"],
+      "substates": ["onOpenSubState", "onCloseSubState"],
+      "events": ["onResize", "onStateSwitch"],
+      "timing": ["beatHit", "stepHit", "measureHit"]
+    },
+
+    "global": {
+      "notes": "Only available if GLOBAL_SCRIPT compilation flag is set",
+      "callbacks": [
+        "onScriptCreated", "onScriptSetup", "beatHit", "stepHit",
+        "focusGained", "focusLost", "gameResized", "postDraw",
+        "postGameReset", "postGameStart", "postStateSwitch"
+      ]
+    }
+  },
+
+  "scriptTypes": {
+    "playstate": {
+      "location": "data/songs/{songName}/",
+      "extensions": [".hx", ".hscript", ".hsc", ".hxs"],
+      "scope": "PlayState lifecycle only",
+      "notes": "Main gameplay scripts"
+    },
+    "character": {
+      "location": "data/characters/{charName}/",
+      "extensions": [".hx", ".hscript", ".hsc", ".hxs"],
+      "scope": "Character lifecycle",
+      "notes": "Per-character behavior scripts"
+    },
+    "stage": {
+      "location": "data/stages/{stageName}/",
+      "extensions": [".hx", ".hscript", ".hsc", ".hxs"],
+      "scope": "Stage lifecycle",
+      "notes": "Per-stage scripts, loaded with stage XML"
+    },
+    "state": {
+      "location": "data/states/{StateName}/",
+      "extensions": [".hx", ".hscript", ".hsc", ".hxs"],
+      "scope": "Any MusicBeatState lifecycle",
+      "notes": "Customize any state including menus"
+    },
+    "global": {
+      "location": "data/global/",
+      "extensions": [".hx", ".hscript", ".hsc", ".hxs"],
+      "scope": "Persistent across all states",
+      "notes": "Requires GLOBAL_SCRIPT compilation flag"
+    },
+    "noteType": {
+      "location": "data/notetypes/{noteTypeName}/",
+      "extensions": [".hx", ".hscript", ".hsc", ".hxs"],
+      "scope": "Custom note type behavior",
+      "notes": "Triggered when specific note types are hit/missed"
+    },
+    "event": {
+      "location": "data/events/{eventName}/",
+      "extensions": [".hx", ".hscript", ".hsc", ".hxs"],
+      "scope": "Custom song event handler",
+      "notes": "Fired when song events trigger"
+    }
+  },
+
+  "scriptingFeatures": {
+    "imports": {
+      "haxeStd": ["Std", "Math", "Reflect", "StringTools", "Json", "Xml", "Type", "Date", "Lambda", "Sys"],
+      "openfl": ["Assets", "Application", "Main"],
+      "flixel": ["FlxG", "FlxSprite", "FlxCamera", "FlxTween", "FlxTimer", "FlxEase", "FlxColor", "FlxMath", "FlxText"],
+      "engine": ["PlayState", "Character", "Note", "StrumLine", "Stage", "Conductor", "Paths", "CoolUtil", "Flags"],
+      "ui": ["HealthIcon", "NoteGroup", "BeatGroup"]
+    },
+    "customClasses": true,
+    "staticVariables": true,
+    "importScript": { "usage": "importScript('path/to/script')" },
+    "disableScript": { "usage": "disableScript()" },
+    "eventPrevention": { "usage": "event.preventDefault() or event.cancel()" },
+    "customEventData": { "usage": "event.data.set('key', value); event.data.get('key')" }
+  },
+
+  "dispatchMechanism": {
+    "methods": {
+      "scripts.event": { "usage": "scripts.event('callbackName', eventObj)", "notes": "Broadcasts event to all scripts in pack" },
+      "scripts.call": { "usage": "scripts.call('callbackName', [param1, param2])", "notes": "Function call broadcast" },
+      "gameAndCharsEvent": { "usage": "gameAndCharsEvent('callbackName', eventObj)", "notes": "Dispatches to state scripts + all character scripts" }
+    },
+    "flow": [
+      "1. Event object created with initial values",
+      "2. Dispatched to scripts via scripts.event()",
+      "3. Scripts can modify event properties",
+      "4. Scripts can call event.preventDefault() to cancel",
+      "5. Dispatcher checks event.cancelled",
+      "6. If not cancelled, default behavior executes"
+    ]
+  }
+}

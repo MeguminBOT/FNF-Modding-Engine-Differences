@@ -1,5 +1,7 @@
 # Common Scripting Patterns
 
+Side-by-side code examples showing how common tasks are done in each engine. For the complete function reference, see: [Psych Lua API](reference/psych-lua-api.md) · [Cross-Engine Class Map](reference/classes-map.md).
+
 ## Creating a Sprite
 
 === "Official Funkin (HScript)"

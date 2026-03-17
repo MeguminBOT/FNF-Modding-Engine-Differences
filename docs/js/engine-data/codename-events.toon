@@ -1,0 +1,396 @@
+version: 1.0.0
+description: Complete Codename Engine event system reference for script conversion
+eventClasses:
+    base:
+        CancellableEvent:
+            package: funkin.backend.system.events
+            fields:
+                cancelled:
+                    type: Bool
+                    default: false
+                data:
+                    type: "Map<String,Dynamic>"
+                    notes: Custom properties for scripts
+            methods:
+                preventDefault:
+                    params[0]:
+                    notes: Cancel the default behavior
+                cancel:
+                    params[0]:
+                    notes: Alias for preventDefault
+    root_events:
+        AmountEvent:
+            fields:
+                amount: Float
+        DrawEvent:
+            fields:
+        DynamicEvent:
+            fields:
+                value: Dynamic
+        NameEvent:
+            fields:
+                name: String
+        PointEvent:
+            fields:
+                x: Float
+                y: Float
+        ResizeEvent:
+            fields:
+                width: Int
+                height: Int
+        StateEvent:
+            fields:
+                state: FlxState
+        TransitionCreationEvent:
+            fields:
+                transition: Dynamic
+                duration: Float
+    gameplay:
+        CountdownEvent:
+            package: funkin.backend.system.events.gameplay
+            fields:
+                swagCounter: Int
+                sprite: FlxSprite
+                sound: FlxSound
+                volume: Float
+                spritePath: String
+                soundPath: String
+        CamMoveEvent:
+            fields:
+                x: Float
+                y: Float
+                character: Character
+                section: Dynamic
+        EventGameEvent:
+            fields:
+                event: Dynamic
+                name: String
+                values: Array<Dynamic>
+            notes: Song event triggered during gameplay
+        GameOverEvent:
+            fields:
+                character: Character
+                gameOverCharacter: String
+                deathSound: String
+                retrySound: String
+                musicPath: String
+                musicBPM: Float
+        RatingUpdateEvent:
+            fields:
+                rating: Dynamic
+                combo: Int
+                score: Int
+                showCombo: Bool
+                showRating: Bool
+                showComboNum: Bool
+    notes:
+        NoteHitEvent:
+            package: funkin.backend.system.events.notes
+            fields:
+                note: Note
+                rating: String
+                score: Int
+                accuracy: Float
+                character: Character
+                strumLine: StrumLine
+                animSuffix: String
+                healthGain: Float
+                showRating: Bool
+                showSplash: Bool
+                enableCamZooming: Bool
+                ratingCounterIncrement: Bool
+        NoteMissEvent:
+            fields:
+                note: Note
+                direction: Int
+                character: Character
+                strumLine: StrumLine
+                healthLoss: Float
+                playAnim: Bool
+                animSuffix: String
+                score: Int
+                muteSustainVocals: Bool
+                muteVocals: Bool
+                playSound: Bool
+        NoteCreationEvent:
+            fields:
+                note: Note
+                strumTime: Float
+                noteData: Int
+                noteType: String
+                isSustainNote: Bool
+        NoteSpawnEvent:
+            fields:
+                note: Note
+        StrumCreationEvent:
+            fields:
+                strumIndex: Int
+                strumPlayer: Int
+                sprite: FlxSprite
+        GhostTapEvent:
+            fields:
+                direction: Int
+                strumLine: StrumLine
+        NoteUpdateEvent:
+            fields:
+                note: Note
+                elapsed: Float
+    character:
+        CharacterXMLParsedEvent:
+            fields:
+                character: Character
+                xml: Xml
+        CharacterNodeParsedEvent:
+            fields:
+                character: Character
+                node: Xml
+                anim: Dynamic
+        PlayAnimEvent:
+            fields:
+                anim: String
+                force: Bool
+                reversed: Bool
+                startFrame: Int
+        DanceEvent:
+            fields:
+                character: Character
+                beat: Int
+                danceAlt: Bool
+    dialogue:
+        DialogueStartEvent:
+            fields:
+                dialoguePath: String
+        DialogueLineEvent:
+            fields:
+                line: Dynamic
+                lineIndex: Int
+        DialogueNextEvent:
+            fields:
+                currentLine: Int
+        DialogueSkipEvent:
+            fields:
+                currentLine: Int
+        DialogueEndEvent:
+            fields:
+        DialogueCharEvent:
+            fields:
+                character: Dynamic
+                name: String
+                expression: String
+        DialogueSoundEvent:
+            fields:
+                sound: Dynamic
+                volume: Float
+        DialogueMusicEvent:
+            fields:
+                music: Dynamic
+                volume: Float
+                fadeIn: Float
+        DialogueBoxEvent:
+            fields:
+                box: Dynamic
+                style: String
+    stage:
+        StageXMLParsedEvent:
+            fields:
+                stage: Stage
+                xml: Xml
+        StageNodeParsedEvent:
+            fields:
+                stage: Stage
+                node: Xml
+                sprite: Dynamic
+    menu:
+        MenuChangeEvent:
+            fields:
+                index: Int
+                oldIndex: Int
+                name: String
+        FreeplaySongSelectEvent:
+            fields:
+                song: Dynamic
+                index: Int
+        WeekSelectEvent:
+            fields:
+                week: Dynamic
+                index: Int
+        DifficultyChangeEvent:
+            fields:
+                difficulty: String
+                index: Int
+        PauseOptionSelectEvent:
+            fields:
+                option: String
+                index: Int
+        MenuScrollEvent:
+            fields:
+                direction: Int
+                amount: Int
+        OptionsChangeEvent:
+            fields:
+                option: String
+                value: Dynamic
+                oldValue: Dynamic
+    misc:
+        HealthIconBumpEvent:
+            fields:
+                icon: HealthIcon
+                scale: Float
+        SplashEvent:
+            fields:
+                note: Note
+                x: Float
+                y: Float
+        DiscordPresenceEvent:
+            fields:
+                details: String
+                state: String
+                largeImageKey: String
+        ShaderEvent:
+            fields:
+                shader: Dynamic
+                name: String
+        SoundTrayEvent:
+            fields:
+                volume: Float
+        SoundTrayVisibilityEvent:
+            fields:
+                visible: Bool
+callbacks:
+    playstate:
+        lifecycle[8]: create,postCreate,preUpdate,update,postUpdate,draw,postDraw,destroy
+        song[5]: onSongStart,onSongEnd,onStartCountdown,onCountdown,onPostCountdown
+        timing[3]:
+            - name: beatHit
+                params[1]: "beat:Int"
+            - name: stepHit
+                params[1]: "step:Int"
+            - name: measureHit
+                params[1]: "measure:Int"
+        notes[9]:
+            - name: onNoteHit
+                eventType: NoteHitEvent
+            - name: onPostNoteHit
+                eventType: NoteHitEvent
+            - name: onPlayerMiss
+                eventType: NoteMissEvent
+            - name: onPlayerHit
+                eventType: NoteHitEvent
+                notes: Player-specific hit
+            - name: onDadHit
+                eventType: NoteHitEvent
+                notes: Opponent-specific hit
+            - name: onNoteSpawn
+                eventType: NoteSpawnEvent
+            - name: onNoteCreation
+                eventType: NoteCreationEvent
+            - name: onGhostTap
+                eventType: GhostTapEvent
+            - name: onNoteUpdate
+                eventType: NoteUpdateEvent
+        characters[5,]{name,eventType}:
+            onDance,DanceEvent
+            onTryDance,DanceEvent
+            onPlayAnim,PlayAnimEvent
+            onCharacterXMLParsed,CharacterXMLParsedEvent
+            onCharacterNodeParsed,CharacterNodeParsedEvent
+        stage[3]:
+            - name: onStageXMLParsed
+                eventType: StageXMLParsedEvent
+            - name: onStageNodeParsed
+                eventType: StageNodeParsedEvent
+            - onPostStageCreation
+        events[3,]{name,eventType}:
+            onEvent,EventGameEvent
+            onPostEvent,EventGameEvent
+            onCameraMove,CamMoveEvent
+        gameplay[3]:
+            - name: onGamePause
+                cancellable: true
+            - name: onGameOver
+                eventType: GameOverEvent
+                cancellable: true
+            - name: onRatingUpdate
+                eventType: RatingUpdateEvent
+        substates[2,]{name,eventType}:
+            onSubstateOpen,StateEvent
+            onSubstateClose,StateEvent
+    menus:
+        mainMenu[2]: onSelectItem,onChangeItem
+        storyMenu[4]: onGoBack,onChangeWeek,onChangeDifficulty,onWeekSelect
+        freeplay[5]: onSelect,onChangeDiff,onChangeCoopMode,onChangeSelection,onUpdateOptionsAlpha
+        pause[6]: create,postCreate,update,onSelectOption,onChangeItem,destroy
+    musicBeatState:
+        lifecycle[5]: create,postCreate,preUpdate,update,postUpdate
+        drawing[2]: draw,postDraw
+        substates[2]: onOpenSubState,onCloseSubState
+        events[2]: onResize,onStateSwitch
+        timing[3]: beatHit,stepHit,measureHit
+    global:
+        notes: Only available if GLOBAL_SCRIPT compilation flag is set
+        callbacks[11]: onScriptCreated,onScriptSetup,beatHit,stepHit,focusGained,focusLost,gameResized,postDraw,postGameReset,postGameStart,postStateSwitch
+scriptTypes:
+    playstate:
+        location: "data/songs/{songName}/"
+        extensions[4]: .hx,.hscript,.hsc,.hxs
+        scope: PlayState lifecycle only
+        notes: Main gameplay scripts
+    character:
+        location: "data/characters/{charName}/"
+        extensions[4]: .hx,.hscript,.hsc,.hxs
+        scope: Character lifecycle
+        notes: Per-character behavior scripts
+    stage:
+        location: "data/stages/{stageName}/"
+        extensions[4]: .hx,.hscript,.hsc,.hxs
+        scope: Stage lifecycle
+        notes: "Per-stage scripts, loaded with stage XML"
+    state:
+        location: "data/states/{StateName}/"
+        extensions[4]: .hx,.hscript,.hsc,.hxs
+        scope: Any MusicBeatState lifecycle
+        notes: Customize any state including menus
+    global:
+        location: data/global/
+        extensions[4]: .hx,.hscript,.hsc,.hxs
+        scope: Persistent across all states
+        notes: Requires GLOBAL_SCRIPT compilation flag
+    noteType:
+        location: "data/notetypes/{noteTypeName}/"
+        extensions[4]: .hx,.hscript,.hsc,.hxs
+        scope: Custom note type behavior
+        notes: Triggered when specific note types are hit/missed
+    event:
+        location: "data/events/{eventName}/"
+        extensions[4]: .hx,.hscript,.hsc,.hxs
+        scope: Custom song event handler
+        notes: Fired when song events trigger
+scriptingFeatures:
+    imports:
+        haxeStd[10]: Std,Math,Reflect,StringTools,Json,Xml,Type,Date,Lambda,Sys
+        openfl[3]: Assets,Application,Main
+        flixel[9]: FlxG,FlxSprite,FlxCamera,FlxTween,FlxTimer,FlxEase,FlxColor,FlxMath,FlxText
+        engine[9]: PlayState,Character,Note,StrumLine,Stage,Conductor,Paths,CoolUtil,Flags
+        ui[3]: HealthIcon,NoteGroup,BeatGroup
+    customClasses: true
+    staticVariables: true
+    importScript:
+        usage: importScript('path/to/script')
+    disableScript:
+        usage: disableScript()
+    eventPrevention:
+        usage: event.preventDefault() or event.cancel()
+    customEventData:
+        usage: "event.data.set('key', value); event.data.get('key')"
+dispatchMechanism:
+    methods:
+        scripts.event:
+            usage: "scripts.event('callbackName', eventObj)"
+            notes: Broadcasts event to all scripts in pack
+        scripts.call:
+            usage: "scripts.call('callbackName', [param1, param2])"
+            notes: Function call broadcast
+        gameAndCharsEvent:
+            usage: "gameAndCharsEvent('callbackName', eventObj)"
+            notes: Dispatches to state scripts + all character scripts
+    flow[6]: 1. Event object created with initial values,2. Dispatched to scripts via scripts.event(),3. Scripts can modify event properties,4. Scripts can call event.preventDefault() to cancel,5. Dispatcher checks event.cancelled,"6. If not cancelled, default behavior executes"

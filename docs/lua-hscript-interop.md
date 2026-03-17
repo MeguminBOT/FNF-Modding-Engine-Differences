@@ -1,6 +1,6 @@
 # Psych Engine: Lua ↔ HScript Interop
 
-Psych Engine is unique in offering **bidirectional communication** between its two scripting systems. This is not applicable to Official Funkin or Codename Engine (which each have only one scripting language).
+Psych Engine is unique in offering **bidirectional communication** between its two scripting systems. This is not applicable to Official Funkin or Codename Engine (which each have only one scripting language). For the complete Lua function reference, see the [Psych Engine Lua API Reference](reference/psych-lua-api.md).
 
 ## From Lua → HScript
 
@@ -109,3 +109,5 @@ The following classes are available in HScript Iris scripts without needing `imp
 | **No enum definitions**          | Cannot define enums, only use pre-registered ones                    |
 | **Abstract types need wrappers** | `FlxColor` exposed as `CustomFlxColor` with color constants as `Int` |
 | **Lower callback priority**      | Always executes after all Lua scripts                                |
+
+See [Script Callbacks](script-callbacks.md) for the full cross-engine callback comparison and [Cross-Engine Callbacks Reference](reference/callbacks-map.md) for expanded detail on every callback.

@@ -1,5 +1,7 @@
 # Cross-Engine Conversion Guide
 
+Use the [API Reference](reference/index.md) pages for detailed class, callback, and function mappings when converting between engines. The [Cross-Engine Class Map](reference/classes-map.md) and [Cross-Engine Callbacks](reference/callbacks-map.md) are particularly useful for script conversion.
+
 ## Psych Engine → Official Funkin
 
 | Component                  | Notes                                                                                                                                                                                |

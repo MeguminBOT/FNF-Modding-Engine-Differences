@@ -2,3 +2,6 @@ site/
 __pycache__/
 *.pyc
 .env
+
+# Engine source repositories (cloned for reference)
+engine-sources/

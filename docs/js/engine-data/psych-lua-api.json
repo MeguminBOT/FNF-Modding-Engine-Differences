@@ -1,0 +1,539 @@
+{
+  "version": "1.0.0",
+  "description": "Complete Psych Engine Lua/HScript API reference for script conversion",
+  "functions": {
+    "script_management": {
+      "getRunningScripts": { "params": [], "returns": "Array<String>", "file": "FunkinLua.hx" },
+      "callScript": { "params": ["luaFile:String", "funcName:String", "?args:Array<Dynamic>"], "returns": "Dynamic", "file": "FunkinLua.hx" },
+      "isRunning": { "params": ["scriptFile:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "setVar": { "params": ["varName:String", "value:Dynamic"], "returns": "Dynamic", "file": "FunkinLua.hx" },
+      "getVar": { "params": ["varName:String"], "returns": "Dynamic", "file": "FunkinLua.hx" },
+      "addLuaScript": { "params": ["luaFile:String", "?ignoreAlreadyRunning:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addHScript": { "params": ["scriptFile:String", "?ignoreAlreadyRunning:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "removeLuaScript": { "params": ["luaFile:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "removeHScript": { "params": ["scriptFile:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "setOnScripts": { "params": ["varName:String", "arg:Dynamic", "?ignoreSelf:Bool", "?exclusions:Array<String>"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setOnHScript": { "params": ["varName:String", "arg:Dynamic", "?ignoreSelf:Bool", "?exclusions:Array<String>"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setOnLuas": { "params": ["varName:String", "arg:Dynamic", "?ignoreSelf:Bool", "?exclusions:Array<String>"], "returns": "Void", "file": "FunkinLua.hx" },
+      "callOnScripts": { "params": ["funcName:String", "?args:Array<Dynamic>", "?ignoreStops:Bool", "?excludeScripts:Array<String>", "?excludeValues:Array<Dynamic>"], "returns": "Dynamic", "file": "FunkinLua.hx" },
+      "callOnLuas": { "params": ["funcName:String", "?args:Array<Dynamic>", "?ignoreStops:Bool", "?excludeScripts:Array<String>", "?excludeValues:Array<Dynamic>"], "returns": "Dynamic", "file": "FunkinLua.hx" },
+      "callOnHScript": { "params": ["funcName:String", "?args:Array<Dynamic>", "?ignoreStops:Bool", "?excludeScripts:Array<String>", "?excludeValues:Array<Dynamic>"], "returns": "Dynamic", "file": "FunkinLua.hx" },
+      "close": { "params": [], "returns": "Bool", "file": "FunkinLua.hx" },
+      "runHaxeCode": { "params": ["codeToRun:String", "?varsToBring:Any", "?funcToRun:String", "?funcArgs:Array<Dynamic>"], "returns": "Dynamic", "file": "HScript.hx" },
+      "runHaxeFunction": { "params": ["funcToRun:String", "?funcArgs:Array<Dynamic>"], "returns": "Dynamic", "file": "HScript.hx" }
+    },
+
+    "song_control": {
+      "loadSong": { "params": ["?name:String", "?difficultyNum:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "triggerEvent": { "params": ["name:String", "?value1:String", "?value2:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "startCountdown": { "params": [], "returns": "Bool", "file": "FunkinLua.hx" },
+      "endSong": { "params": [], "returns": "Bool", "file": "FunkinLua.hx" },
+      "restartSong": { "params": ["?skipTransition:Bool"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "exitSong": { "params": ["?skipTransition:Bool"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "getSongPosition": { "params": [], "returns": "Float", "file": "FunkinLua.hx" }
+    },
+
+    "scoring": {
+      "addScore": { "params": ["value:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addMisses": { "params": ["value:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addHits": { "params": ["value:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setScore": { "params": ["value:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setMisses": { "params": ["value:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setHits": { "params": ["value:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setHealth": { "params": ["value:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addHealth": { "params": ["value:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "getHealth": { "params": [], "returns": "Float", "file": "FunkinLua.hx" },
+      "setRatingPercent": { "params": ["value:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setRatingName": { "params": ["value:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setRatingFC": { "params": ["value:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "updateScoreText": { "params": [], "returns": "Void", "file": "FunkinLua.hx" }
+    },
+
+    "sprites": {
+      "makeLuaSprite": { "params": ["tag:String", "?image:String", "?x:Float", "?y:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "makeAnimatedLuaSprite": { "params": ["tag:String", "?image:String", "?x:Float", "?y:Float", "?spriteType:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "makeGraphic": { "params": ["obj:String", "width:Int", "height:Int", "color:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addLuaSprite": { "params": ["tag:String", "?inFront:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "removeLuaSprite": { "params": ["tag:String", "destroy:Bool", "?group:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "luaSpriteExists": { "params": ["tag:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "loadGraphic": { "params": ["variable:String", "image:String", "?gridX:Int", "?gridY:Int"], "returns": "Void", "file": "FunkinLua.hx" },
+      "loadFrames": { "params": ["variable:String", "image:String", "spriteType:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setGraphicSize": { "params": ["obj:String", "x:Float", "y:Float", "updateHitbox:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "scaleObject": { "params": ["obj:String", "x:Float", "y:Float", "updateHitbox:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "updateHitbox": { "params": ["obj:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "screenCenter": { "params": ["obj:String", "pos:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setScrollFactor": { "params": ["obj:String", "scrollX:Float", "scrollY:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setObjectCamera": { "params": ["obj:String", "camera:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "setBlendMode": { "params": ["obj:String", "blend:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "objectsOverlap": { "params": ["obj1:String", "obj2:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "getObjectOrder": { "params": ["obj:String", "?group:String"], "returns": "Int", "file": "FunkinLua.hx" },
+      "setObjectOrder": { "params": ["obj:String", "position:Int", "?group:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "getPixelColor": { "params": ["obj:String", "x:Int", "y:Int"], "returns": "Int", "file": "FunkinLua.hx" }
+    },
+
+    "animations": {
+      "addAnimationByPrefix": { "params": ["obj:String", "name:String", "prefix:String", "framerate:Float", "loop:Bool"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "addAnimation": { "params": ["obj:String", "name:String", "frames:Any", "framerate:Float", "loop:Bool"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "addAnimationByIndices": { "params": ["obj:String", "name:String", "prefix:String", "indices:Any", "framerate:Float", "loop:Bool"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "playAnim": { "params": ["obj:String", "name:String", "?forced:Bool", "?reverse:Bool", "?startFrame:Int"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "addOffset": { "params": ["obj:String", "anim:String", "x:Float", "y:Float"], "returns": "Bool", "file": "FunkinLua.hx" }
+    },
+
+    "flxanimate": {
+      "makeFlxAnimateSprite": { "params": ["tag:String", "?x:Float", "?y:Float", "?loadFolder:String"], "returns": "Void", "file": "FlxAnimateFunctions.hx" },
+      "loadAnimateAtlas": { "params": ["tag:String", "folderOrImg:String", "?spriteJson:String", "?animationJson:String"], "returns": "Void", "file": "FlxAnimateFunctions.hx" },
+      "addAnimationBySymbol": { "params": ["tag:String", "name:String", "symbol:String", "?framerate:Float", "?loop:Bool", "?matX:Float", "?matY:Float"], "returns": "Bool", "file": "FlxAnimateFunctions.hx" },
+      "addAnimationBySymbolIndices": { "params": ["tag:String", "name:String", "symbol:String", "?indices:Any", "?framerate:Float", "?loop:Bool", "?matX:Float", "?matY:Float"], "returns": "Bool", "file": "FlxAnimateFunctions.hx" }
+    },
+
+    "tweens": {
+      "startTween": { "params": ["tag:String", "vars:String", "values:Any", "duration:Float", "?options:Any"], "returns": "String", "file": "FunkinLua.hx" },
+      "doTweenX": { "params": ["tag:String", "vars:String", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "doTweenY": { "params": ["tag:String", "vars:String", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "doTweenAngle": { "params": ["tag:String", "vars:String", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "doTweenAlpha": { "params": ["tag:String", "vars:String", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "doTweenZoom": { "params": ["tag:String", "camera:String", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "doTweenColor": { "params": ["tag:String", "vars:String", "targetColor:String", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "noteTweenX": { "params": ["tag:String", "note:Int", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "noteTweenY": { "params": ["tag:String", "note:Int", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "noteTweenAngle": { "params": ["tag:String", "note:Int", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "noteTweenAlpha": { "params": ["tag:String", "note:Int", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "noteTweenDirection": { "params": ["tag:String", "note:Int", "value:Dynamic", "duration:Float", "?ease:String"], "returns": "String", "file": "FunkinLua.hx" },
+      "cancelTween": { "params": ["tag:String"], "returns": "Void", "file": "FunkinLua.hx" }
+    },
+
+    "timers": {
+      "runTimer": { "params": ["tag:String", "time:Float", "loops:Int"], "returns": "String", "file": "FunkinLua.hx" },
+      "cancelTimer": { "params": ["tag:String"], "returns": "Void", "file": "FunkinLua.hx" }
+    },
+
+    "sound": {
+      "playMusic": { "params": ["sound:String", "?volume:Float", "?loop:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "playSound": { "params": ["sound:String", "?volume:Float", "?tag:String", "?loop:Bool"], "returns": "String", "file": "FunkinLua.hx" },
+      "stopSound": { "params": ["tag:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "pauseSound": { "params": ["tag:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "resumeSound": { "params": ["tag:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "soundFadeIn": { "params": ["tag:String", "duration:Float", "fromValue:Float", "toValue:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "soundFadeOut": { "params": ["tag:String", "duration:Float", "toValue:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "soundFadeCancel": { "params": ["tag:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "getSoundVolume": { "params": ["tag:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "setSoundVolume": { "params": ["tag:String", "value:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "getSoundTime": { "params": ["tag:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "setSoundTime": { "params": ["tag:String", "value:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "getSoundPitch": { "params": ["tag:String"], "returns": "Float", "file": "FunkinLua.hx", "notes": "FLX_PITCH only" },
+      "setSoundPitch": { "params": ["tag:String", "value:Float", "?doPause:Bool"], "returns": "Void", "file": "FunkinLua.hx", "notes": "FLX_PITCH only" },
+      "luaSoundExists": { "params": ["tag:String"], "returns": "Bool", "file": "FunkinLua.hx" }
+    },
+
+    "camera": {
+      "cameraSetTarget": { "params": ["target:String"], "returns": "Void", "file": "FunkinLua.hx", "notes": "target: gf/dad/boyfriend" },
+      "setCameraScroll": { "params": ["x:Float", "y:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setCameraFollowPoint": { "params": ["x:Float", "y:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addCameraScroll": { "params": ["?x:Float", "?y:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addCameraFollowPoint": { "params": ["?x:Float", "?y:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "getCameraScrollX": { "params": [], "returns": "Float", "file": "FunkinLua.hx" },
+      "getCameraScrollY": { "params": [], "returns": "Float", "file": "FunkinLua.hx" },
+      "getCameraFollowX": { "params": [], "returns": "Float", "file": "FunkinLua.hx" },
+      "getCameraFollowY": { "params": [], "returns": "Float", "file": "FunkinLua.hx" },
+      "cameraShake": { "params": ["camera:String", "intensity:Float", "duration:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "cameraFlash": { "params": ["camera:String", "color:String", "duration:Float", "forced:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "cameraFade": { "params": ["camera:String", "color:String", "duration:Float", "forced:Bool", "?fadeOut:Bool"], "returns": "Void", "file": "FunkinLua.hx" }
+    },
+
+    "characters": {
+      "getCharacterX": { "params": ["type:String"], "returns": "Float", "file": "FunkinLua.hx", "notes": "type: dad/gf/boyfriend" },
+      "setCharacterX": { "params": ["type:String", "value:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "getCharacterY": { "params": ["type:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "setCharacterY": { "params": ["type:String", "value:Float"], "returns": "Void", "file": "FunkinLua.hx" },
+      "characterDance": { "params": ["character:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "addCharacterToList": { "params": ["name:String", "type:String"], "returns": "Void", "file": "FunkinLua.hx" }
+    },
+
+    "text": {
+      "makeLuaText": { "params": ["tag:String", "?text:String", "?width:Int", "?x:Float", "?y:Float"], "returns": "Void", "file": "TextFunctions.hx" },
+      "setTextString": { "params": ["tag:String", "text:String"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextSize": { "params": ["tag:String", "size:Int"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextWidth": { "params": ["tag:String", "width:Float"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextHeight": { "params": ["tag:String", "height:Float"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextAutoSize": { "params": ["tag:String", "value:Bool"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextBorder": { "params": ["tag:String", "size:Float", "color:String", "?style:String"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextColor": { "params": ["tag:String", "color:String"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextFont": { "params": ["tag:String", "newFont:String"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextItalic": { "params": ["tag:String", "italic:Bool"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "setTextAlignment": { "params": ["tag:String", "alignment:String"], "returns": "Bool", "file": "TextFunctions.hx" },
+      "getTextString": { "params": ["tag:String"], "returns": "String", "file": "TextFunctions.hx" },
+      "getTextSize": { "params": ["tag:String"], "returns": "Int", "file": "TextFunctions.hx" },
+      "getTextFont": { "params": ["tag:String"], "returns": "String", "file": "TextFunctions.hx" },
+      "getTextWidth": { "params": ["tag:String"], "returns": "Float", "file": "TextFunctions.hx" },
+      "addLuaText": { "params": ["tag:String"], "returns": "Void", "file": "TextFunctions.hx" },
+      "removeLuaText": { "params": ["tag:String", "destroy:Bool"], "returns": "Void", "file": "TextFunctions.hx" },
+      "luaTextExists": { "params": ["tag:String"], "returns": "Bool", "file": "FunkinLua.hx" }
+    },
+
+    "shaders": {
+      "removeSpriteShader": { "params": ["obj:String"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "getShaderBool": { "params": ["obj:String", "prop:String"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "getShaderBoolArray": { "params": ["obj:String", "prop:String"], "returns": "Array<Bool>", "file": "ShaderFunctions.hx" },
+      "getShaderInt": { "params": ["obj:String", "prop:String"], "returns": "Int", "file": "ShaderFunctions.hx" },
+      "getShaderIntArray": { "params": ["obj:String", "prop:String"], "returns": "Array<Int>", "file": "ShaderFunctions.hx" },
+      "getShaderFloat": { "params": ["obj:String", "prop:String"], "returns": "Float", "file": "ShaderFunctions.hx" },
+      "getShaderFloatArray": { "params": ["obj:String", "prop:String"], "returns": "Array<Float>", "file": "ShaderFunctions.hx" },
+      "setShaderBool": { "params": ["obj:String", "prop:String", "value:Bool"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "setShaderBoolArray": { "params": ["obj:String", "prop:String", "values:Dynamic"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "setShaderInt": { "params": ["obj:String", "prop:String", "value:Int"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "setShaderIntArray": { "params": ["obj:String", "prop:String", "values:Dynamic"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "setShaderFloat": { "params": ["obj:String", "prop:String", "value:Float"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "setShaderFloatArray": { "params": ["obj:String", "prop:String", "values:Dynamic"], "returns": "Bool", "file": "ShaderFunctions.hx" },
+      "setShaderSampler2D": { "params": ["obj:String", "prop:String", "bitmapdataPath:String"], "returns": "Bool", "file": "ShaderFunctions.hx" }
+    },
+
+    "reflection": {
+      "getProperty": { "params": ["variable:String", "?allowMaps:Bool"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "setProperty": { "params": ["variable:String", "value:Dynamic", "?allowMaps:Bool", "?allowInstances:Bool"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "getPropertyFromClass": { "params": ["classVar:String", "variable:String", "?allowMaps:Bool"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "setPropertyFromClass": { "params": ["classVar:String", "variable:String", "value:Dynamic", "?allowMaps:Bool", "?allowInstances:Bool"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "getPropertyFromGroup": { "params": ["group:String", "index:Int", "variable:Dynamic", "?allowMaps:Bool"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "setPropertyFromGroup": { "params": ["group:String", "index:Int", "variable:Dynamic", "value:Dynamic", "?allowMaps:Bool", "?allowInstances:Bool"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "addToGroup": { "params": ["group:String", "tag:String", "?index:Int"], "returns": "Void", "file": "ReflectionFunctions.hx" },
+      "removeFromGroup": { "params": ["group:String", "?index:Int", "?tag:String", "?destroy:Bool"], "returns": "Void", "file": "ReflectionFunctions.hx" },
+      "callMethod": { "params": ["funcToRun:String", "?args:Array<Dynamic>"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "callMethodFromClass": { "params": ["className:String", "funcToRun:String", "?args:Array<Dynamic>"], "returns": "Dynamic", "file": "ReflectionFunctions.hx" },
+      "createInstance": { "params": ["variableToSave:String", "className:String", "?args:Array<Dynamic>"], "returns": "Bool", "file": "ReflectionFunctions.hx" },
+      "addInstance": { "params": ["objectName:String", "?inFront:Bool"], "returns": "Void", "file": "ReflectionFunctions.hx" },
+      "instanceArg": { "params": ["instanceName:String", "?className:String"], "returns": "String", "file": "ReflectionFunctions.hx" }
+    },
+
+    "input": {
+      "mouseClicked": { "params": ["?button:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "mousePressed": { "params": ["?button:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "mouseReleased": { "params": ["?button:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "getMouseX": { "params": ["?camera:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "getMouseY": { "params": ["?camera:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "keyboardJustPressed": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "keyboardPressed": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "keyboardReleased": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "keyJustPressed": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "keyPressed": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "keyReleased": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "anyGamepadJustPressed": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "anyGamepadPressed": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "anyGamepadReleased": { "params": ["name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "gamepadAnalogX": { "params": ["id:Int", "?leftStick:Bool"], "returns": "Float", "file": "ExtraFunctions.hx" },
+      "gamepadAnalogY": { "params": ["id:Int", "?leftStick:Bool"], "returns": "Float", "file": "ExtraFunctions.hx" },
+      "gamepadJustPressed": { "params": ["id:Int", "name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "gamepadPressed": { "params": ["id:Int", "name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "gamepadReleased": { "params": ["id:Int", "name:String"], "returns": "Bool", "file": "ExtraFunctions.hx" }
+    },
+
+    "position_queries": {
+      "getMidpointX": { "params": ["variable:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "getMidpointY": { "params": ["variable:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "getGraphicMidpointX": { "params": ["variable:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "getGraphicMidpointY": { "params": ["variable:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "getScreenPositionX": { "params": ["variable:String", "?camera:String"], "returns": "Float", "file": "FunkinLua.hx" },
+      "getScreenPositionY": { "params": ["variable:String", "?camera:String"], "returns": "Float", "file": "FunkinLua.hx" }
+    },
+
+    "save_data": {
+      "initSaveData": { "params": ["name:String", "?folder:String"], "returns": "Void", "file": "ExtraFunctions.hx" },
+      "flushSaveData": { "params": ["name:String"], "returns": "Void", "file": "ExtraFunctions.hx" },
+      "getDataFromSave": { "params": ["name:String", "field:String", "?defaultValue:Dynamic"], "returns": "Dynamic", "file": "ExtraFunctions.hx" },
+      "setDataFromSave": { "params": ["name:String", "field:String", "value:Dynamic"], "returns": "Void", "file": "ExtraFunctions.hx" },
+      "eraseSaveData": { "params": ["name:String"], "returns": "Void", "file": "ExtraFunctions.hx" }
+    },
+
+    "file_management": {
+      "checkFileExists": { "params": ["filename:String", "?absolute:Bool"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "saveFile": { "params": ["path:String", "content:String", "?absolute:Bool"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "deleteFile": { "params": ["path:String", "?ignoreModFolders:Bool", "?absolute:Bool"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "getTextFromFile": { "params": ["path:String", "?ignoreModFolders:Bool"], "returns": "String", "file": "ExtraFunctions.hx" },
+      "directoryFileList": { "params": ["folder:String"], "returns": "Array<String>", "file": "ExtraFunctions.hx" }
+    },
+
+    "string_utils": {
+      "stringStartsWith": { "params": ["str:String", "start:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "stringEndsWith": { "params": ["str:String", "end:String"], "returns": "Bool", "file": "ExtraFunctions.hx" },
+      "stringSplit": { "params": ["str:String", "split:String"], "returns": "Array<String>", "file": "ExtraFunctions.hx" },
+      "stringTrim": { "params": ["str:String"], "returns": "String", "file": "ExtraFunctions.hx" }
+    },
+
+    "random": {
+      "getRandomInt": { "params": ["min:Int", "max:Int", "exclude:String"], "returns": "Int", "file": "ExtraFunctions.hx" },
+      "getRandomFloat": { "params": ["min:Float", "max:Float", "exclude:String"], "returns": "Float", "file": "ExtraFunctions.hx" },
+      "getRandomBool": { "params": ["chance:Float"], "returns": "Bool", "file": "ExtraFunctions.hx" }
+    },
+
+    "colors": {
+      "FlxColor": { "params": ["color:String"], "returns": "Int", "file": "FunkinLua.hx" },
+      "getColorFromName": { "params": ["color:String"], "returns": "Int", "file": "FunkinLua.hx" },
+      "getColorFromString": { "params": ["color:String"], "returns": "Int", "file": "FunkinLua.hx" },
+      "getColorFromHex": { "params": ["color:String"], "returns": "Int", "file": "FunkinLua.hx" },
+      "setHealthBarColors": { "params": ["left:String", "right:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "setTimeBarColors": { "params": ["left:String", "right:String"], "returns": "Void", "file": "FunkinLua.hx" }
+    },
+
+    "precache": {
+      "precacheImage": { "params": ["name:String", "?allowGPU:Bool"], "returns": "Void", "file": "FunkinLua.hx" },
+      "precacheSound": { "params": ["name:String"], "returns": "Void", "file": "FunkinLua.hx" },
+      "precacheMusic": { "params": ["name:String"], "returns": "Void", "file": "FunkinLua.hx" }
+    },
+
+    "dialogue_and_video": {
+      "startDialogue": { "params": ["dialogueFile:String", "?music:String"], "returns": "Bool", "file": "FunkinLua.hx" },
+      "startVideo": { "params": ["videoFile:String", "?canSkip:Bool", "?forMidSong:Bool", "?shouldLoop:Bool", "?playOnLoad:Bool"], "returns": "Bool", "file": "FunkinLua.hx" }
+    },
+
+    "custom_substates": {
+      "openCustomSubstate": { "params": ["name:String", "?pauseGame:Bool"], "returns": "Void", "file": "CustomSubstate.hx" },
+      "closeCustomSubstate": { "params": [], "returns": "Bool", "file": "CustomSubstate.hx" },
+      "insertToCustomSubstate": { "params": ["tag:String", "?pos:Int"], "returns": "Bool", "file": "CustomSubstate.hx" }
+    },
+
+    "debug": {
+      "debugPrint": { "params": ["text:Dynamic", "color:String"], "returns": "Void", "file": "FunkinLua.hx" }
+    }
+  },
+
+  "globalVariables": {
+    "version_metadata": {
+      "version": "String",
+      "scriptName": "String",
+      "modFolder": "String"
+    },
+    "function_constants": {
+      "Function_StopLua": "String",
+      "Function_StopHScript": "String",
+      "Function_StopAll": "String",
+      "Function_Stop": "String",
+      "Function_Continue": "String"
+    },
+    "debug": {
+      "luaDebugMode": "Bool (default: false)",
+      "luaDeprecatedWarnings": "Bool (default: true)"
+    },
+    "song_data": {
+      "curBpm": "Float",
+      "bpm": "Float",
+      "scrollSpeed": "Float",
+      "crochet": "Float",
+      "stepCrochet": "Float",
+      "songLength": "Float",
+      "songName": "String",
+      "songPath": "String",
+      "loadedSongName": "String",
+      "loadedSongPath": "String",
+      "chartPath": "String",
+      "curStage": "String"
+    },
+    "difficulty": {
+      "isStoryMode": "Bool",
+      "difficulty": "Int",
+      "difficultyName": "String",
+      "difficultyPath": "String",
+      "difficultyNameTranslation": "String",
+      "weekRaw": "Int",
+      "week": "String",
+      "seenCutscene": "Bool",
+      "hasVocals": "Bool"
+    },
+    "screen": {
+      "screenWidth": "Int",
+      "screenHeight": "Int"
+    },
+    "gameplay_state": {
+      "curSection": "Int",
+      "curBeat": "Int",
+      "curStep": "Int",
+      "curDecBeat": "Float",
+      "curDecStep": "Float",
+      "score": "Int",
+      "misses": "Int",
+      "hits": "Int",
+      "combo": "Int",
+      "deaths": "Int",
+      "rating": "Float",
+      "ratingName": "String",
+      "ratingFC": "String",
+      "totalPlayed": "Int",
+      "totalNotesHit": "Int",
+      "inGameOver": "Bool",
+      "mustHitSection": "Bool",
+      "altAnim": "Bool",
+      "gfSection": "Bool",
+      "healthGainMult": "Float",
+      "healthLossMult": "Float",
+      "playbackRate": "Float",
+      "guitarHeroSustains": "Bool",
+      "instakillOnMiss": "Bool",
+      "botPlay": "Bool",
+      "practice": "Bool"
+    },
+    "character_positions": {
+      "defaultBoyfriendX": "Float",
+      "defaultBoyfriendY": "Float",
+      "defaultOpponentX": "Float",
+      "defaultOpponentY": "Float",
+      "defaultGirlfriendX": "Float",
+      "defaultGirlfriendY": "Float",
+      "boyfriendName": "String",
+      "dadName": "String",
+      "gfName": "String"
+    },
+    "strum_positions": {
+      "defaultPlayerStrumX0": "Float",
+      "defaultPlayerStrumX1": "Float",
+      "defaultPlayerStrumX2": "Float",
+      "defaultPlayerStrumX3": "Float",
+      "defaultOpponentStrumX0": "Float",
+      "defaultOpponentStrumX1": "Float",
+      "defaultOpponentStrumX2": "Float",
+      "defaultOpponentStrumX3": "Float",
+      "defaultPlayerStrumY0": "Float",
+      "defaultPlayerStrumY1": "Float",
+      "defaultPlayerStrumY2": "Float",
+      "defaultPlayerStrumY3": "Float",
+      "defaultOpponentStrumY0": "Float",
+      "defaultOpponentStrumY1": "Float",
+      "defaultOpponentStrumY2": "Float",
+      "defaultOpponentStrumY3": "Float"
+    },
+    "ui_settings": {
+      "downscroll": "Bool",
+      "middlescroll": "Bool",
+      "framerate": "Int",
+      "ghostTapping": "Bool",
+      "hideHud": "Bool",
+      "timeBarType": "String",
+      "scoreZoom": "Bool",
+      "cameraZoomOnBeat": "Bool",
+      "flashingLights": "Bool",
+      "noteOffset": "Float",
+      "healthBarAlpha": "Float",
+      "noResetButton": "Bool",
+      "lowQuality": "Bool",
+      "shadersEnabled": "Bool",
+      "currentModDirectory": "String"
+    },
+    "noteskins": {
+      "noteSkin": "String",
+      "noteSkinPostfix": "String",
+      "splashSkin": "String",
+      "splashSkinPostfix": "String",
+      "splashAlpha": "Float"
+    },
+    "system": {
+      "buildTarget": "String"
+    }
+  },
+
+  "callbacks": {
+    "lifecycle": [
+      { "name": "onCreate", "params": [], "notes": "Script loaded, after variables set" },
+      { "name": "onCreatePost", "params": [], "notes": "After everything created" },
+      { "name": "onUpdate", "params": ["elapsed:Float"], "notes": "Every frame" },
+      { "name": "onUpdatePost", "params": ["elapsed:Float"], "notes": "After updates" },
+      { "name": "onDestroy", "params": [], "notes": "State destroyed" }
+    ],
+    "song": [
+      { "name": "onStartCountdown", "params": [], "notes": "Before countdown. Return false to cancel", "cancellable": true },
+      { "name": "onCountdownStarted", "params": [], "notes": "Countdown actually began" },
+      { "name": "onCountdownTick", "params": ["swagCounter:Int"], "notes": "Each countdown tick" },
+      { "name": "onSongStart", "params": [], "notes": "Song begins playing" },
+      { "name": "onEndSong", "params": [], "notes": "Song completed. Return false to cancel", "cancellable": true }
+    ],
+    "timing": [
+      { "name": "onStepHit", "params": [], "notes": "Each step hit. curStep via global" },
+      { "name": "onBeatHit", "params": [], "notes": "Each beat hit. curBeat via global" },
+      { "name": "onSectionHit", "params": [], "notes": "Section boundary crossed" }
+    ],
+    "notes": [
+      { "name": "onSpawnNote", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool", "strumTime:Float"], "notes": "Note spawned" },
+      { "name": "goodNoteHitPre", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"], "notes": "Before player hit" },
+      { "name": "goodNoteHit", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"], "notes": "Player hit note" },
+      { "name": "opponentNoteHitPre", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"], "notes": "Before opponent hit" },
+      { "name": "opponentNoteHit", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"], "notes": "Opponent hit note" },
+      { "name": "noteMiss", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"], "notes": "Note missed" },
+      { "name": "noteMissPress", "params": ["direction:Int"], "notes": "Pressed key with no notes (ghost miss)" }
+    ],
+    "input": [
+      { "name": "onKeyPressPre", "params": ["key:Int"], "notes": "Before key pressed, return to block" },
+      { "name": "onKeyPress", "params": ["key:Int"], "notes": "Key pressed" },
+      { "name": "onKeyReleasePre", "params": ["key:Int"], "notes": "Before key released" },
+      { "name": "onKeyRelease", "params": ["key:Int"], "notes": "Key released" },
+      { "name": "onGhostTap", "params": ["key:Int"], "notes": "Key pressed with no notes" }
+    ],
+    "events": [
+      { "name": "onEvent", "params": ["eventName:String", "value1:String", "value2:String", "strumTime:Float"], "notes": "Event triggered" },
+      { "name": "onEventPushed", "params": ["eventName:String", "value1:String", "value2:String", "strumTime:Float"], "notes": "Event loaded from chart" },
+      { "name": "eventEarlyTrigger", "params": ["eventName:String", "value1:String", "value2:String", "strumTime:Float"], "notes": "Return Float to offset trigger time" }
+    ],
+    "camera": [
+      { "name": "onMoveCamera", "params": ["character:String"], "notes": "Camera moved to character (dad/gf/boyfriend)" }
+    ],
+    "pause_gameover": [
+      { "name": "onPause", "params": [], "notes": "Before pause. Return false to cancel", "cancellable": true },
+      { "name": "onResume", "params": [], "notes": "After resume" },
+      { "name": "onGameOver", "params": [], "notes": "Before game over. Return false to cancel", "cancellable": true },
+      { "name": "onGameOverStart", "params": [], "notes": "Game over state entered" },
+      { "name": "onGameOverUpdate", "params": ["elapsed:Float"], "notes": "Game over frame" },
+      { "name": "onGameOverUpdatePost", "params": ["elapsed:Float"], "notes": "After game over update" },
+      { "name": "onGameOverConfirm", "params": ["returnToMenu:Bool"], "notes": "Exit confirmed" }
+    ],
+    "dialogue": [
+      { "name": "onNextDialogue", "params": ["dialogueCount:Int"], "notes": "Next dialogue line" },
+      { "name": "onSkipDialogue", "params": ["dialogueCount:Int"], "notes": "Dialogue skipped" }
+    ],
+    "rating": [
+      { "name": "onRecalculateRating", "params": [], "notes": "Before rating recalculated" },
+      { "name": "onUpdateScore", "params": ["miss:Bool"], "notes": "Score updated" }
+    ],
+    "tween_timer": [
+      { "name": "onTweenCompleted", "params": ["tag:String", "vars:String"], "notes": "Tween finished" },
+      { "name": "onTimerCompleted", "params": ["tag:String", "loops:Int", "loopsLeft:Int"], "notes": "Timer finished" },
+      { "name": "onSoundFinished", "params": ["tag:String"], "notes": "Sound finished" }
+    ],
+    "custom_substates": [
+      { "name": "onCustomSubstateCreate", "params": ["name:String"], "notes": "Substate created" },
+      { "name": "onCustomSubstateCreatePost", "params": ["name:String"], "notes": "After substate created" },
+      { "name": "onCustomSubstateUpdate", "params": ["name:String", "elapsed:Float"], "notes": "Substate update" },
+      { "name": "onCustomSubstateUpdatePost", "params": ["name:String", "elapsed:Float"], "notes": "After substate update" },
+      { "name": "onCustomSubstateDestroy", "params": ["name:String"], "notes": "Substate destroyed" }
+    ]
+  },
+
+  "hscript": {
+    "availableClasses": [
+      "Type", "File", "FileSystem", "FlxG", "FlxMath", "FlxSprite", "FlxText",
+      "FlxCamera", "PsychCamera", "FlxTimer", "FlxTween", "FlxEase", "FlxColor",
+      "PlayState", "Paths", "Conductor", "ClientPrefs", "Character", "Alphabet",
+      "Note", "CustomSubstate", "FlxRuntimeShader", "StringTools", "FlxAnimate"
+    ],
+    "functions": {
+      "setVar": { "params": ["name:String", "value:Dynamic"], "returns": "Dynamic" },
+      "getVar": { "params": ["name:String"], "returns": "Dynamic" },
+      "removeVar": { "params": ["name:String"], "returns": "Bool" },
+      "debugPrint": { "params": ["text:String", "?color:FlxColor"], "returns": "Void" },
+      "getModSetting": { "params": ["saveTag:String", "?modName:String"], "returns": "Dynamic" },
+      "addHaxeLibrary": { "params": ["libName:String", "?libPackage:String"], "returns": "Void" },
+      "createGlobalCallback": { "params": ["name:String", "func:Dynamic"], "returns": "Void" },
+      "createCallback": { "params": ["name:String", "func:Dynamic", "?funk"], "returns": "Void" }
+    },
+    "luaBridge": {
+      "runHaxeCode": { "params": ["codeToRun:String", "?varsToBring:Any", "?funcToRun:String", "?funcArgs:Array<Dynamic>"], "returns": "Dynamic" },
+      "runHaxeFunction": { "params": ["funcToRun:String", "?funcArgs:Array<Dynamic>"], "returns": "Dynamic" }
+    }
+  },
+
+  "deprecated": {
+    "addAnimationByIndicesLoop": { "replacement": "addAnimationByIndices (with loop=true)" },
+    "objectPlayAnimation": { "replacement": "playAnim" },
+    "characterPlayAnim": { "replacement": "playAnim with character name" },
+    "luaSpriteMakeGraphic": { "replacement": "makeGraphic" },
+    "luaSpriteAddAnimationByPrefix": { "replacement": "addAnimationByPrefix" },
+    "luaSpriteAddAnimationByIndices": { "replacement": "addAnimationByIndices" },
+    "luaSpritePlayAnimation": { "replacement": "playAnim" },
+    "setLuaSpriteCamera": { "replacement": "setObjectCamera" },
+    "setLuaSpriteScrollFactor": { "replacement": "setScrollFactor" },
+    "scaleLuaSprite": { "replacement": "scaleObject" }
+  }
+}

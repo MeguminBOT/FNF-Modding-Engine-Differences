@@ -1,0 +1,47 @@
+name: "Stage Converter Issue"
+description: Report a problem with the Stage Data Converter tool.
+labels: ["bug", "tool: stage-converter"]
+body:
+  - type: dropdown
+    id: direction
+    attributes:
+      label: Conversion Direction
+      options:
+        - Funkin -> Psych
+        - Psych -> Funkin
+        - Funkin -> Codename
+        - Codename -> Funkin
+        - Psych -> Codename
+        - Codename -> Psych
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Input Data
+      description: Paste the source stage file you used (or attach the file).
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output / Error
+      description: Paste the output you received, or describe the error.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+      description: What did you expect the output to look like?
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other details (browser, screenshots, etc.).
+    validations:
+      required: false

@@ -11,3 +11,6 @@ A high-level comparison of the three engines' technology and approach.
 | **Platforms**          | Windows, Mac, Linux, Web, iOS, Android | Windows, Mac, Linux             | Windows, Mac, Linux                                               |
 | **Status**             | Active development                     | Archived (March 2025)           | Active development                                                |
 | **Current Version**    | v0.8.3                                 | v1.0.4 (final)                  | v1.0.1                                                            |
+
+!!! tip "Dive deeper"
+    See [Scripting System](scripting-system.md) for detailed scripting comparisons, [Script Callbacks](script-callbacks.md) for callback mappings, or browse the [API Reference](reference/index.md) for complete function/class/event listings.

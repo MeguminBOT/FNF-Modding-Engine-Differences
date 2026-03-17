@@ -1,0 +1,487 @@
+{
+  "version": "1.0.0",
+  "description": "Complete Official Funkin (V-Slice) scripting/modding system reference for script conversion",
+
+  "scriptEvents": {
+    "base": {
+      "ScriptEvent": {
+        "package": "funkin.modding.events",
+        "file": "source/funkin/modding/events/ScriptEvent.hx",
+        "fields": {
+          "type": "ScriptEventType",
+          "cancelled": "Bool"
+        },
+        "methods": {
+          "preventDefault": { "params": [], "notes": "Cancel default behavior" },
+          "toString": { "params": [], "returns": "String" }
+        }
+      }
+    },
+
+    "constants": {
+      "CREATE": "ScriptEvent.CREATE",
+      "DESTROY": "ScriptEvent.DESTROY",
+      "UPDATE": "ScriptEvent.UPDATE",
+      "SONG_START": "ScriptEvent.SONG_START",
+      "SONG_END": "ScriptEvent.SONG_END",
+      "COUNTDOWN_START": "ScriptEvent.COUNTDOWN_START",
+      "COUNTDOWN_STEP": "ScriptEvent.COUNTDOWN_STEP",
+      "COUNTDOWN_END": "ScriptEvent.COUNTDOWN_END",
+      "NOTE_HIT": "ScriptEvent.NOTE_HIT",
+      "NOTE_GHOST_MISS": "ScriptEvent.NOTE_GHOST_MISS",
+      "SONG_EVENT": "ScriptEvent.SONG_EVENT",
+      "PAUSE": "ScriptEvent.PAUSE",
+      "RESUME": "ScriptEvent.RESUME",
+      "GAME_OVER": "ScriptEvent.GAME_OVER",
+      "SONG_LOADED": "ScriptEvent.SONG_LOADED",
+      "DIALOGUE_START": "ScriptEvent.DIALOGUE_START",
+      "DIALOGUE_LINE": "ScriptEvent.DIALOGUE_LINE",
+      "DIALOGUE_END": "ScriptEvent.DIALOGUE_END",
+      "STATE_CHANGE_BEGIN": "ScriptEvent.STATE_CHANGE_BEGIN",
+      "STATE_CHANGE_END": "ScriptEvent.STATE_CHANGE_END",
+      "NOTE_HOLD_PRESS": "ScriptEvent.NOTE_HOLD_PRESS",
+      "NOTE_HOLD_RELEASE": "ScriptEvent.NOTE_HOLD_RELEASE",
+      "FREEPLAY_SONG_SELECT": "ScriptEvent.FREEPLAY_SONG_SELECT",
+      "FREEPLAY_INTRO": "ScriptEvent.FREEPLAY_INTRO",
+      "FREEPLAY_OUTRO": "ScriptEvent.FREEPLAY_OUTRO",
+      "CHARACTER_SELECT": "ScriptEvent.CHARACTER_SELECT",
+      "BEAT_HIT": "ScriptEvent.BEAT_HIT",
+      "STEP_HIT": "ScriptEvent.STEP_HIT"
+    },
+
+    "subclasses": {
+      "UpdateScriptEvent": {
+        "fields": { "elapsed": "Float" },
+        "notes": "Dispatched every frame during update"
+      },
+      "NoteScriptEvent": {
+        "fields": {
+          "note": "NoteSprite",
+          "playerId": "Int",
+          "healthChange": "Float",
+          "comboChange": "Int",
+          "judgement": "String",
+          "score": "Int"
+        },
+        "notes": "Used for NOTE_HIT, NOTE_GHOST_MISS, NOTE_HOLD_PRESS, NOTE_HOLD_RELEASE"
+      },
+      "HitNoteScriptEvent": {
+        "extends": "NoteScriptEvent",
+        "fields": {
+          "note": "NoteSprite",
+          "judgement": "String",
+          "score": "Int",
+          "healthChange": "Float",
+          "comboChange": "Int"
+        }
+      },
+      "GhostMissNoteScriptEvent": {
+        "extends": "NoteScriptEvent",
+        "fields": {
+          "direction": "NoteDirection",
+          "hasPossibleNotes": "Bool"
+        }
+      },
+      "SongTimeScriptEvent": {
+        "fields": {
+          "beat": "Int",
+          "step": "Int"
+        },
+        "notes": "Used for BEAT_HIT and STEP_HIT"
+      },
+      "CountdownScriptEvent": {
+        "fields": {
+          "step": "Int",
+          "isLast": "Bool"
+        },
+        "notes": "Used for COUNTDOWN_START, COUNTDOWN_STEP, COUNTDOWN_END"
+      },
+      "SongEventScriptEvent": {
+        "fields": {
+          "eventData": "SongEventData"
+        },
+        "notes": "Song event triggered"
+      },
+      "SongLoadScriptEvent": {
+        "fields": {
+          "chart": "SongChartData",
+          "id": "String"
+        },
+        "notes": "Can modify chart data before use! Cancellable."
+      },
+      "PauseScriptEvent": {
+        "fields": {
+          "gitaroo": "Bool"
+        },
+        "notes": "Easter egg flag for gitaroo man pause"
+      },
+      "StateChangeScriptEvent": {
+        "fields": {
+          "targetState": "FlxState"
+        },
+        "notes": "State transition events"
+      },
+      "DialogueScriptEvent": {
+        "fields": {
+          "dialogue": "Dynamic"
+        },
+        "notes": "Used for DIALOGUE_START, DIALOGUE_LINE, DIALOGUE_END"
+      },
+      "FreeplayScriptEvent": {
+        "fields": {
+          "song": "Dynamic",
+          "index": "Int"
+        },
+        "notes": "Freeplay menu events"
+      },
+      "CapsuleScriptEvent": {
+        "fields": {
+          "capsule": "Dynamic",
+          "index": "Int"
+        },
+        "notes": "Freeplay capsule interaction"
+      },
+      "CharacterSelectScriptEvent": {
+        "fields": {
+          "character": "Dynamic"
+        },
+        "notes": "Character selection events"
+      }
+    }
+  },
+
+  "scriptedClasses": {
+    "gameplay": {
+      "ScriptedStage": { "base": "Stage", "file": "source/funkin/play/stage/ScriptedStage.hx" },
+      "ScriptedBopper": { "base": "Bopper", "file": "source/funkin/play/stage/ScriptedBopper.hx" },
+      "ScriptedStageProp": { "base": "StageProp", "file": "source/funkin/play/stage/ScriptedStageProp.hx" },
+      "ScriptedSong": { "base": "Song", "file": "source/funkin/play/song/ScriptedSong.hx" },
+      "ScriptedNoteKind": { "base": "NoteKind", "file": "source/funkin/play/notes/ScriptedNoteKind.hx" },
+      "ScriptedNoteStyle": { "base": "NoteStyle", "file": "source/funkin/play/notes/ScriptedNoteStyle.hx" }
+    },
+    "characters": {
+      "ScriptedBaseCharacter": { "base": "BaseCharacter", "renderType": "generic" },
+      "ScriptedSparrowCharacter": { "base": "SparrowCharacter", "renderType": "sparrow" },
+      "ScriptedPackerCharacter": { "base": "PackerCharacter", "renderType": "packer" },
+      "ScriptedMultiSparrowCharacter": { "base": "MultiSparrowCharacter", "renderType": "multisparrow" },
+      "ScriptedAnimateAtlasCharacter": { "base": "AnimateAtlasCharacter", "renderType": "animateAtlas" },
+      "ScriptedCharacterData": { "base": "CharacterData", "notes": "Data wrapper" }
+    },
+    "dialogue": {
+      "ScriptedConversation": { "base": "Conversation" },
+      "ScriptedDialogueBox": { "base": "DialogueBox" },
+      "ScriptedSpeaker": { "base": "Speaker" }
+    },
+    "ui": {
+      "ScriptedMusicBeatState": { "base": "MusicBeatState" },
+      "ScriptedMusicBeatSubState": { "base": "MusicBeatSubState" },
+      "ScriptedFreeplayStyle": { "base": "FreeplayStyle" },
+      "ScriptedPlayableCharacter": { "base": "PlayableCharacter" }
+    },
+    "flixel_wrappers": {
+      "ScriptedFlxState": { "base": "FlxState" },
+      "ScriptedFlxSubState": { "base": "FlxSubState" },
+      "ScriptedFlxSprite": { "base": "FlxSprite" },
+      "ScriptedFlxSpriteGroup": { "base": "FlxSpriteGroup" },
+      "ScriptedFlxTypedGroup": { "base": "FlxTypedGroup" },
+      "ScriptedFlxBasic": { "base": "FlxBasic" },
+      "ScriptedFlxObject": { "base": "FlxObject" },
+      "ScriptedFlxCamera": { "base": "FlxCamera" },
+      "ScriptedFlxUIState": { "base": "FlxUIState" },
+      "ScriptedFlxUISubState": { "base": "FlxUISubState" },
+      "ScriptedFlxRuntimeShader": { "base": "FlxRuntimeShader" }
+    }
+  },
+
+  "interfaces": {
+    "IScriptedClass": {
+      "file": "source/funkin/modding/IScriptedClass.hx",
+      "methods": [
+        "onCreate(event:ScriptEvent):Void",
+        "onDestroy(event:ScriptEvent):Void",
+        "onUpdate(event:UpdateScriptEvent):Void",
+        "onScriptEvent(event:ScriptEvent):Void"
+      ]
+    },
+    "IPlayStateScriptedClass": {
+      "extends": "IScriptedClass",
+      "methods": [
+        "onNoteHit(event:HitNoteScriptEvent):Void",
+        "onNoteMiss(event:NoteScriptEvent):Void",
+        "onNoteGhostMiss(event:GhostMissNoteScriptEvent):Void",
+        "onSongStart(event:ScriptEvent):Void",
+        "onSongEnd(event:ScriptEvent):Void",
+        "onCountdownStart(event:CountdownScriptEvent):Void",
+        "onCountdownStep(event:CountdownScriptEvent):Void",
+        "onCountdownEnd(event:CountdownScriptEvent):Void",
+        "onStepHit(event:SongTimeScriptEvent):Void",
+        "onBeatHit(event:SongTimeScriptEvent):Void",
+        "onPause(event:PauseScriptEvent):Void",
+        "onResume(event:ScriptEvent):Void",
+        "onGameOver(event:ScriptEvent):Void",
+        "onSongEvent(event:SongEventScriptEvent):Void",
+        "onSongLoaded(event:SongLoadScriptEvent):Void"
+      ]
+    },
+    "INoteScriptedClass": {
+      "extends": "IScriptedClass",
+      "methods": [
+        "onNoteIncoming(event:NoteScriptEvent):Void",
+        "onNoteHit(event:HitNoteScriptEvent):Void",
+        "onNoteMiss(event:NoteScriptEvent):Void"
+      ]
+    },
+    "IBPMSyncedScriptedClass": {
+      "extends": "IScriptedClass",
+      "methods": [
+        "onStepHit(event:SongTimeScriptEvent):Void",
+        "onBeatHit(event:SongTimeScriptEvent):Void"
+      ]
+    },
+    "IFreeplayScriptedClass": {
+      "extends": "IScriptedClass",
+      "methods": [
+        "onFreeplaySongSelect(event:FreeplayScriptEvent):Void",
+        "onFreeplayIntro(event:FreeplayScriptEvent):Void",
+        "onFreeplayOutro(event:FreeplayScriptEvent):Void",
+        "onCapsuleInit(event:CapsuleScriptEvent):Void",
+        "onCapsuleHover(event:CapsuleScriptEvent):Void",
+        "onCapsuleSelect(event:CapsuleScriptEvent):Void"
+      ]
+    },
+    "ICharacterSelectScriptedClass": {
+      "extends": "IScriptedClass",
+      "methods": [
+        "onCharacterSelect(event:CharacterSelectScriptEvent):Void",
+        "onCharacterDeselect(event:CharacterSelectScriptEvent):Void",
+        "onCharacterConfirm(event:CharacterSelectScriptEvent):Void"
+      ]
+    },
+    "IDialogueScriptedClass": {
+      "extends": "IScriptedClass",
+      "methods": [
+        "onDialogueStart(event:DialogueScriptEvent):Void",
+        "onDialogueLine(event:DialogueScriptEvent):Void",
+        "onDialogueEnd(event:DialogueScriptEvent):Void",
+        "onDialogueSkip(event:DialogueScriptEvent):Void",
+        "onDialogueCompleteLine(event:DialogueScriptEvent):Void"
+      ]
+    },
+    "IStateChangingScriptedClass": {
+      "extends": "IScriptedClass",
+      "methods": [
+        "onStateChangeBegin(event:StateChangeScriptEvent):Void",
+        "onStateChangeEnd(event:StateChangeScriptEvent):Void"
+      ]
+    },
+    "IStateStageProp": {
+      "notes": "For stage props that need state management"
+    }
+  },
+
+  "moduleSystem": {
+    "class": "Module",
+    "file": "source/funkin/modding/module/Module.hx",
+    "implements": ["IPlayStateScriptedClass", "IFreeplayScriptedClass", "ICharacterSelectScriptedClass", "IDialogueScriptedClass", "IStateChangingScriptedClass"],
+    "fields": {
+      "moduleName": "String",
+      "active": "Bool",
+      "priority": "Int (1-1000+, lower = earlier)",
+      "stateFilter": "Null<Array<Class<Dynamic>>>",
+      "scriptCall": "Dynamic->Dynamic"
+    },
+    "notes": [
+      "Modules are persistent global scripts that survive across states",
+      "They receive all gameplay, freeplay, dialogue, and state events",
+      "Priority system controls processing order (lower = first)",
+      "Optional stateFilter limits which states receive events",
+      "Modules are registered in ModuleHandler and managed automatically"
+    ],
+    "registration": "ModuleHandler.registerModule(module)",
+    "lookup": "ModuleHandler.getModule(name)"
+  },
+
+  "dataFormats": {
+    "SongMetadata": {
+      "file": "source/funkin/data/song/SongData.hx",
+      "fields": {
+        "version": "String",
+        "songName": "String",
+        "artist": "String",
+        "charter": "Null<String>",
+        "divisions": "Null<Int>",
+        "looped": "Bool",
+        "offsets": "{ instrumental:Float, vocals:Map<String,Float> }",
+        "timeFormat": "String (ms or steps)",
+        "timeChanges": "Array<SongTimeChange>",
+        "playData": {
+          "songVariations": "Array<String>",
+          "difficulties": "Array<String>",
+          "characters": { "player": "String", "opponent": "String", "girlfriend": "String", "instrumental": "String" },
+          "stage": "String",
+          "noteStyle": "String",
+          "ratings": "Map<String,Int>"
+        },
+        "generatedBy": "Null<String>"
+      }
+    },
+    "SongTimeChange": {
+      "fields": {
+        "timeStamp": "Float",
+        "bpm": "Float",
+        "timeSignatureNum": "Int",
+        "timeSignatureDen": "Int",
+        "beatTuplets": "Array<Int>"
+      }
+    },
+    "SongNoteData": {
+      "file": "source/funkin/data/song/SongData.hx",
+      "fields": {
+        "time": "Float",
+        "data": "Int (note index, 0-3 opponent, 4-7 player)",
+        "length": "Float (hold duration in ms)",
+        "kind": "Null<String> (custom note type)",
+        "params": "Dynamic"
+      },
+      "methods": {
+        "getDirection": { "returns": "NoteDirection (0=LEFT, 1=DOWN, 2=UP, 3=RIGHT)" },
+        "getStrumlineIndex": { "returns": "Int (0=opponent, 1=player)" },
+        "getMustHitNote": { "returns": "Bool" },
+        "getStepTime": { "returns": "Float" }
+      }
+    },
+    "SongEventData": {
+      "file": "source/funkin/data/song/SongData.hx",
+      "fields": {
+        "time": "Float",
+        "eventKind": "String",
+        "value": "Dynamic"
+      },
+      "methods": {
+        "getHandler": { "returns": "SongEvent" },
+        "getSchema": { "returns": "Array<EventSchema>" },
+        "getDynamic": { "params": ["key:String"], "returns": "Dynamic" },
+        "getInt": { "params": ["key:String"], "returns": "Int" },
+        "getFloat": { "params": ["key:String"], "returns": "Float" },
+        "getString": { "params": ["key:String"], "returns": "String" },
+        "getBool": { "params": ["key:String"], "returns": "Bool" },
+        "getArray": { "params": ["key:String"], "returns": "Array<Dynamic>" }
+      }
+    },
+    "CharacterData": {
+      "file": "source/funkin/data/character/CharacterData.hx",
+      "fields": {
+        "version": "String",
+        "name": "String",
+        "renderType": "String (sparrow|packer|multisparrow|animateAtlas|placeholder|custom)",
+        "assetPath": "String",
+        "scale": "Float",
+        "healthIcon": "{ id:String, offsets:Array<Int>, flipX:Bool }",
+        "death": "{ cameraOffsets:Array<Float>, cameraZoom:Float, preTransitionDelay:Float }",
+        "offsets": "Array<Float>",
+        "cameraOffsets": "Array<Float>",
+        "isPixel": "Bool",
+        "danceEvery": "Int",
+        "singTime": "Float",
+        "animations": "Array<AnimationData>"
+      }
+    },
+    "AnimationData": {
+      "fields": {
+        "name": "String",
+        "prefix": "String",
+        "offsets": "Array<Float>",
+        "looped": "Bool",
+        "flipX": "Bool",
+        "flipY": "Bool",
+        "frameRate": "Float",
+        "frameIndices": "Null<Array<Int>>"
+      }
+    },
+    "StageData": {
+      "file": "source/funkin/data/stage/StageData.hx",
+      "fields": {
+        "version": "String",
+        "name": "String",
+        "cameraZoom": "Float",
+        "directory": "String",
+        "props": "Array<StageDataProp>",
+        "characters": {
+          "bf": "{ zIndex:Int, position:Array<Float>, cameraOffsets:Array<Float>, data:Dynamic }",
+          "dad": "{ zIndex:Int, position:Array<Float>, cameraOffsets:Array<Float>, data:Dynamic }",
+          "gf": "{ zIndex:Int, position:Array<Float>, cameraOffsets:Array<Float>, data:Dynamic }"
+        }
+      }
+    },
+    "StageDataProp": {
+      "fields": {
+        "name": "String",
+        "assetPath": "String",
+        "position": "Array<Float>",
+        "zIndex": "Float",
+        "scroll": "Array<Float>",
+        "scale": "Float",
+        "danceEvery": "Int",
+        "startingAnimation": "Null<String>",
+        "animType": "String (sparrow|packer)",
+        "animations": "Array<AnimationData>"
+      }
+    }
+  },
+
+  "dispatchPoints": {
+    "PlayState": {
+      "lifecycle": [
+        { "event": "ScriptEvent.CREATE", "type": "ScriptEvent" },
+        { "event": "ScriptEvent.DESTROY", "type": "ScriptEvent" },
+        { "event": "ScriptEvent.UPDATE", "type": "UpdateScriptEvent" }
+      ],
+      "song": [
+        { "event": "ScriptEvent.SONG_START", "type": "ScriptEvent" },
+        { "event": "ScriptEvent.SONG_END", "type": "ScriptEvent" },
+        { "event": "ScriptEvent.SONG_LOADED", "type": "SongLoadScriptEvent" }
+      ],
+      "countdown": [
+        { "event": "ScriptEvent.COUNTDOWN_START", "type": "CountdownScriptEvent" },
+        { "event": "ScriptEvent.COUNTDOWN_STEP", "type": "CountdownScriptEvent" },
+        { "event": "ScriptEvent.COUNTDOWN_END", "type": "CountdownScriptEvent" }
+      ],
+      "notes": [
+        { "event": "ScriptEvent.NOTE_HIT", "type": "HitNoteScriptEvent" },
+        { "event": "ScriptEvent.NOTE_GHOST_MISS", "type": "GhostMissNoteScriptEvent" },
+        { "event": "ScriptEvent.NOTE_HOLD_PRESS", "type": "NoteScriptEvent" },
+        { "event": "ScriptEvent.NOTE_HOLD_RELEASE", "type": "NoteScriptEvent" }
+      ],
+      "timing": [
+        { "event": "ScriptEvent.BEAT_HIT", "type": "SongTimeScriptEvent" },
+        { "event": "ScriptEvent.STEP_HIT", "type": "SongTimeScriptEvent" }
+      ],
+      "gameplay": [
+        { "event": "ScriptEvent.PAUSE", "type": "PauseScriptEvent" },
+        { "event": "ScriptEvent.RESUME", "type": "ScriptEvent" },
+        { "event": "ScriptEvent.GAME_OVER", "type": "ScriptEvent" },
+        { "event": "ScriptEvent.SONG_EVENT", "type": "SongEventScriptEvent" }
+      ]
+    },
+    "Conversation": [
+      { "event": "ScriptEvent.DIALOGUE_START", "type": "DialogueScriptEvent" },
+      { "event": "ScriptEvent.DIALOGUE_LINE", "type": "DialogueScriptEvent" },
+      { "event": "ScriptEvent.DIALOGUE_END", "type": "DialogueScriptEvent" }
+    ],
+    "FreeplayState": [
+      { "event": "ScriptEvent.FREEPLAY_SONG_SELECT", "type": "FreeplayScriptEvent" },
+      { "event": "ScriptEvent.FREEPLAY_INTRO", "type": "FreeplayScriptEvent" },
+      { "event": "ScriptEvent.FREEPLAY_OUTRO", "type": "FreeplayScriptEvent" }
+    ],
+    "CharSelectSubState": [
+      { "event": "ScriptEvent.CHARACTER_SELECT", "type": "CharacterSelectScriptEvent" }
+    ],
+    "MusicBeatState": [
+      { "event": "ScriptEvent.UPDATE", "type": "UpdateScriptEvent" },
+      { "event": "ScriptEvent.BEAT_HIT", "type": "SongTimeScriptEvent" },
+      { "event": "ScriptEvent.STEP_HIT", "type": "SongTimeScriptEvent" },
+      { "event": "ScriptEvent.STATE_CHANGE_BEGIN", "type": "StateChangeScriptEvent" },
+      { "event": "ScriptEvent.STATE_CHANGE_END", "type": "StateChangeScriptEvent" }
+    ]
+  }
+}
