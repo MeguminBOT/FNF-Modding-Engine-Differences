@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block announce %}
+  <style>
+    .md-banner {
+      color: var(--md-footer-fg-color--lighter);
+    }
+  </style>
+  <span id="last-updated">Last updated: {{ config.extra.last_updated }}</span>
+  {% if config.extra.last_updated_iso %}
+  <script>
+    (function() {
+      var iso = "{{ config.extra.last_updated_iso }}";
+      var d = new Date(iso);
+      if (!isNaN(d)) {
+        var opts = { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" };
+        document.getElementById("last-updated").textContent = "Last updated: " + d.toLocaleString(undefined, opts);
+      }
+    })();
+  </script>
+  {% endif %}
+{% endblock %}
