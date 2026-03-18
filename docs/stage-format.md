@@ -6,9 +6,10 @@
 
 ```json
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "Main Stage",
   "cameraZoom": 1.1,
+  "directory": "shared",
   "props": [
     {
       "zIndex": 10,
@@ -18,7 +19,12 @@
       "assetPath": "stages/mainStage/stageback",
       "scroll": [0.9, 0.9],
       "alpha": 1.0,
+      "angle": 0.0,
+      "blend": "",
+      "color": "#FFFFFF",
       "isPixel": false,
+      "flipX": false,
+      "flipY": false,
       "animType": "sparrow",
       "animations": [],
       "startingAnimation": "",
@@ -26,9 +32,9 @@
     }
   ],
   "characters": {
-    "bf": { "zIndex": 300, "position": [989.5, 885], "cameraOffsets": [-100, -100] },
-    "dad": { "zIndex": 200, "position": [335, 885], "cameraOffsets": [150, -100] },
-    "gf": { "zIndex": 100, "position": [751.5, 787], "cameraOffsets": [0, 0] }
+    "bf": { "zIndex": 300, "position": [989.5, 885], "cameraOffsets": [-100, -100], "scale": 1, "scroll": [1, 1], "alpha": 1.0, "angle": 0.0 },
+    "dad": { "zIndex": 200, "position": [335, 885], "cameraOffsets": [150, -100], "scale": 1, "scroll": [1, 1], "alpha": 1.0, "angle": 0.0 },
+    "gf": { "zIndex": 100, "position": [751.5, 787], "cameraOffsets": [0, 0], "scale": 1, "scroll": [1, 1], "alpha": 1.0, "angle": 0.0 }
   }
 }
 ```
@@ -172,17 +178,23 @@ ______________________________________________________________________
 | **Dad camera offset**  | `characters.dad.cameraOffsets` | `camera_opponent` [x, y]                                        | `<dad camxoffset="" camyoffset=""/>`       |
 | **Hide GF**            | Omit gf / empty gf char        | `hide_girlfriend` bool                                          | Omit `<girlfriend/>` node                  |
 | **Solid/colored box**  | Color hex in `assetPath`       | Lua `makeGraphic`                                               | `<solid>` / `<box>` node                   |
-| **Stage folder**       | Images rel. to `images/`       | `directory` field                                               | `folder` attribute                         |
+| **Stage folder**       | `directory` (default `"shared"`) | `directory` field                                             | `folder` attribute                         |
 | **Start camera pos**   | Not explicit                   | Not explicit                                                    | `startCamPosX`, `startCamPosY`             |
 | **Character z-index**  | `characters.<char>.zIndex`     | Lua add order                                                   | XML node order                             |
 | **Character scale**    | `characters.<char>.scale`      | Not in JSON (Lua scripted)                                      | `scale`/`scalex`/`scaley` on char nodes    |
-| **Character scroll**   | Not configurable               | Not configurable                                                | `scroll`/`scrollx`/`scrolly` on char nodes |
+| **Character scroll**   | `characters.<char>.scroll` [x, y]        | Not configurable                                                | `scroll`/`scrollx`/`scrolly` on char nodes |
 | **Character flip**     | Not per-stage                  | Not per-stage                                                   | `flipX`/`flip` on char nodes               |
-| **Character alpha**    | Not per-stage                  | Not per-stage                                                   | `alpha` on char nodes                      |
+| **Character alpha**    | `characters.<char>.alpha`      | Not per-stage                                                   | `alpha` on char nodes                      |
+| **Character angle**    | `characters.<char>.angle`      | Not per-stage                                                   | `angle` on char nodes                      |
 | **Sprite zoom factor** | Not configurable               | Not configurable                                                | `zoomfactor` attr on sprites/char nodes    |
 | **Sprite skew**        | Not configurable               | Not configurable                                                | `skewx`, `skewy` on sprites/char nodes     |
 | **Sprite alpha**       | `alpha` in prop                | Lua `setProperty(tag, 'alpha', v)`                              | `alpha` attr on `<sprite>`                 |
 | **Sprite flipX**       | `flipX` in prop                | Lua `setProperty`                                               | `flipX` attr on `<sprite>`                 |
+| **Sprite flipY**       | `flipY` in prop                | Lua `setProperty`                                               | `flipY` attr on `<sprite>`                 |
+| **Sprite angle**       | `angle` in prop                | Lua `setProperty`                                               | `angle` attr on `<sprite>`                 |
+| **Sprite blend**       | `blend` in prop (string)       | Lua `setBlendMode`                                              | N/A                                        |
+| **Sprite color**       | `color` in prop (hex string)   | Lua `setProperty`                                               | `color` attr on `<sprite>`                 |
+| **Atlas settings**     | `atlasSettings` in prop        | N/A                                                             | `applyStageMatrix`, `useRenderTexture` attrs |
 | **Prop properties**    | Inline in JSON                 | Lua `setProperty`                                               | `<property name="" type="" value="">` child |
 | **Ratings position**   | Not configurable               | Not configurable                                                | `<ratings x="" y=""/>` / `<combo>` node    |
 | **Custom char slots**  | Fixed (bf, dad, gf)            | Fixed (bf, dad, gf)                                             | `<character name="">` for extra slots      |
