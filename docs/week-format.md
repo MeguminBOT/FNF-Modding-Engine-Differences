@@ -6,7 +6,7 @@
 
 ```json
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "DADDY DEAREST",
   "titleAsset": "storymenu/titles/week1",
   "background": "#F9CF51",
@@ -16,11 +16,16 @@
     {
       "assetPath": "storymenu/props/dad",
       "scale": 1.0,
+      "alpha": 1.0,
+      "isPixel": false,
+      "danceEvery": 1.0,
+      "flipX": false,
       "offsets": [100, 60],
       "animations": [
         { "name": "idle", "prefix": "idle0", "frameRate": 24 },
         { "name": "confirm", "prefix": "confirm0", "frameRate": 24 }
-      ]
+      ],
+      "startingAnimation": ""
     }
   ]
 }
