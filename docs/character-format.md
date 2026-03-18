@@ -6,7 +6,7 @@
 
 ```json
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Daddy Dearest",
   "renderType": "sparrow",
   "assetPath": "characters/DADDY_DEAREST",
@@ -14,11 +14,12 @@
   "singTime": 6.1,
   "flipX": false,
   "isPixel": false,
-  "healthIcon": { "id": "dad", "scale": 1.0, "flipX": false, "isPixel": false, "offsets": [0, 0] },
+  "healthIcon": { "id": "dad", "scale": 1.0, "flipX": false, "isPixel": false, "offsets": [0, 25] },
   "offsets": [0, 0],
   "cameraOffsets": [0, 0],
   "danceEvery": 1,
   "scale": 1.0,
+  "applyStageMatrix": false,
   "death": { "cameraOffsets": [0, 0], "cameraZoom": 1, "preTransitionDelay": 0 },
   "animations": [
     {
@@ -38,7 +39,14 @@
       "looped": false,
       "frameRate": 24
     }
-  ]
+  ],
+  "atlasSettings": {
+    "swfMode": true,
+    "cacheOnLoad": false,
+    "filterQuality": 1,
+    "applyStageMatrix": false,
+    "useRenderTexture": false
+  }
 }
 ```
 
@@ -151,12 +159,13 @@ ______________________________________________________________________
 | **Format**                  | JSON                                                       | JSON                          | XML                        |
 | **Anim internal name**      | `animations[].name`                                        | `animations[].anim`           | `<anim name="">`           |
 | **Anim spritesheet prefix** | `animations[].prefix`                                      | `animations[].name`           | `<anim anim="">`           |
+| **Per-anim asset path**     | `animations[].assetPath` (multisparrow/multianimateatlas only) | N/A                         | N/A                          |
 | **Frame rate**              | `animations[].frameRate`                                   | `animations[].fps`            | `<anim fps="">`            |
 | **Loop**                    | `animations[].looped`                                      | `animations[].loop`           | `<anim loop="">`           |
 | **Frame indices**           | `animations[].frameIndices`                                | `animations[].indices`        | `<anim indices="">`        |
 | **Anim offsets**            | `animations[].offsets` [x, y]                              | `animations[].offsets` [x, y] | `<anim x="" y="">`         |
 | **Spritesheet path**        | `assetPath`                                                | `image`                       | `sprite` attribute         |
-| **Render type**             | `renderType` (sparrow/packer/animateatlas/multisparrow)    | Implicit (sparrow default)    | Implicit (auto-detected)   |
+| **Render type**             | `renderType` (sparrow/packer/multisparrow/animateatlas/multianimateatlas/custom) | Implicit (sparrow default) | Implicit (auto-detected) |
 | **Character scale**         | `scale`                                                    | `scale`                       | `scale` attribute          |
 | **Sing hold time**          | `singTime` (in steps)                                      | `sing_duration`               | `holdTime` (default 4)     |
 | **Health icon**             | `healthIcon` object `{id, scale, flipX, isPixel, offsets}` | `healthicon` (string)         | `icon` attribute (string)  |
@@ -169,9 +178,11 @@ ______________________________________________________________________
 | **Is player**               | Determined by stage/chart role                             | Determined by chart role      | `isPlayer` attribute       |
 | **Game over character**     | `death` object                                             | Not in character data         | `gameOverChar` attribute   |
 | **Dance frequency**         | `danceEvery` (beats)                                       | Implicit                      | `interval` attribute       |
-| **Stage matrix**            | N/A                                                        | N/A                           | `applyStageMatrix` attr    |
-| **Animate atlas settings**  | N/A                                                        | N/A                           | `swfMode`, `cacheOnLoad`, `filterQuality` |
-| **Anim label mode**         | N/A                                                        | N/A                           | `label="true"` on `<anim>` |
+| **Stage matrix**            | `applyStageMatrix` (bool, default false)                   | N/A                           | `applyStageMatrix` attr    |
+| **Animate atlas settings**  | `atlasSettings` object (`swfMode`, `cacheOnLoad`, `filterQuality`, `applyStageMatrix`, `useRenderTexture`) | N/A | `swfMode`, `cacheOnLoad`, `filterQuality` |
+| **Anim type**               | `animations[].animType` (`"framelabel"`/`"symbol"`, atlas only) | N/A                     | `label="true"` on `<anim>` |
+| **Anim render type**        | `animations[].renderType` (`"sparrow"`/`"animateatlas"`, multi-chars only) | N/A              | N/A                        |
+| **Per-anim atlas settings** | `animations[].atlasSettings` (same as character-level)     | N/A                           | N/A                        |
 | **Custom attributes**       | N/A                                                        | N/A                           | Extra attrs in `extra` map |
 | **Script extensions**       | N/A                                                        | N/A                           | `<use-extension>` / `<ext>` nodes |
 
