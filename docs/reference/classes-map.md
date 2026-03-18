@@ -158,8 +158,8 @@ Asset loading and path resolution.
     | `image` | `key:String` | `String` |
     | `sound` | `key:String` | `String` |
     | `music` | `key:String` | `String` |
-    | `voices` | `song:String` | `String` |
-    | `inst` | `song:String` | `String` |
+    | `voices` | `song:String, ?suffix:String` | `String` |
+    | `inst` | `song:String, ?suffix:String, withExtension:Bool` | `String` |
     | `json` | `key:String` | `String` |
     | `getSparrowAtlas` | `key:String` | `FlxAtlasFrames` |
     | `animateAtlas` | `path:String` | `String` |

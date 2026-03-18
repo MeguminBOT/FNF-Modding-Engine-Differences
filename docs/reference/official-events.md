@@ -194,6 +194,7 @@ Classes you can extend via HScript to create custom behavior.
 | `ScriptedPackerCharacter` | `PackerCharacter` | Packer |
 | `ScriptedMultiSparrowCharacter` | `MultiSparrowCharacter` | Multi-sparrow |
 | `ScriptedAnimateAtlasCharacter` | `AnimateAtlasCharacter` | Animate atlas |
+| `ScriptedMultiAnimateAtlasCharacter` | `MultiAnimateAtlasCharacter` | Multi-animate atlas |
 | `ScriptedCharacterData` | `CharacterData` | Data wrapper |
 
 ### Dialogue
