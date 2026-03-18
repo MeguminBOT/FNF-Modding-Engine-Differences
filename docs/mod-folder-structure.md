@@ -57,15 +57,16 @@ mods/MyMod/
 │   └── <song>/
 │       ├── song/
 │       │   ├── Inst.ogg
-│       │   ├── Voices.ogg
-│       │   ├── Voices-dad.ogg  # Per-character vocals
-│       │   └── Voices-bf.ogg
+│       │   ├── Voices.ogg          # Single combined vocals
+│       │   ├── Voices_Opponent.ogg # Per-strumline (via vocalsSuffix)
+│       │   └── Voices_BF.ogg
 │       ├── charts/
 │       │   ├── easy.json
 │       │   ├── normal.json
 │       │   └── hard.json
 │       ├── scripts/            # Per-song gameplay scripts
 │       │   └── modchart.hx
+│       ├── events.json         # Song events (optional, alt to inline)
 │       └── meta.json
 ├── data/
 │   ├── characters/             # Character XML files
@@ -74,13 +75,22 @@ mods/MyMod/
 │   │   └── weeks/              # Week XML files
 │   ├── events/                 # Custom event JSON + HScript
 │   ├── notes/                  # Custom note type scripts
+│   ├── scripts/                # Global gameplay scripts
+│   ├── splashes/               # Note splash configurations (XML)
 │   ├── states/                 # State override scripts
 │   ├── config/                 # discord.json, credits.xml, options.xml
 │   └── configs/
 │       └── modpack.ini         # Modpack metadata (v1.0+)
 ├── images/
 │   ├── characters/             # Character spritesheets
+│   ├── icons/                  # Health bar icons
+│   ├── game/notes/             # Note skins
 │   └── stages/                 # Stage images
+├── fonts/                      # Custom fonts
+├── music/                      # Background music
+├── shaders/                    # GLSL shaders
+├── sounds/                     # Sound effects
+└── videos/                     # Video cutscenes
 ```
 
 ## Key Differences
