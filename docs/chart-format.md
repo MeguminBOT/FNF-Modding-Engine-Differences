@@ -13,16 +13,32 @@ Charts are split into two files per song:
   "artist": "Kawai Sprite",
   "charter": "ninjamuffin99",
   "playData": {
+    "songVariations": ["erect", "pico"],
     "difficulties": ["easy", "normal", "hard"],
     "characters": {
       "player": "bf",
       "opponent": "dad",
-      "girlfriend": "gf"
+      "girlfriend": "gf",
+      "instrumental": "",
+      "altInstrumentals": [],
+      "opponentVocals": ["dad"],
+      "playerVocals": ["bf"]
     },
     "stage": "mainStage",
     "noteStyle": "funkin",
-    "ratings": { "default": 0 }
+    "ratings": { "normal": 0 },
+    "album": null,
+    "previewStart": 0,
+    "previewEnd": 15000
   },
+  "offsets": {
+    "instrumental": 0,
+    "altInstrumentals": {},
+    "vocals": {},
+    "altVocals": {}
+  },
+  "looped": false,
+  "generatedBy": "FNF SongData v2.2.4",
   "timeFormat": "ms",
   "timeChanges": [
     { "t": 0, "bpm": 100, "n": 4, "d": 4, "bt": [4, 4, 4, 4] }
@@ -34,16 +50,17 @@ Charts are split into two files per song:
 
 ```json
 {
-  "version": "2.1.0",
+  "version": "2.0.0",
   "scrollSpeed": { "default": 1.0 },
   "notes": {
     "default": [
-      { "t": 1000, "d": 0, "l": 0, "k": "" }
+      { "t": 1000, "d": 0, "l": 0, "k": "", "p": [] }
     ]
   },
   "events": [
     { "t": 2000, "e": "FocusCamera", "v": { "char": 1 } }
-  ]
+  ],
+  "generatedBy": "FNF ChartData v2.0.0"
 }
 ```
 
@@ -53,6 +70,7 @@ Charts are split into two files per song:
 - `d` = direction (0-3 = player, 4-7 = opponent)
 - `l` = sustain length in ms
 - `k` = note kind/type (optional string)
+- `p` = note params (optional array of `{"n": "name", "v": value}` objects)
 
 ______________________________________________________________________
 
@@ -198,11 +216,15 @@ ______________________________________________________________________
 | Aspect                | Official Funkin                           | Psych Engine                               | Codename Engine                         |
 | --------------------- | ----------------------------------------- | ------------------------------------------ | --------------------------------------- |
 | **File split**        | metadata + chart (2 files)                | Single file                                | meta.json + per-difficulty chart files  |
-| **Note structure**    | `{t, d, l, k}` objects                    | `[time, data, sustain, type?]` arrays      | Strumline-based                         |
+| **Note structure**    | `{t, d, l, k, p}` objects                 | `[time, data, sustain, type?]` arrays      | Strumline-based                         |
 | **Direction mapping** | 0-3 player, 4-7 opponent (fixed)          | Depends on `mustHitSection`                | Per-strumline                           |
 | **Section concept**   | No sections                               | Section-based (`mustHitSection`)           | No sections (`curCameraTarget` instead) |
 | **BPM changes**       | `timeChanges` array in metadata           | `changeBPM` flag per section               | Events (`BPM Change` event)             |
 | **Events storage**    | In chart JSON                             | In chart JSON (separate `events` array)    | In chart JSON, or separate `events.json` per song |
 | **Scroll speed**      | Per-difficulty in chart                   | Single `speed` value                       | Per-difficulty in chart                 |
-| **Characters**        | In metadata `playData.characters`         | In chart `player1`, `player2`, `gfVersion` | In meta.json / chart editor             |
+| **Characters**        | In metadata `playData.characters` (includes vocal mapping) | In chart `player1`, `player2`, `gfVersion` | In meta.json / chart editor   |
 | **Difficulties**      | Listed in metadata, separate `notes` keys | Separate files per difficulty              | Separate files per difficulty           |
+| **Variations**        | `playData.songVariations` + separate metadata files | N/A                               | Variant system via `charts/<variant>/`  |
+| **Audio offsets**      | `offsets` object in metadata (instrumental, per-vocal, per-alt) | N/A                         | N/A                                     |
+| **Note params**       | `p` array of `{n, v}` objects             | N/A                                        | N/A                                     |
+| **Album / preview**   | `playData.album`, `previewStart`, `previewEnd` | N/A                                   | N/A                                     |
