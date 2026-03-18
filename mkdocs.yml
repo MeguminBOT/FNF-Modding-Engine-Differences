@@ -76,6 +76,7 @@ nav:
       - Chart / Song Converter: tools/chart-converter.md
       - Stage Converter: tools/stage-converter.md
       - Script Converter: tools/script-converter.md
+  - Changelog: changelog.md
 
 hooks:
   - hooks/last_updated.py
@@ -92,3 +93,4 @@ extra_javascript:
   - js/chart-converter.js
   - js/stage-converter.js
   - js/script-converter.js
+  - js/changelog.js
