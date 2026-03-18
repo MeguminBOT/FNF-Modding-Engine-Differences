@@ -11,7 +11,9 @@ mods/MyMod/
 │   ├── songs/
 │   │   └── <songid>/
 │   │       ├── <songid>-metadata.json
-│   │       └── <songid>-chart.json
+│   │       ├── <songid>-chart.json
+│   │       ├── <songid>-metadata-<variation>.json  # Per-variation metadata
+│   │       └── <songid>-chart-<variation>.json     # Per-variation chart
 │   └── stages/                 # Stage JSON files
 ├── images/
 │   ├── characters/             # Character spritesheets
@@ -19,8 +21,9 @@ mods/MyMod/
 ├── songs/
 │   └── <songid>/
 │       ├── Inst.ogg
-│       ├── Voices-bf.ogg       # Per-character vocals
-│       └── Voices-pico.ogg
+│       ├── Inst-<variation>.ogg    # Variation instrumental (e.g. Inst-erect.ogg)
+│       ├── Voices-bf.ogg          # Per-character vocals (suffix = -<charId>)
+│       └── Voices-dad.ogg
 ├── scripts/                    # HScript module scripts (.hxc)
 └── shared/                     # Shared assets
 ```
