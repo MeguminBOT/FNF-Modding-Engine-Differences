@@ -10,16 +10,16 @@
       <option value="auto">Auto-detect</option>
       <option value="lua">Psych Engine Lua</option>
       <option value="psych-hx">Psych Engine HScript Iris</option>
-      <option value="funkin-hx">Official Funkin HScript</option>
-      <option value="codename-hx">Codename Engine HScript</option>
+      <option value="funkin-hx" disabled>Official Funkin HScript (coming soon)</option>
+      <option value="codename-hx" disabled>Codename Engine HScript (coming soon)</option>
     </select>
   </div>
   <div style="flex: 1; min-width: 200px;">
     <label for="script-target-lang"><strong>Target</strong></label>
     <select id="script-target-lang" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--md-default-fg-color--lighter); background: var(--md-code-bg-color); color: var(--md-code-fg-color);">
       <option value="psych-hx">Psych Engine HScript Iris</option>
-      <option value="funkin-hx">Official Funkin HScript</option>
-      <option value="codename-hx">Codename Engine HScript</option>
+      <option value="funkin-hx" disabled>Official Funkin HScript (coming soon)</option>
+      <option value="codename-hx" disabled>Codename Engine HScript (coming soon)</option>
       <option value="lua">Psych Engine Lua</option>
     </select>
   </div>
