@@ -351,7 +351,7 @@
     if (m) return indent + m[1] + ".animation.play('" + m[2] + "'" + (m[3] ? ", " + m[3] : "") + ");";
 
     // setProperty(var + '.prop', val) — dynamic tag concatenation
-    m = content.match(/^setProperty\s*\(\s*(\w+)\s*\+\s*'(\.[^']+)'\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    m = content.match(/^setProperty\s*\(\s*(\w+)\s*(?:\+|\.\.)\s*'(\.[^']+)'\s*,\s*(.+?)\s*\)\s*;?\s*$/);
     if (m) return indent + m[1] + m[2] + " = " + convertLuaValue(m[3].trim()) + ";";
 
     // setProperty(path, val)
@@ -359,7 +359,7 @@
     if (m) return indent + "game." + m[1] + " = " + convertLuaValue(m[2].trim()) + ";";
 
     // getProperty(var + '.prop') — dynamic tag standalone (rare)
-    m = content.match(/^getProperty\s*\(\s*(\w+)\s*\+\s*'(\.[^']+)'\s*\)\s*;?\s*$/);
+    m = content.match(/^getProperty\s*\(\s*(\w+)\s*(?:\+|\.\.)\s*'(\.[^']+)'\s*\)\s*;?\s*$/);
     if (m) return indent + m[1] + m[2] + ";";
 
     // getProperty(path) — standalone call (rare)
@@ -1112,7 +1112,7 @@
 
   function convertLuaExpr(expr) {
     // getProperty inline (dynamic tag concatenation)
-    expr = expr.replace(/getProperty\s*\(\s*(\w+)\s*\+\s*'(\.[^']+)'\s*\)/g, "$1$2");
+    expr = expr.replace(/getProperty\s*\(\s*(\w+)\s*(?:\+|\.\.)\s*'(\.[^']+)'\s*\)/g, "$1$2");
 
     // getProperty inline
     expr = expr.replace(/getProperty\s*\(\s*'([^']+)'\s*\)/g, "game.$1");
