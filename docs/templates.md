@@ -1,5 +1,8 @@
 # Mod Templates
 
+!!! warning "Under Construction"
+    This page is under construction. Don't take anything on the template pages as finished.
+
 Starter templates with the correct folder structure, example data, and working scripts so you can jump straight into modding.
 
 Pick your engine to get started:

@@ -1,5 +1,8 @@
 # Script Converter
 
+!!! warning "Under Development"
+    The Script Converter is **still under active development** and is not stable. It will almost certainly produce broken or incomplete scripts. It is strongly advised to not use this yet. Always review and test the output manually before using it in your mod.
+
 <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
   <div style="flex: 1; min-width: 200px;">
     <label for="script-source-lang"><strong>Source</strong></label>
