@@ -1338,7 +1338,9 @@
         }
       }
 
-      result.push(converted);
+      if (converted !== "__SKIP_LINE__") {
+        result.push(converted);
+      }
     }
 
     return result.join("\n");
@@ -1385,6 +1387,14 @@
 
     // } -> end
     if (/^\}\s*;?\s*$/.test(codeContent)) return indent + "end" + inlineComment;
+
+    // One-line if: if (COND) BODY; -> if COND then BODY end
+    var oneLineIfMatch = codeContent.match(/^if\s*\((.+)\)\s+(.+?)\s*;\s*$/);
+    if (oneLineIfMatch) {
+      var cond = convertHScriptExpr(oneLineIfMatch[1]);
+      var body = convertHScriptExpr(oneLineIfMatch[2]);
+      return indent + "if " + cond + " then " + body + " end" + inlineComment;
+    }
 
     // if (...) { -> if ... then
     var ifMatch = codeContent.match(/^if\s*\((.+)\)\s*\{\s*$/);
@@ -1516,6 +1526,17 @@
     m = content.match(/^Paths\.image\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
     if (m) return indent + "precacheImage('" + m[1] + "')";
 
+    // _cachedImages.set('path', Paths.image('path'));  (precache via StringMap)
+    m = content.match(/^_cached\w+\.set\s*\(\s*['"]([^'"]+)['"]\s*,\s*Paths\.(image|sound|music)\s*\(\s*['"]([^'"]+)['"]\s*\)\s*\)\s*;\s*$/);
+    if (m) {
+      var fnMap = { image: "precacheImage", sound: "precacheSound", music: "precacheMusic" };
+      return indent + fnMap[m[2]] + "('" + m[3] + "')";
+    }
+
+    // var _cachedImages = new haxe.ds.StringMap();  (precache declaration - skip)
+    m = content.match(/^var\s+_cached\w+\s*=\s*new\s+haxe\.ds\.StringMap\s*\(\s*\)\s*;\s*$/);
+    if (m) return "__SKIP_LINE__";
+
     // Paths.sound('name');  (precache)
     m = content.match(/^Paths\.sound\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
     if (m) return indent + "precacheSound('" + m[1] + "')";
@@ -1556,6 +1577,18 @@
     m = content.match(/^(\w+)\.color\s*=\s*FlxColor\.fromString\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
     if (m) return indent + "setTextColor('" + m[1] + "', '" + m[2] + "')";
 
+    // tag.borderStyle = OUTLINE/SHADOW/NONE/OUTLINE_FAST; → converted as part of setTextBorder group
+    m = content.match(/^(\w+)\.borderStyle\s*=\s*(\w+)\s*;\s*$/);
+    if (m) return indent + "-- borderStyle: " + m[2].toLowerCase();
+
+    // tag.borderSize = val; → setTextBorder second arg
+    m = content.match(/^(\w+)\.borderSize\s*=\s*(.+?)\s*;\s*$/);
+    if (m) return indent + "-- borderSize: " + m[2].trim();
+
+    // tag.borderColor = FlxColor.fromString('color'); → setTextBorder third arg
+    m = content.match(/^(\w+)\.borderColor\s*=\s*FlxColor\.fromString\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
+    if (m) return indent + "setTextBorder('" + m[1] + "', 0, '" + m[2] + "')";
+
     // tag.font = Paths.font('font');
     m = content.match(/^(\w+)\.font\s*=\s*Paths\.font\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
     if (m) return indent + "setTextFont('" + m[1] + "', '" + m[2] + "')";
@@ -1564,9 +1597,12 @@
     m = content.match(/^(\w+)\.italic\s*=\s*(true|false)\s*;\s*$/);
     if (m) return indent + "setTextItalic('" + m[1] + "', " + m[2] + ")";
 
-    // tag.alignment = 'val';
-    m = content.match(/^(\w+)\.alignment\s*=\s*['"]([^'"]+)['"]\s*;\s*$/);
-    if (m) return indent + "setTextAlignment('" + m[1] + "', '" + m[2] + "')";
+    // tag.alignment = LEFT/CENTER/RIGHT/JUSTIFY or 'val';
+    m = content.match(/^(\w+)\.alignment\s*=\s*(?:['"]([^'"]+)['"]|(\w+))\s*;\s*$/);
+    if (m) {
+      var align = (m[2] || m[3] || 'left').toLowerCase();
+      return indent + "setTextAlignment('" + m[1] + "', '" + align + "')";
+    }
 
     // tag.fieldWidth = val;
     m = content.match(/^(\w+)\.fieldWidth\s*=\s*(.+?)\s*;\s*$/);
@@ -1708,6 +1744,16 @@
 
     // FlxG.save.data.field -> getDataFromSave equivalent
     expr = expr.replace(/\bFlxG\.save\.data\.(\w+)/g, "getDataFromSave('save', '$1')");
+
+    // Convert Haxe anonymous structs { key: value } back to Lua tables { key = value }
+    expr = expr.replace(/\{([^{}]*)\}/g, function(match, inner) {
+      var trimmed = inner.trim();
+      if (/\w+\s*:\s*/.test(trimmed)) {
+        var converted = inner.replace(/(\w+)\s*:/g, '$1 =');
+        return '{' + converted + '}';
+      }
+      return match;
+    });
 
     // Known HScript variables -> Lua built-in variables (longer paths first)
     var sortedKeys = Object.keys(SC.hscriptVarToLua).sort(function (a, b) { return b.length - a.length; });
