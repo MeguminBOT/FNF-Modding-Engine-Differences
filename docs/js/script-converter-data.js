@@ -73,7 +73,10 @@
   SC.cameraMap = {
     "camGame": "game.camGame",
     "camHUD": "game.camHUD",
-    "camOther": "game.camOther"
+    "camOther": "game.camOther",
+    "game": "game.camGame",
+    "hud": "game.camHUD",
+    "other": "game.camOther"
   };
 
   // Psych Lua note callbacks receive decomposed primitives;

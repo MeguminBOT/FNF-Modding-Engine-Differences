@@ -189,6 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function convertScript(raw, source, target) {
     if (source === "lua") {
       var psychHx = SC.luaToPsychHScript(raw);
+      if (SC.postProcessHScript) psychHx = SC.postProcessHScript(psychHx);
       if (target === "psych-hx") return psychHx;
       if (target === "funkin-hx") return SC.psychHxToFunkinHx(psychHx);
       if (target === "codename-hx") return SC.psychHxToCodenameHx(psychHx);

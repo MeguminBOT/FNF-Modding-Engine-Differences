@@ -431,8 +431,11 @@
     // =============================================
 
     // makeGraphic(tag, width, height, color)
-    m = content.match(/^makeGraphic\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*'?([^')*]*)'?\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + ".makeGraphic(" + m[2].trim() + ", " + m[3].trim() + ", FlxColor.fromString('" + m[4].trim() + "'));";
+    m = content.match(/^makeGraphic\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*'([^']*)'\s*\)\s*;?\s*$/);
+    if (m) return indent + m[1] + ".makeGraphic(" + m[2].trim() + ", " + m[3].trim() + ", FlxColor.fromString('#" + m[4].trim() + "'));";    m = content.match(/^makeGraphic\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*(\w+)\s*\)\s*;?\s*$/);
+    if (m) return indent + m[1] + ".makeGraphic(" + m[2].trim() + ", " + m[3].trim() + ", FlxColor.fromString('#' + " + m[4].trim() + "));";    // makeGraphic with no color
+    m = content.match(/^makeGraphic\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) return indent + m[1] + ".makeGraphic(" + m[2].trim() + ", " + m[3].trim() + ");";    
 
     // loadGraphic(obj, image, gridX, gridY)
     m = content.match(/^loadGraphic\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*(?:,\s*(.+?)\s*,\s*(.+?))?\s*\)\s*;?\s*$/);
@@ -507,7 +510,7 @@
     m = content.match(/^setTextBorder\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*,\s*(?:'([^']+)'|(\w[\w.]*))\s*(?:,\s*'([^']*)')?\s*\)\s*;?\s*$/);
     if (m) {
       var tag = m[1] || m[2];
-      var color = m[4] ? "FlxColor.fromString('" + m[4] + "')" : "FlxColor.fromString(" + m[5] + ")";
+      var color = m[4] ? "FlxColor.fromString('#" + m[4] + "')" : "FlxColor.fromString('#' + " + m[5] + ")";
       var style = (m[6] || 'outline').toUpperCase().replace(/ /g, '_');
       return indent + tag + '.borderStyle = ' + style + ';\n' + indent + tag + '.borderSize = ' + m[3].trim() + ';\n' + indent + tag + '.borderColor = ' + color + ';';
     }
@@ -659,7 +662,7 @@
     m = content.match(/^cameraFlash\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(.+?)\s*,\s*(true|false)\s*\)\s*;?\s*$/);
     if (m) {
       var cam = SC.cameraMap[m[1]] || 'game.' + m[1];
-      return indent + cam + ".flash(FlxColor.fromString('" + m[2] + "'), " + m[3].trim() + ', null, ' + m[4] + ');';
+      return indent + cam + ".flash(FlxColor.fromString('#" + m[2] + "'), " + m[3].trim() + ', null, ' + m[4] + ');';
     }
 
     // cameraFade(camera, color, duration, forced, fadeOut)
@@ -667,7 +670,7 @@
     if (m) {
       var cam = SC.cameraMap[m[1]] || 'game.' + m[1];
       var fadeOut = m[5] || 'false';
-      return indent + cam + ".fade(FlxColor.fromString('" + m[2] + "'), " + m[3].trim() + ', ' + fadeOut + ', null, ' + m[4] + ');';
+      return indent + cam + ".fade(FlxColor.fromString('#" + m[2] + "'), " + m[3].trim() + ', ' + fadeOut + ', null, ' + m[4] + ');';
     }
 
     // setCameraScroll(x, y)
@@ -740,11 +743,11 @@
 
     // setHealthBarColors(left, right)
     m = content.match(/^setHealthBarColors\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + "game.healthBar.setColors(FlxColor.fromString('" + m[1] + "'), FlxColor.fromString('" + m[2] + "'));";
+    if (m) return indent + "game.healthBar.setColors(FlxColor.fromString('#" + m[1] + "'), FlxColor.fromString('#" + m[2] + "'));";
 
     // setTimeBarColors(left, right)
     m = content.match(/^setTimeBarColors\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + "game.timeBar.setColors(FlxColor.fromString('" + m[1] + "'), FlxColor.fromString('" + m[2] + "'));";
+    if (m) return indent + "game.timeBar.setColors(FlxColor.fromString('#" + m[1] + "'), FlxColor.fromString('#" + m[2] + "'));";
 
     // =============================================
     // DEBUG
@@ -1054,7 +1057,7 @@
 
     // luaSpriteMakeGraphic(tag, width, height, color)
     m = content.match(/^luaSpriteMakeGraphic\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*'?([^')]*)'?\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + ".makeGraphic(" + m[2].trim() + ", " + m[3].trim() + ", FlxColor.fromString('" + m[4].trim() + "'));";
+    if (m) return indent + m[1] + ".makeGraphic(" + m[2].trim() + ", " + m[3].trim() + ", FlxColor.fromString('#" + m[4].trim() + "'));";
 
     // luaSpriteAddAnimationByPrefix → same as addAnimationByPrefix
     m = content.match(/^luaSpriteAddAnimationByPrefix\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(true|false)\s*\)\s*;?\s*$/);
@@ -1126,10 +1129,23 @@
     // Not equal ~= to !=
     expr = expr.replace(/~=/g, "!=");
 
+    // Lua ternary idiom: COND and VALUE or FALLBACK -> (COND) ? VALUE : FALLBACK
+    // Must run BEFORE and/or -> &&/|| conversion
+    var ternaryMatch = expr.match(/^(.+?)\s+and\s+(.+?)\s+or\s+((?:(?!\band\b|\bor\b).)+)$/);
+    if (ternaryMatch) {
+      var tCond = ternaryMatch[1];
+      var tTrue = ternaryMatch[2];
+      var tFalse = ternaryMatch[3];
+      // Only convert if the value parts don't contain further and/or (i.e. simple ternary)
+      if (!/\b(?:and|or)\b/.test(tTrue) && !/\b(?:and|or)\b/.test(tFalse)) {
+        return "(" + convertLuaExpr(tCond) + ") ? (" + convertLuaExpr(tTrue) + ") : (" + convertLuaExpr(tFalse) + ")";
+      }
+    }
+
     // Boolean operators
     expr = expr.replace(/\bnot\s+/g, "!");
     expr = expr.replace(/\band\b/g, "&&");
-    expr = expr.replace(/\bor\b/g, "||");
+    expr = expr.replace(/\bor\b/g, "||");;
 
     // nil -> null
     expr = expr.replace(/\bnil\b/g, "null");
@@ -1140,10 +1156,12 @@
       expr = expr.replace(regex, SC.luaVarToHScript[luaVar]);
     }
 
-    // math.floor, math.ceil, math.abs, math.random
+    // math.floor, math.ceil, math.abs, math.max, math.min, math.random
     expr = expr.replace(/\bmath\.floor\b/g, "Math.floor");
     expr = expr.replace(/\bmath\.ceil\b/g, "Math.ceil");
     expr = expr.replace(/\bmath\.abs\b/g, "Math.abs");
+    expr = expr.replace(/\bmath\.max\b/g, "Math.max");
+    expr = expr.replace(/\bmath\.min\b/g, "Math.min");
     expr = expr.replace(/\bmath\.random\b/g, "FlxG.random.float");
     expr = expr.replace(/\bmath\.pi\b/gi, "Math.PI");
     expr = expr.replace(/\bmath\.sin\b/g, "Math.sin");
@@ -1274,6 +1292,9 @@
 
     // getModSetting inline
     expr = expr.replace(/\bgetModSetting\s*\(\s*'([^']+)'\s*\)/g, "getModSetting('$1')");
+
+    // Add '#' prefix to bare hex colors in FlxColor.fromString('HEXCOLOR')
+    expr = expr.replace(/FlxColor\.fromString\('([0-9A-Fa-f]{6,8})'\)/g, "FlxColor.fromString('#$1')");
 
     return expr;
   }
@@ -1575,7 +1596,10 @@
 
     // tag.color = FlxColor.fromString('color');
     m = content.match(/^(\w+)\.color\s*=\s*FlxColor\.fromString\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
-    if (m) return indent + "setTextColor('" + m[1] + "', '" + m[2] + "')";
+    if (m) {
+      var hexColor = m[2].replace(/^#/, '');
+      return indent + "setTextColor('" + m[1] + "', '" + hexColor + "')";
+    }
 
     // tag.borderStyle = OUTLINE/SHADOW/NONE/OUTLINE_FAST; → converted as part of setTextBorder group
     m = content.match(/^(\w+)\.borderStyle\s*=\s*(\w+)\s*;\s*$/);
@@ -1587,7 +1611,10 @@
 
     // tag.borderColor = FlxColor.fromString('color'); → setTextBorder third arg
     m = content.match(/^(\w+)\.borderColor\s*=\s*FlxColor\.fromString\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
-    if (m) return indent + "setTextBorder('" + m[1] + "', 0, '" + m[2] + "')";
+    if (m) {
+      var hexColor = m[2].replace(/^#/, '');
+      return indent + "setTextBorder('" + m[1] + "', 0, '" + hexColor + "')";
+    }
 
     // tag.font = Paths.font('font');
     m = content.match(/^(\w+)\.font\s*=\s*Paths\.font\s*\(\s*['"]([^'"]+)['"]\s*\)\s*;\s*$/);
@@ -1626,13 +1653,15 @@
     m = content.match(/^(game\.cam\w+|FlxG\.camera)\.flash\s*\(\s*FlxColor\.fromString\s*\(\s*['"]([^'"]+)['"]\s*\)\s*,\s*(.+?)\s*(?:,\s*null\s*,\s*(true|false))?\s*\)\s*;\s*$/);
     if (m) {
       var camName = m[1].replace("game.", "");
-      return indent + "cameraFlash('" + camName + "', '" + m[2] + "', " + m[3].trim() + (m[4] ? ", " + m[4] : ", false") + ")";
+      var hexColor = m[2].replace(/^#/, '');
+      return indent + "cameraFlash('" + camName + "', '" + hexColor + "', " + m[3].trim() + (m[4] ? ", " + m[4] : ", false") + ")";
     }
 
     m = content.match(/^(game\.cam\w+|FlxG\.camera)\.fade\s*\(\s*FlxColor\.fromString\s*\(\s*['"]([^'"]+)['"]\s*\)\s*,\s*(.+?)\s*,\s*(true|false)\s*(?:,\s*null\s*,\s*(true|false))?\s*\)\s*;\s*$/);
     if (m) {
       var camName = m[1].replace("game.", "");
-      return indent + "cameraFade('" + camName + "', '" + m[2] + "', " + m[3].trim() + ", " + (m[5] || "false") + ", " + m[4] + ")";
+      var hexColor = m[2].replace(/^#/, '');
+      return indent + "cameraFade('" + camName + "', '" + hexColor + "', " + m[3].trim() + ", " + (m[5] || "false") + ", " + m[4] + ")";
     }
 
     // game.songScore/songMisses/songHits += value;
@@ -1698,6 +1727,8 @@
     expr = expr.replace(/\bMath\.floor\b/g, "math.floor");
     expr = expr.replace(/\bMath\.ceil\b/g, "math.ceil");
     expr = expr.replace(/\bMath\.abs\b/g, "math.abs");
+    expr = expr.replace(/\bMath\.max\b/g, "math.max");
+    expr = expr.replace(/\bMath\.min\b/g, "math.min");
     expr = expr.replace(/\bMath\.PI\b/g, "math.pi");
     expr = expr.replace(/\bMath\.sin\b/g, "math.sin");
     expr = expr.replace(/\bMath\.cos\b/g, "math.cos");
@@ -1716,8 +1747,8 @@
     expr = expr.replace(/\bFlxG\.random\.float\s*\(\s*(.+?)\s*,\s*(.+?)\s*\)/g, "getRandomFloat($1, $2)");
     expr = expr.replace(/\bFlxG\.random\.bool\s*\(\s*(.+?)\s*\)/g, "getRandomBool($1)");
 
-    // FlxColor.fromString -> getColorFromHex
-    expr = expr.replace(/\bFlxColor\.fromString\s*\(\s*(['"][^'"]+['"])\s*\)/g, "getColorFromHex($1)");
+    // FlxColor.fromString -> getColorFromHex (strip '#' prefix for Lua)
+    expr = expr.replace(/\bFlxColor\.fromString\s*\(\s*['"]#?([^'"]+)['"]\s*\)/g, "getColorFromHex('$1')");
 
     // FlxG.keys -> keyboard input
     expr = expr.replace(/\bFlxG\.keys\.justPressed\.(\w+)/g, "keyboardJustPressed('$1')");

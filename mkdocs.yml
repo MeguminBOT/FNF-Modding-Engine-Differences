@@ -101,5 +101,6 @@ extra_javascript:
   - js/script-converter-lua.js
   - js/script-converter-hx.js
   - js/script-converter-analysis.js
+  - js/script-converter-postprocess.js
   - js/script-converter.js
   - js/changelog.js
