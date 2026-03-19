@@ -63,6 +63,11 @@ nav:
           - Health Icons: health-icons.md
       - Additional Features: additional-features.md
       - Cross-Engine Conversion: cross-engine-conversion.md
+  - Templates:
+      - Overview: templates.md
+      - "Official Funkin' (V-Slice)": template-guides/vslice.md
+      - Psych Engine: template-guides/psych.md
+      - Codename Engine: template-guides/codename.md
   - Reference:
       - Overview: reference/index.md
       - Cross-Engine Class Map: reference/classes-map.md
@@ -92,5 +97,9 @@ extra_javascript:
   - js/week-converter.js
   - js/chart-converter.js
   - js/stage-converter.js
+  - js/script-converter-data.js
+  - js/script-converter-lua.js
+  - js/script-converter-hx.js
+  - js/script-converter-analysis.js
   - js/script-converter.js
   - js/changelog.js
