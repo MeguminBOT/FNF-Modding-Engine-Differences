@@ -1,0 +1,7 @@
+{
+    "name": "My Mod",
+    "description": "A cool mod for Psych Engine.",
+    "restart": false,
+    "runsGlobally": false,
+    "color": [170, 0, 255]
+}

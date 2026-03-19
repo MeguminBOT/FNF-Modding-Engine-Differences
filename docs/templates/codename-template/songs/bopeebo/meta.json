@@ -1,0 +1,13 @@
+{
+    "name": "bopeebo",
+    "bpm": 100,
+    "difficulties": ["easy", "normal", "hard"],
+    "displayName": "Bopeebo",
+    "icon": "dad",
+    "color": "#AF66CE",
+    "needsVoices": true,
+    "coopAllowed": true,
+    "opponentModeAllowed": true,
+    "stepsPerBeat": 4,
+    "beatsPerMeasure": 4
+}
