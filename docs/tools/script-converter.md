@@ -1,13 +1,5 @@
 # Script Converter
 
-!!! info "Coming Soon"
-    The Script Converter is currently under development and will be available in a future update. It will support converting scripts between Psych Engine Lua, Psych Engine HScript Iris, Official Funkin HScript, and Codename Engine HScript.
-
-    In the meantime, check out the [API Reference](../reference/index.md) for cross-engine class maps, callback mappings, and full function listings to help with manual script conversion.
-
-<!-- Tool UI and documentation preserved below — do not remove -->
-<!--
-
 <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
   <div style="flex: 1; min-width: 200px;">
     <label for="script-source-lang"><strong>Source</strong></label>
@@ -97,15 +89,23 @@
 | --- | --- | --- | --- |
 | Creation | `onCreate()` | `onCreate()` | `create()` |
 | Post-creation | `onCreatePost()` | `onCreatePost()` | `postCreate()` |
-| Update | `onUpdate(elapsed)` | `onUpdate(elapsed)` | `update(elapsed)` |
-| Post-update | `onUpdatePost(elapsed)` | `onUpdatePost(elapsed)` | `postUpdate(elapsed)` |
-| Destroy | `onDestroy()` | `onDestroy()` | `destroy()` |
-| Beat hit | `onBeatHit()` | `onBeatHit(curBeat)` | `beatHit(curBeat)` |
-| Step hit | `onStepHit()` | `onStepHit(curStep)` | `stepHit(curStep)` |
-| Song end | `onEndSong()` | `onEndSong()` | `onSongEnd()` |
-| Player note hit | `goodNoteHit(note)` | `goodNoteHit(note)` | `onPlayerHit(event)` |
-| Note miss | `noteMiss(note)` | `noteMiss(note)` | `onPlayerMiss(event)` |
-| Opponent note hit | `opponentNoteHit(note)` | `opponentNoteHit(note)` | `onDadHit(event)` |
+| Update | `onUpdate(elapsed)` | `onUpdate(event)` — `event.elapsed` | `update(elapsed)` |
+| Post-update | `onUpdatePost(elapsed)` | `onUpdatePost(event)` — `event.elapsed` | `postUpdate(elapsed)` |
+| Destroy | `onDestroy()` | `onDestroy(event)` | `destroy()` |
+| Beat hit | `onBeatHit()` | `onBeatHit(event)` — `event.beat` | `beatHit(curBeat)` |
+| Step hit | `onStepHit()` | `onStepHit(event)` — `event.step` | `stepHit(curStep)` |
+| Song end | `onEndSong()` | `onSongEnd(event)` | `onSongEnd()` |
+| Countdown start | `onStartCountdown()` | `onCountdownStart(event)` | `onStartCountdown()` |
+| Player note hit | `goodNoteHit(note)` | `onNoteHit(event)` — `event.note` | `onPlayerHit(event)` |
+| Note miss | `noteMiss(note)` | `onNoteMiss(event)` — `event.note` | `onPlayerMiss(event)` |
+| Opponent note hit | `opponentNoteHit(note)` | `onNoteHit(event)` | `onDadHit(event)` |
+| Ghost miss | `noteMissPress(direction)` | `onNoteGhostMiss(event)` — `event.dir` | `onPlayerMiss(event)` |
+| Song event | `onEvent(name, v1, v2)` | `onSongEvent(event)` — `event.eventData` | `onEvent(event)` |
+| Song start | `onSongStart()` | `onSongStart(event)` | `onSongStart()` |
+| Pause | `onPause()` | `onPause(event)` | `onPause()` |
+| Game over | `onGameOver()` | `onGameOver(event)` | `onGameOver(event)` |
+| Song retry | — | `onSongRetry(event)` | — |
+| Countdown end | — | `onCountdownEnd(event)` | — |
 
 ## HScript Variant Differences
 
@@ -113,17 +113,32 @@
 | --- | --- | --- | --- |
 | PlayState reference | `game` | `PlayState.instance` | _(direct access)_ |
 | Add to stage | `game.add(spr)` | `PlayState.instance.add(spr)` | `add(spr)` |
-| Access boyfriend | `game.boyfriend` | `PlayState.instance.boyfriend` | `boyfriend` |
+| Access boyfriend | `game.boyfriend` | `PlayState.instance.currentStage.getBoyfriend()` | `boyfriend` |
+| Access dad | `game.dad` | `PlayState.instance.currentStage.getDad()` | `dad` |
+| Access girlfriend | `game.gf` | `PlayState.instance.currentStage.getGirlfriend()` | `gf` |
 | Set health | `game.health = 1.5` | `PlayState.instance.health = 1.5` | `health = 1.5` |
 | Character anim | `.playAnim("name")` | `.playAnimation("name")` | `.playAnim("name")` |
+| Character ID | `.curCharacter` | `.characterId` | `.curCharacter` |
 | Camera ref | `game.camHUD` | `PlayState.instance.camHUD` | `camHUD` |
+| Conductor BPM | `Conductor.bpm` | `Conductor.instance.bpm` | `Conductor.bpm` |
+| Beat duration | `Conductor.crochet` | `Conductor.instance.beatLengthMs` | `Conductor.crochet` |
+| Step duration | `Conductor.stepCrochet` | `Conductor.instance.stepLengthMs` | `Conductor.stepCrochet` |
+| Note direction | `note.noteData` | `note.direction` | `note.noteData` |
+| Note type | `note.noteType` | `note.kind` | `note.noteType` |
+| Is sustain | `note.isSustainNote` | `note.isHoldNote` | `note.isSustainNote` |
+| Flow control (stop) | `return Function_Stop;` | `event.cancel(); return;` | `event.cancel(); return;` |
+| Flow control (continue) | `return Function_Continue;` | _(default, no action)_ | _(default, no action)_ |
 
 !!! info "Limitations"
     - **Table-driven patterns**: Lua `for _, item in ipairs(tbl)` converts to `for (item in tbl)` and `for k, v in pairs(tbl)` converts to `for (k => v in tbl)`. Complex nested table structures may still need manual review.
     - **String concatenation**: Lua `..` is converted to HScript `+`, which works for strings but may need `Std.string()` wraps for mixed types.
+    - **Lua→HScript note callbacks**: Note callbacks like `goodNoteHit(id, direction, noteType, isSustainNote)` are automatically converted to HScript's single-object form `goodNoteHit(note)`, with parameter references remapped (e.g., `direction` → `note.noteData`, `noteType` → `note.noteType`). `onCountdownTick(counter)` gains the additional `tick` parameter. The reverse (HScript→Lua) also converts `note.noteData` → `direction` etc.
     - **Psych built-in variables**: Variables like `downscroll`, `middlescroll`, `boyfriendName`, `dadName` are converted to their Psych HScript equivalents. When targeting Funkin or Codename, these are commented as Psych-specific.
     - **Codename events**: Codename callbacks receive event objects (e.g., `onPlayerHit(event)`) instead of note objects. Note property accesses are automatically remapped — direct event properties like `event.direction`, `event.noteType`, `event.score` are used where available, and `event.note.property` for note-specific fields. Codename event methods like `event.preventAnim()` have no Psych equivalent and are commented.
+    - **Funkin ScriptEvents**: Official Funkin uses ScriptEvent-based callbacks (e.g., `onUpdate(event)` with `event.elapsed`, `onNoteHit(event)` with `event.note`). Callbacks are renamed (`goodNoteHit` → `onNoteHit`, `onEndSong` → `onSongEnd`, `onStartCountdown` → `onCountdownStart`), parameters are remapped to event object fields, and note properties are translated (`noteData` → `direction`, `noteType` → `kind`, `isSustainNote` → `isHoldNote`).
+    - **Psych-only callbacks**: When converting to Funkin, callbacks with no equivalent (e.g., `onSpawnNote`, `onMoveCamera`, `onRecalculateRating`, `onKeyPress`, `onGhostTap`, `goodNoteHitPre`, `opponentNoteHitPre`) are flagged with a `[Psych-specific]` comment explaining the gap.
+    - **Funkin character access**: Characters in Official Funkin are accessed via `PlayState.instance.currentStage.getBoyfriend()` / `getDad()` / `getGirlfriend()` instead of direct properties. The converter handles this automatically.
+    - **Funkin Conductor**: Psych uses static `Conductor.bpm`; Funkin uses instance-based `Conductor.instance.bpm`. Field names also differ: `crochet` → `beatLengthMs`, `stepCrochet` → `stepLengthMs`.
     - **Funkin `playAnimation`**: Official Funkin characters use `.playAnimation()` instead of `.playAnim()`. This is handled automatically.
     - **`close(true)`**: The Lua `close()` function closes the running Lua script. HScript scripts are managed differently, so this is commented out with an explanation.
-    - **Flow control**: `Function_Stop` and `Function_StopAll` are converted to `event.cancel(); return;` for Codename. `Function_Continue` (the default) is removed. `Function_StopLua` and `Function_StopHScript` are Psych-only and commented. In the reverse direction, `event.cancel()` converts to `return Function_Stop;`.
--->
+    - **Flow control**: `Function_Stop` and `Function_StopAll` are converted to `event.cancel(); return;` for both Codename and Funkin. `Function_Continue` (the default) is removed. `Function_StopLua` and `Function_StopHScript` are Psych-only and commented. In the reverse direction, `event.cancel()` and `event.cancelEvent()` convert to `return Function_Stop;`.
