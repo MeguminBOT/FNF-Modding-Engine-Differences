@@ -17,9 +17,102 @@
     var declaredVars = {};
     var noteCallbackState = null;
 
+    // Pre-scan: find tags used with setObjectOrder/getObjectOrder
+    var orderTags = {};
+    for (var k = 0; k < lines.length; k++) {
+      var om = lines[k].match(/(?:setObjectOrder|getObjectOrder)\s*\(\s*'([^']+)'/);
+      if (om) orderTags[om[1]] = true;
+    }
+
+    // Pre-scan: collect all precache calls grouped by type
+    var precacheState = { images: [], sounds: [], musics: [], emitted: false };
+    for (var k = 0; k < lines.length; k++) {
+      var pc;
+      pc = lines[k].trim().match(/^precacheImage\s*\(\s*'([^']+)'\s*\)/);
+      if (pc) { precacheState.images.push(pc[1]); continue; }
+      pc = lines[k].trim().match(/^precacheSound\s*\(\s*'([^']+)'\s*\)/);
+      if (pc) { precacheState.sounds.push(pc[1]); continue; }
+      pc = lines[k].trim().match(/^precacheMusic\s*\(\s*'([^']+)'\s*\)/);
+      if (pc) { precacheState.musics.push(pc[1]); continue; }
+    }
+
+    // Pre-process: join multi-line if/elseif conditions into single lines
+    // In Lua, if/elseif conditions can span multiple lines until 'then'
+    for (var k = 0; k < lines.length; k++) {
+      var trimK = lines[k].trim();
+      if (/^(if|elseif)\s+/.test(trimK) && !/\bthen\s*$/.test(trimK) && !/\bend\s*$/.test(trimK)) {
+        while (k + 1 < lines.length) {
+          var nextTrim = lines[k + 1].trim();
+          lines[k] = lines[k].trimEnd() + ' ' + nextTrim;
+          lines.splice(k + 1, 1);
+          if (/\bthen\s*$/.test(nextTrim)) break;
+        }
+      }
+    }
+
+    // Pre-process: convert Lua table syntax to HScript
+    // In raw Lua, {} is always a table literal (code blocks use then/do...end)
+    var tableStack = [];
+    for (var k = 0; k < lines.length; k++) {
+      var trimK = lines[k].trim();
+      if (/^--/.test(trimK)) continue;
+
+      var opens = (trimK.match(/\{/g) || []).length;
+      var closes = (trimK.match(/\}/g) || []).length;
+      var netOpen = opens - closes;
+
+      if (netOpen > 0) {
+        for (var n = 0; n < netOpen; n++) {
+          var nextContent = '';
+          for (var j = k + 1; j < lines.length; j++) {
+            var trimJ = lines[j].trim();
+            if (trimJ && !/^--/.test(trimJ)) { nextContent = trimJ; break; }
+          }
+          if (/^\w+\s*=\s/.test(nextContent)) {
+            tableStack.push('struct');
+          } else {
+            tableStack.push('array');
+            lines[k] = lines[k].replace(/\{(\s*)$/, '[$1');
+          }
+        }
+      } else if (netOpen < 0) {
+        for (var n = 0; n < -netOpen; n++) {
+          if (tableStack.length > 0) {
+            var type = tableStack.pop();
+            if (type === 'array') {
+              lines[k] = lines[k].replace(/\}/, ']');
+            }
+          }
+        }
+      }
+
+      if (tableStack.length > 0 && tableStack[tableStack.length - 1] === 'struct') {
+        if (/^\w+\s*=\s/.test(trimK) && !/^(if|elseif|local|return|for|while|function|end)\b/.test(trimK)) {
+          lines[k] = lines[k].replace(/^(\s*\w+)\s*=/, '$1:');
+        }
+      }
+    }
+
+    var tableLiteralDepth = 0;
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
-      var converted = convertLuaLine(line, declaredVars);
+
+      // Track table/array literal depth from pre-processed lines
+      // In pre-processed Lua, { } [ ] are ONLY table/array literals (code blocks use then/do/end)
+      var preTrim = line.trim();
+      if (!/^--/.test(preTrim)) {
+        var noStrings = preTrim.replace(/'[^']*'|"[^"]*"/g, '');
+        var tOpens = (noStrings.match(/[\[{]/g) || []).length;
+        var tCloses = (noStrings.match(/[\]}]/g) || []).length;
+        tableLiteralDepth += tOpens - tCloses;
+      }
+
+      var converted = convertLuaLine(line, declaredVars, orderTags, precacheState);
+
+      // Inside table/array literals, suppress trailing semicolons
+      if (tableLiteralDepth > 0) {
+        converted = converted.replace(/;\s*$/, '');
+      }
 
       // Detect note callback function declarations and remap parameters
       var funcMatch = converted.match(/^(\s*)function\s+(\w+)\s*\(([^)]*)\)\s*\{/);
@@ -63,22 +156,25 @@
         }
       }
 
-      result.push(converted);
+      if (converted !== "__SKIP_LINE__") {
+        result.push(converted);
+      }
     }
 
     return result.join("\n");
   };
 
-  function convertLuaLine(line, declaredVars) {
+  function convertLuaLine(line, declaredVars, orderTags, precacheState) {
     var indent = line.match(/^(\s*)/)[1];
     var trimmed = line.trimEnd();
     var content = trimmed.trim();
 
     if (!content) return "";
 
-    // Block comments --[[ ... ]]--
+    // Block comments --[[ ... ]]-- (closing can be ]], ]]-- or --]])
     if (/^--\[\[/.test(content)) return indent + "/*" + content.substring(4);
-    if (/\]\]--?\s*$/.test(content)) return indent + content.replace(/\]\]--?\s*$/, "*/");
+    if (/^--\]\]\s*$/.test(content)) return indent + "*/";
+    if (/\]\](?:--?)?\s*$/.test(content)) return indent + content.replace(/\]\](?:--?)?\s*$/, "*/");
 
     // Single line comments
     if (/^--/.test(content)) return indent + "//" + content.substring(2);
@@ -92,12 +188,27 @@
       inlineComment = " //" + commentMatch[2];
     }
 
+    // local function name(args) -> function name(args) { (HScript doesn't support local functions)
+    var localFuncMatch = codeContent.match(/^local\s+function\s+(\w+)\s*\(([^)]*)\)\s*$/);
+    if (localFuncMatch) return indent + "function " + localFuncMatch[1] + "(" + localFuncMatch[2] + ") {" + inlineComment;
+
     // function name(args) -> function name(args) {
     var funcMatch = codeContent.match(/^function\s+(\w+)\s*\(([^)]*)\)\s*$/);
     if (funcMatch) return indent + "function " + funcMatch[1] + "(" + funcMatch[2] + ") {" + inlineComment;
 
     // end -> }
     if (/^end\s*$/.test(codeContent)) return indent + "}" + inlineComment;
+
+    // One-line if: if COND then BODY end -> if (COND) BODY;
+    var oneLineIfMatch = codeContent.match(/^if\s+(.+?)\s+then\s+(.+?)\s+end\s*$/);
+    if (oneLineIfMatch) {
+      var cond = convertLuaExpr(oneLineIfMatch[1]);
+      var body = oneLineIfMatch[2].trim();
+      if (body === 'return') return indent + "if (" + cond + ") return;" + inlineComment;
+      var retBodyMatch = body.match(/^return\s+(.+)$/);
+      if (retBodyMatch) return indent + "if (" + cond + ") return " + convertLuaExpr(retBodyMatch[1]) + ";" + inlineComment;
+      return indent + "if (" + cond + ") " + convertLuaExpr(body) + ";" + inlineComment;
+    }
 
     // if ... then -> if (...) {
     var ifMatch = codeContent.match(/^if\s+(.+?)\s+then\s*$/);
@@ -137,7 +248,11 @@
 
     // return statement
     var retMatch = codeContent.match(/^return\s+(.+)$/);
-    if (retMatch) return indent + "return " + convertLuaExpr(retMatch[1]) + ";" + inlineComment;
+    if (retMatch) {
+      var retVal = convertLuaExpr(retMatch[1]);
+      var retSemi = /[\{\[,]\s*$/.test(retVal) ? "" : ";";
+      return indent + "return " + retVal + retSemi + inlineComment;
+    }
     if (/^return\s*$/.test(codeContent)) return indent + "return;" + inlineComment;
 
     // local var = value -> var var = value
@@ -145,7 +260,8 @@
     if (localMatch) {
       declaredVars[localMatch[1]] = true;
       var val = convertLuaExpr(localMatch[1] + " = " + localMatch[2]);
-      return indent + "var " + val + ";" + inlineComment;
+      var localSemi = /[\{\[,]\s*$/.test(val) ? "" : ";";
+      return indent + "var " + val + localSemi + inlineComment;
     }
 
     // local var (no assignment)
@@ -156,20 +272,21 @@
     }
 
     // API call conversions
-    var apiConverted = convertLuaApiCall(codeContent, indent);
+    var apiConverted = convertLuaApiCall(codeContent, indent, orderTags, precacheState);
+    if (apiConverted === "__SKIP_LINE__") return "__SKIP_LINE__";
     if (apiConverted !== null) return apiConverted + inlineComment;
 
     // Generic statement - convert expressions and add semicolon
     var converted = convertLuaExpr(codeContent);
     if (converted !== codeContent || /\w/.test(converted)) {
-      if (!/[{};]\s*$/.test(converted)) converted += ";";
+      if (!/[{}\[;,]\s*$/.test(converted)) converted += ";";
       return indent + converted + inlineComment;
     }
 
     return indent + codeContent + inlineComment;
   }
 
-  function convertLuaApiCall(content, indent) {
+  function convertLuaApiCall(content, indent, orderTags, precacheState) {
     var m;
 
     // makeLuaSprite(tag, image, x, y)
@@ -186,8 +303,8 @@
     // addLuaSprite(tag, front)
     m = content.match(/^addLuaSprite\s*\(\s*'([^']+)'\s*(?:,\s*(true|false))?\s*\)\s*;?\s*$/);
     if (m) {
-      if (m[2] === "true") return indent + "game.add(" + m[1] + ");";
-      return indent + "game.insert(game.members.indexOf(game.boyfriendGroup), " + m[1] + ");";
+      if (orderTags && orderTags[m[1]]) return indent + "game.insert(game.members.indexOf(game.boyfriendGroup), " + m[1] + ");";
+      return indent + "game.add(" + m[1] + ");";
     }
 
     // removeLuaSprite(tag, destroy)
@@ -210,10 +327,11 @@
     }
 
     // setObjectCamera(tag, cam)
-    m = content.match(/^setObjectCamera\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
+    m = content.match(/^setObjectCamera\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
     if (m) {
-      var cam = SC.cameraMap[m[2]] || "game." + m[2];
-      return indent + m[1] + ".cameras = [" + cam + "];";
+      var tag = m[1] || m[2];
+      var cam = SC.cameraMap[m[3]] || "game." + m[3];
+      return indent + tag + ".cameras = [" + cam + "];";
     }
 
     // addAnimationByPrefix(tag, name, prefix, fps, loop)
@@ -232,9 +350,17 @@
     m = content.match(/^objectPlayAnimation\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*(?:,\s*(true|false))?(?:,\s*\d+)?\s*\)\s*;?\s*$/);
     if (m) return indent + m[1] + ".animation.play('" + m[2] + "'" + (m[3] ? ", " + m[3] : "") + ");";
 
+    // setProperty(var + '.prop', val) — dynamic tag concatenation
+    m = content.match(/^setProperty\s*\(\s*(\w+)\s*\+\s*'(\.[^']+)'\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) return indent + m[1] + m[2] + " = " + convertLuaValue(m[3].trim()) + ";";
+
     // setProperty(path, val)
     m = content.match(/^setProperty\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*\)\s*;?\s*$/);
     if (m) return indent + "game." + m[1] + " = " + convertLuaValue(m[2].trim()) + ";";
+
+    // getProperty(var + '.prop') — dynamic tag standalone (rare)
+    m = content.match(/^getProperty\s*\(\s*(\w+)\s*\+\s*'(\.[^']+)'\s*\)\s*;?\s*$/);
+    if (m) return indent + m[1] + m[2] + ";";
 
     // getProperty(path) — standalone call (rare)
     m = content.match(/^getProperty\s*\(\s*'([^']+)'\s*\)\s*;?\s*$/);
@@ -257,16 +383,22 @@
     if (m) return indent + "FlxTween.color(" + m[2] + ", " + m[5].trim() + ", " + m[3] + ", " + m[4] + (m[6] ? ", {ease: FlxEase." + m[6] + "}" : "") + ");";
 
     // setTextString(tag, text)
-    m = content.match(/^setTextString\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + ".text = " + convertLuaValue(m[2].trim()) + ";";
+    m = content.match(/^setTextString\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) return indent + (m[1] || m[2]) + ".text = " + convertLuaValue(m[3].trim()) + ";";
 
     // setTextSize(tag, size)
-    m = content.match(/^setTextSize\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + ".size = " + m[2].trim() + ";";
+    m = content.match(/^setTextSize\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) return indent + (m[1] || m[2]) + ".size = " + m[3].trim() + ";";
 
-    // precacheImage(img)
-    m = content.match(/^precacheImage\s*\(\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + "Paths.image('" + m[1] + "');";
+    // precacheImage / precacheSound / precacheMusic → grouped StringMap block
+    m = content.match(/^precache(?:Image|Sound|Music)\s*\(\s*'([^']+)'\s*\)\s*;?\s*$/);
+    if (m) {
+      if (precacheState && !precacheState.emitted) {
+        precacheState.emitted = true;
+        return buildPrecacheBlock(indent, precacheState);
+      }
+      return "__SKIP_LINE__";
+    }
 
     // close(true)
     m = content.match(/^close\s*\(\s*(true)?\s*\)\s*;?\s*$/);
@@ -360,47 +492,64 @@
     // =============================================
 
     // makeLuaText(tag, text, width, x, y)
-    m = content.match(/^makeLuaText\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\s*\)\s*;?\s*$/);
-    if (m) return indent + 'var ' + m[1] + ' = new FlxText(' + m[4].trim() + ', ' + m[5].trim() + ', ' + m[3].trim() + ', ' + convertLuaValue(m[2].trim()) + ');';
+    m = content.match(/^makeLuaText\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) { var tag = m[1] || m[2]; return indent + 'var ' + tag + ' = new FlxText(' + m[5].trim() + ', ' + m[6].trim() + ', ' + m[4].trim() + ', ' + convertLuaValue(m[3].trim()) + ');'; }
 
     // addLuaText(tag)
-    m = content.match(/^addLuaText\s*\(\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + 'game.add(' + m[1] + ');';
+    m = content.match(/^addLuaText\s*\(\s*(?:'([^']+)'|(\w+))\s*\)\s*;?\s*$/);
+    if (m) return indent + 'game.add(' + (m[1] || m[2]) + ');';
 
     // removeLuaText(tag, destroy)
-    m = content.match(/^removeLuaText\s*\(\s*'([^']+)'\s*(?:,\s*(true|false))?\s*\)\s*;?\s*$/);
-    if (m) return indent + 'game.remove(' + m[1] + ');';
+    m = content.match(/^removeLuaText\s*\(\s*(?:'([^']+)'|(\w+))\s*(?:,\s*(true|false))?\s*\)\s*;?\s*$/);
+    if (m) return indent + 'game.remove(' + (m[1] || m[2]) + ');';
 
     // setTextBorder(tag, size, color, style)
-    m = content.match(/^setTextBorder\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*,\s*'([^']+)'\s*(?:,\s*'([^']*)')?\s*\)\s*;?\s*$/);
+    m = content.match(/^setTextBorder\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*,\s*(?:'([^']+)'|(\w[\w.]*))\s*(?:,\s*'([^']*)')?\s*\)\s*;?\s*$/);
     if (m) {
-      var style = m[4] || 'OUTLINE';
-      return indent + m[1] + '.setBorderStyle(' + style + ', FlxColor.fromString(\'' + m[3] + '\'), ' + m[2].trim() + ');';
+      var tag = m[1] || m[2];
+      var color = m[4] ? "FlxColor.fromString('" + m[4] + "')" : "FlxColor.fromString(" + m[5] + ")";
+      var style = (m[6] || 'outline').toUpperCase().replace(/ /g, '_');
+      return indent + tag + '.borderStyle = ' + style + ';\n' + indent + tag + '.borderSize = ' + m[3].trim() + ';\n' + indent + tag + '.borderColor = ' + color + ';';
     }
 
     // setTextColor(tag, color)
-    m = content.match(/^setTextColor\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + ".color = FlxColor.fromString('" + m[2] + "');";
+    m = content.match(/^setTextColor\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) {
+      var tag = m[1] || m[2];
+      var colorArg = m[3].trim();
+      var colorVal = /^'[^']*'$/.test(colorArg) ? "FlxColor.fromString(" + colorArg + ")" : "FlxColor.fromString(" + colorArg + ")";
+      return indent + tag + ".color = " + colorVal + ";";
+    }
 
     // setTextFont(tag, font)
-    m = content.match(/^setTextFont\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + ".font = Paths.font('" + m[2] + "');";
+    m = content.match(/^setTextFont\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) {
+      var tag = m[1] || m[2];
+      var fontArg = m[3].trim();
+      var fontVal = /^'[^']*'$/.test(fontArg) ? "Paths.font(" + fontArg + ")" : "Paths.font(" + fontArg + ")";
+      return indent + tag + ".font = " + fontVal + ";";
+    }
 
     // setTextItalic(tag, italic)
-    m = content.match(/^setTextItalic\s*\(\s*'([^']+)'\s*,\s*(true|false)\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + '.italic = ' + m[2] + ';';
+    m = content.match(/^setTextItalic\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(true|false)\s*\)\s*;?\s*$/);
+    if (m) return indent + (m[1] || m[2]) + '.italic = ' + m[3] + ';';
 
     // setTextAlignment(tag, alignment)
-    m = content.match(/^setTextAlignment\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + ".alignment = '" + m[2] + "';";
+    m = content.match(/^setTextAlignment\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) {
+      var alignArg = m[3].trim();
+      // Convert string alignment to FlxTextAlign enum
+      var alignVal = /^['"]/.test(alignArg) ? alignArg.replace(/^['"]|['"]$/g, '').toUpperCase() : alignArg;
+      return indent + (m[1] || m[2]) + ".alignment = " + alignVal + ";";
+    }
 
     // setTextWidth(tag, width)
-    m = content.match(/^setTextWidth\s*\(\s*'([^']+)'\s*,\s*(.+?)\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + '.fieldWidth = ' + m[2].trim() + ';';
+    m = content.match(/^setTextWidth\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(.+?)\s*\)\s*;?\s*$/);
+    if (m) return indent + (m[1] || m[2]) + '.fieldWidth = ' + m[3].trim() + ';';
 
     // setTextAutoSize(tag, value)
-    m = content.match(/^setTextAutoSize\s*\(\s*'([^']+)'\s*,\s*(true|false)\s*\)\s*;?\s*$/);
-    if (m) return indent + m[1] + '.autoSize = ' + m[2] + ';';
+    m = content.match(/^setTextAutoSize\s*\(\s*(?:'([^']+)'|(\w+))\s*,\s*(true|false)\s*\)\s*;?\s*$/);
+    if (m) return indent + (m[1] || m[2]) + '.autoSize = ' + m[3] + ';';
 
     // =============================================
     // TWEENING (additional)
@@ -631,7 +780,7 @@
     // addInstance(objName, inFront)
     m = content.match(/^addInstance\s*\(\s*'([^']+)'\s*(?:,\s*(true|false))?\s*\)\s*;?\s*$/);
     if (m) {
-      if (m[2] === 'false') return indent + 'game.insert(game.members.indexOf(game.boyfriendGroup), ' + m[1] + ');';
+      if (orderTags && orderTags[m[1]]) return indent + 'game.insert(game.members.indexOf(game.boyfriendGroup), ' + m[1] + ');';
       return indent + 'game.add(' + m[1] + ');';
     }
 
@@ -681,17 +830,7 @@
     m = content.match(/^addCharacterToList\s*\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)\s*;?\s*$/);
     if (m) return indent + "game.addCharacterToList('" + m[1] + "', '" + m[2] + "');";
 
-    // =============================================
-    // PRECACHE (additional)
-    // =============================================
-
-    // precacheSound(name)
-    m = content.match(/^precacheSound\s*\(\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + "Paths.sound('" + m[1] + "');";
-
-    // precacheMusic(name)
-    m = content.match(/^precacheMusic\s*\(\s*'([^']+)'\s*\)\s*;?\s*$/);
-    if (m) return indent + "Paths.music('" + m[1] + "');";
+    // precacheSound/precacheMusic are handled by the grouped precache block above
 
     // =============================================
     // CUSTOM SUBSTATES
@@ -943,7 +1082,38 @@
     return null;
   }
 
+  function buildPrecacheBlock(indent, state) {
+    var lines = [];
+    if (state.images.length > 0) {
+      lines.push(indent + "// Precache images");
+      lines.push(indent + "var _cachedImages = new haxe.ds.StringMap();");
+      for (var i = 0; i < state.images.length; i++) {
+        lines.push(indent + "_cachedImages.set('" + state.images[i] + "', Paths.image('" + state.images[i] + "'));");
+      }
+    }
+    if (state.sounds.length > 0) {
+      if (lines.length > 0) lines.push("");
+      lines.push(indent + "// Precache sounds");
+      lines.push(indent + "var _cachedSounds = new haxe.ds.StringMap();");
+      for (var i = 0; i < state.sounds.length; i++) {
+        lines.push(indent + "_cachedSounds.set('" + state.sounds[i] + "', Paths.sound('" + state.sounds[i] + "'));");
+      }
+    }
+    if (state.musics.length > 0) {
+      if (lines.length > 0) lines.push("");
+      lines.push(indent + "// Precache music");
+      lines.push(indent + "var _cachedMusic = new haxe.ds.StringMap();");
+      for (var i = 0; i < state.musics.length; i++) {
+        lines.push(indent + "_cachedMusic.set('" + state.musics[i] + "', Paths.music('" + state.musics[i] + "'));");
+      }
+    }
+    return lines.join("\n");
+  }
+
   function convertLuaExpr(expr) {
+    // getProperty inline (dynamic tag concatenation)
+    expr = expr.replace(/getProperty\s*\(\s*(\w+)\s*\+\s*'(\.[^']+)'\s*\)/g, "$1$2");
+
     // getProperty inline
     expr = expr.replace(/getProperty\s*\(\s*'([^']+)'\s*\)/g, "game.$1");
 
@@ -978,6 +1148,17 @@
     expr = expr.replace(/\bmath\.pi\b/gi, "Math.PI");
     expr = expr.replace(/\bmath\.sin\b/g, "Math.sin");
     expr = expr.replace(/\bmath\.cos\b/g, "Math.cos");
+
+    // Convert sequential Lua tables {val1, val2, ...} to HScript arrays [val1, val2, ...]
+    expr = expr.replace(/\{([^{}]*)\}/g, function(match, inner) {
+      var trimmed = inner.trim();
+      if (!trimmed) return '[]';
+      if (/\w+\s*=\s*[^=]/.test(trimmed)) {
+        var converted = inner.replace(/(\w+)\s*=(?!=)/g, '$1:');
+        return '{' + converted + '}';
+      }
+      return '[' + inner + ']';
+    });
 
     // tostring / tonumber
     expr = expr.replace(/\btostring\s*\(/g, "Std.string(");
