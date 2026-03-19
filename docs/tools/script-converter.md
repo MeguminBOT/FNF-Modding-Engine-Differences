@@ -1,7 +1,7 @@
 # Script Converter
 
 !!! warning "Under Development"
-    The Script Converter is **still under active development** and is not stable. It will almost certainly produce broken or incomplete scripts. It is strongly advised to not use this yet. Always review and test the output manually before using it in your mod.
+    The Script Converter is **still under experimental development** and is extremely unreliable. It will almost certainly produce broken or incomplete scripts. It is STRONGLY advised to not use the converter yet.
 
 <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
   <div style="flex: 1; min-width: 200px;">
@@ -67,8 +67,6 @@
     <summary style="cursor: pointer; font-size: 0.9rem; font-weight: 600;">View details</summary>
     <ul id="script-issue-list" style="font-size: 0.85rem; margin-top: 0.5rem; padding-left: 1.5rem;"></ul>
   </details>
-</div>
-
 </div>
 
 ## Supported Conversions (Lua → HScript)
