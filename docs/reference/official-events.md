@@ -11,8 +11,11 @@ All events extend `ScriptEvent` from `funkin.modding.events`:
 | Field / Method | Type | Description |
 |----------------|------|-------------|
 | `type` | `ScriptEventType` | Event type constant |
-| `cancelled` | `Bool` | Whether cancelled |
-| `preventDefault()` | Method | Cancel default behavior |
+| `cancelable` | `Bool` | Whether this event can be cancelled |
+| `eventCanceled` | `Bool` | Whether cancelled |
+| `cancelEvent()` | Method | Cancel default behavior |
+| `cancel()` | Method | Alias for `cancelEvent()` |
+| `stopPropagation()` | Method | Stop event from reaching other scripts |
 
 ### Event Constants
 
@@ -27,14 +30,18 @@ All events extend `ScriptEvent` from `funkin.modding.events`:
 | `ScriptEvent.COUNTDOWN_START` | Countdown begins |
 | `ScriptEvent.COUNTDOWN_STEP` | Each countdown tick |
 | `ScriptEvent.COUNTDOWN_END` | Countdown ends |
+| `ScriptEvent.NOTE_INCOMING` | Note approaching |
 | `ScriptEvent.NOTE_HIT` | Note hit |
-| `ScriptEvent.NOTE_GHOST_MISS` | Ghost miss |
+| `ScriptEvent.NOTE_MISS` | Note missed |
+| `ScriptEvent.NOTE_GHOST_MISS` | Ghost miss (no note present) |
 | `ScriptEvent.NOTE_HOLD_PRESS` | Hold note pressed |
 | `ScriptEvent.NOTE_HOLD_RELEASE` | Hold note released |
+| `ScriptEvent.NOTE_HOLD_DROP` | Hold note dropped |
 | `ScriptEvent.SONG_EVENT` | Song event triggered |
 | `ScriptEvent.PAUSE` | Game paused |
 | `ScriptEvent.RESUME` | Game resumed |
 | `ScriptEvent.GAME_OVER` | Game over triggered |
+| `ScriptEvent.SONG_RETRY` | Song retried |
 | `ScriptEvent.BEAT_HIT` | Beat hit |
 | `ScriptEvent.STEP_HIT` | Step hit |
 | `ScriptEvent.DIALOGUE_START` | Dialogue begins |
@@ -61,37 +68,63 @@ Dispatched every frame during update.
 
 ### NoteScriptEvent
 
-Used for NOTE_HIT, NOTE_GHOST_MISS, NOTE_HOLD_PRESS, NOTE_HOLD_RELEASE.
+Used for NOTE_HIT, NOTE_HOLD_PRESS, NOTE_HOLD_RELEASE. Extends `ScriptEvent`.
 
-| Field | Type |
-|-------|------|
-| `note` | `NoteSprite` |
-| `playerId` | `Int` |
-| `healthChange` | `Float` |
-| `comboChange` | `Int` |
-| `judgement` | `String` |
-| `score` | `Int` |
+| Field | Type | Notes |
+|-------|------|-------|
+| `note` | `NoteSprite` | The note associated with this event |
+| `comboCount` | `Int` | Current combo count |
+| `playSound` | `Bool` | Whether to play the hit/miss sound |
+| `healthChange` | `Float` | Health gained or lost (max health is 2.00) |
 
 ### HitNoteScriptEvent
 
 Extends `NoteScriptEvent` — specifically for NOTE_HIT.
 
-| Field | Type |
-|-------|------|
-| `note` | `NoteSprite` |
-| `judgement` | `String` |
-| `score` | `Int` |
-| `healthChange` | `Float` |
-| `comboChange` | `Int` |
+| Field | Type | Notes |
+|-------|------|-------|
+| `judgement` | `String` | Hit judgement (sick, good, bad, etc.) |
+| `score` | `Int` | Score received for the hit |
+| `isComboBreak` | `Bool` | Whether this hit breaks the combo |
+| `hitDiff` | `Float` | Timing difference when the note was hit |
+| `doesNotesplash` | `Bool` | Whether to show a notesplash (true on "sick") |
+
+Also inherits `note`, `comboCount`, `playSound`, `healthChange` from `NoteScriptEvent`.
 
 ### GhostMissNoteScriptEvent
 
-Extends `NoteScriptEvent` — for NOTE_GHOST_MISS.
+Extends `ScriptEvent` (not NoteScriptEvent) — for NOTE_GHOST_MISS.
 
-| Field | Type |
-|-------|------|
-| `direction` | `NoteDirection` |
-| `hasPossibleNotes` | `Bool` |
+| Field | Type | Notes |
+|-------|------|-------|
+| `dir` | `NoteDirection` | The direction that was mistakenly pressed |
+| `hasPossibleNotes` | `Bool` | Whether a note was in judgement range |
+| `healthChange` | `Float` | Health lost from this ghost press |
+| `scoreChange` | `Int` | Score lost from this ghost press |
+| `playSound` | `Bool` | Whether to play the miss sound |
+| `playAnim` | `Bool` | Whether to play the miss animation |
+
+### HoldNoteScriptEvent
+
+Extends `NoteScriptEvent` — for NOTE_HOLD_DROP.
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `holdNote` | `SustainTrail` | The hold note that was hit or dropped |
+| `score` | `Int` | Score received |
+| `isComboBreak` | `Bool` | Whether this breaks the combo |
+| `hitDiff` | `Float` | Timing difference |
+| `doesNotesplash` | `Bool` | Whether to show a notesplash |
+
+Also inherits `note`, `comboCount`, `playSound`, `healthChange` from `NoteScriptEvent`.
+
+### SongRetryEvent
+
+Extends `ScriptEvent` — for SONG_RETRY.
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `difficulty` | `String` | The difficulty of the song being retried |
 
 ### SongTimeScriptEvent
 
@@ -253,8 +286,10 @@ Extends `IScriptedClass` — for gameplay-aware scripts.
 onNoteHit(event:HitNoteScriptEvent):Void
 onNoteMiss(event:NoteScriptEvent):Void
 onNoteGhostMiss(event:GhostMissNoteScriptEvent):Void
+onNoteHoldDrop(event:HoldNoteScriptEvent):Void
 onSongStart(event:ScriptEvent):Void
 onSongEnd(event:ScriptEvent):Void
+onSongRetry(event:SongRetryEvent):Void
 onCountdownStart(event:CountdownScriptEvent):Void
 onCountdownStep(event:CountdownScriptEvent):Void
 onCountdownEnd(event:CountdownScriptEvent):Void
@@ -368,15 +403,19 @@ Modules are **persistent global scripts** that survive across states. They recei
 | Countdown | `ScriptEvent.COUNTDOWN_START` | `CountdownScriptEvent` |
 | Countdown | `ScriptEvent.COUNTDOWN_STEP` | `CountdownScriptEvent` |
 | Countdown | `ScriptEvent.COUNTDOWN_END` | `CountdownScriptEvent` |
+| Notes | `ScriptEvent.NOTE_INCOMING` | `NoteScriptEvent` |
 | Notes | `ScriptEvent.NOTE_HIT` | `HitNoteScriptEvent` |
+| Notes | `ScriptEvent.NOTE_MISS` | `NoteScriptEvent` |
 | Notes | `ScriptEvent.NOTE_GHOST_MISS` | `GhostMissNoteScriptEvent` |
 | Notes | `ScriptEvent.NOTE_HOLD_PRESS` | `NoteScriptEvent` |
 | Notes | `ScriptEvent.NOTE_HOLD_RELEASE` | `NoteScriptEvent` |
+| Notes | `ScriptEvent.NOTE_HOLD_DROP` | `HoldNoteScriptEvent` |
 | Timing | `ScriptEvent.BEAT_HIT` | `SongTimeScriptEvent` |
 | Timing | `ScriptEvent.STEP_HIT` | `SongTimeScriptEvent` |
 | Gameplay | `ScriptEvent.PAUSE` | `PauseScriptEvent` |
 | Gameplay | `ScriptEvent.RESUME` | `ScriptEvent` |
 | Gameplay | `ScriptEvent.GAME_OVER` | `ScriptEvent` |
+| Gameplay | `ScriptEvent.SONG_RETRY` | `SongRetryEvent` |
 | Gameplay | `ScriptEvent.SONG_EVENT` | `SongEventScriptEvent` |
 
 ### Other States

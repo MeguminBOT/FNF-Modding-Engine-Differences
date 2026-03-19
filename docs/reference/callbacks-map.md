@@ -25,9 +25,11 @@ Complete mapping of callbacks and events across all three FNF engines. Each row 
 | **Song end** | `onEndSong()` | `onSongEnd()` | `onSongEnd()` via `ScriptEvent` |
 | **Countdown start** | `onStartCountdown()` | `onStartCountdown()` | `onCountdownStart()` via `CountdownScriptEvent` |
 | **Countdown tick** | `onCountdownTick(counter)` | `onCountdown(CountdownEvent)` | `onCountdownStep()` via `CountdownScriptEvent` |
+| **Countdown end** | _(N/A)_ | _(N/A)_ | `onCountdownEnd()` via `CountdownScriptEvent` |
+| **Song retry** | _(N/A)_ | _(N/A)_ | `onSongRetry()` via `SongRetryEvent` |
 
 !!! note "Cancellation"
-    All three engines support cancelling the countdown start. Psych uses `return Function_Stop`, Codename uses `event.cancel()`, Official uses `event.preventDefault()`.
+    All three engines support cancelling the countdown start. Psych uses `return Function_Stop`, Codename uses `event.cancel()`, Official uses `event.cancel()` / `event.cancelEvent()`.
 
 ---
 
@@ -48,11 +50,18 @@ Complete mapping of callbacks and events across all three FNF engines. Each row 
 | **Player note hit** | `goodNoteHit(id, dir, type, isSustain)` | `goodNoteHit(note:Note)` | `onNoteHit(NoteHitEvent)` / `onPlayerHit(NoteHitEvent)` | `onNoteHit(HitNoteScriptEvent)` |
 | **Opponent note hit** | `opponentNoteHit(id, dir, type, isSustain)` | `opponentNoteHit(note:Note)` | `onNoteHit(NoteHitEvent)` / `onDadHit(NoteHitEvent)` | `onNoteHit(HitNoteScriptEvent)` |
 | **Note miss** | `noteMiss(id, dir, type, isSustain)` | `noteMiss(note:Note)` | `onNoteMiss(NoteMissEvent)` / `onPlayerMiss(NoteMissEvent)` | `onNoteMiss(NoteScriptEvent)` |
-| **Ghost miss** | `noteMissPress(direction)` | `noteMissPress(direction:Int)` | `onNoteMiss` with `note=null` | `onGhostMiss(GhostMissNoteScriptEvent)` |
+| **Ghost miss** | `noteMissPress(direction)` | `noteMissPress(direction:Int)` | `onNoteMiss` with `note=null` | `onNoteGhostMiss(GhostMissNoteScriptEvent)` |
 | **Note spawn** | `onSpawnNote(id, data, type, isSustain, strumTime)` | `onSpawnNote(note:Note)` | `onNoteSpawn(NoteSpawnEvent)` | _(N/A)_ |
+| **Note incoming** | _(N/A)_ | _(N/A)_ | _(N/A)_ | `onNoteIncoming(NoteScriptEvent)` |
+| **Hold note drop** | _(N/A)_ | _(N/A)_ | _(N/A)_ | `onNoteHoldDrop(HoldNoteScriptEvent)` |
+| **Player hit (pre)** | `goodNoteHitPre(id, dir, type, isSustain)` | `goodNoteHitPre(note:Note)` | _(N/A)_ | _(N/A)_ |
+| **Opponent hit (pre)** | `opponentNoteHitPre(id, dir, type, isSustain)` | `opponentNoteHitPre(note:Note)` | _(N/A)_ | _(N/A)_ |
 
 !!! note "Key difference"
     Psych Lua callbacks receive **decomposed primitive values** (id, direction, type as separate arguments), while Psych HScript and both other engines receive **full objects** with all properties accessible.
+
+!!! note "Pre-processing callbacks"
+    Psych Engine has `goodNoteHitPre` and `opponentNoteHitPre` callbacks that fire **before** the standard hit callbacks. These can be cancelled with `return Function_Stop` to prevent the note hit from being processed. Neither Codename nor Funkin have equivalents.
 
 ---
 
@@ -77,11 +86,15 @@ Complete mapping of callbacks and events across all three FNF engines. Each row 
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `note` | `NoteSprite` | The note that was hit |
-| `judgement` | `String` | Judgement name |
+| `note` | `NoteSprite` | The note that was hit (inherited from `NoteScriptEvent`) |
+| `judgement` | `String` | Judgement name (sick, good, bad, etc.) |
 | `score` | `Int` | Score earned |
-| `healthChange` | `Float` | Health change |
-| `comboChange` | `Int` | Combo change |
+| `healthChange` | `Float` | Health change (inherited from `NoteScriptEvent`) |
+| `comboCount` | `Int` | Current combo count (inherited from `NoteScriptEvent`) |
+| `isComboBreak` | `Bool` | Whether this hit breaks the combo |
+| `hitDiff` | `Float` | Timing difference |
+| `doesNotesplash` | `Bool` | Whether to show a notesplash |
+| `playSound` | `Bool` | Whether to play hit sound (inherited from `NoteScriptEvent`) |
 
 ---
 
@@ -138,7 +151,14 @@ Psych HScript also has `onKeyPressPre(key:Int)` and `onKeyReleasePre(key:Int)` f
 | Event | Psych Engine | Codename Engine | Official Funkin |
 |-------|-------------|-----------------|-----------------|
 | **Rating recalculate** | `onRecalculateRating()` — cancellable | `onRatingUpdate(RatingUpdateEvent)` | _(N/A)_ |
+---
 
+## Score Updates (Psych Only)
+
+| Callback | Parameters | Notes |
+|----------|-----------|-------|
+| `preUpdateScore` | `miss:Bool` | Before score updates — cancellable |
+| `onUpdateScore` | `miss:Bool` | After score updates |
 ---
 
 ## Tweens & Timers (Psych Only)

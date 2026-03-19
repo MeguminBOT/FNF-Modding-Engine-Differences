@@ -55,6 +55,16 @@
         "psych": { "callback": "onCountdownTick", "params": ["counter:Int"], "timing": "Each countdown tick" },
         "codename": { "callback": "onCountdown", "timing": "Each tick", "eventType": "CountdownEvent", "eventFields": ["swagCounter:Int"] },
         "official": { "callback": "onCountdownStep", "eventType": "CountdownScriptEvent", "eventFields": ["step:Int"] }
+      },
+      "onCountdownEnd": {
+        "psych": null,
+        "codename": null,
+        "official": { "callback": "onCountdownEnd", "eventType": "CountdownScriptEvent" }
+      },
+      "onCountdownStarted": {
+        "psych": { "callback": "onCountdownStarted", "timing": "After countdown has been started" },
+        "codename": null,
+        "official": null
       }
     },
 
@@ -80,7 +90,7 @@
       "goodNoteHit": {
         "psych": { "callback": "goodNoteHit", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"] },
         "codename": { "callback": "onNoteHit", "eventType": "NoteHitEvent", "eventFields": ["note:Note", "rating:String", "score:Int", "character:Character", "strumLine:StrumLine", "animSuffix:String", "healthGain:Float", "showRating:Bool", "showSplash:Bool"], "cancellable": true },
-        "official": { "callback": "onNoteHit", "eventType": "HitNoteScriptEvent", "eventFields": ["note:NoteSprite", "judgement:String", "score:Int", "healthChange:Float", "comboChange:Int"] }
+        "official": { "callback": "onNoteHit", "eventType": "HitNoteScriptEvent", "eventFields": ["note:NoteSprite", "judgement:String", "score:Int", "healthChange:Float", "comboCount:Int", "isComboBreak:Bool", "hitDiff:Float", "doesNotesplash:Bool", "playSound:Bool"] }
       },
       "opponentNoteHit": {
         "psych": { "callback": "opponentNoteHit", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"] },
@@ -95,12 +105,32 @@
       "noteMissPress": {
         "psych": { "callback": "noteMissPress", "params": ["direction:Int"], "notes": "Ghost miss (pressed wrong key)" },
         "codename": { "callback": "onNoteMiss", "notes": "Same event with note=null" },
-        "official": { "callback": "onGhostMiss", "eventType": "GhostMissNoteScriptEvent" }
+        "official": { "callback": "onNoteGhostMiss", "eventType": "GhostMissNoteScriptEvent" }
       },
       "onSpawnNote": {
         "psych": { "callback": "onSpawnNote", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool", "strumTime:Float"] },
         "codename": { "callback": "onNoteSpawn", "eventType": "NoteSpawnEvent" },
         "official": null
+      },
+      "goodNoteHitPre": {
+        "psych": { "callback": "goodNoteHitPre", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"], "cancellable": true },
+        "codename": null,
+        "official": null
+      },
+      "opponentNoteHitPre": {
+        "psych": { "callback": "opponentNoteHitPre", "params": ["membersIndex:Int", "noteData:Int", "noteType:String", "isSustainNote:Bool"], "cancellable": true },
+        "codename": null,
+        "official": null
+      },
+      "onNoteIncoming": {
+        "psych": null,
+        "codename": null,
+        "official": { "callback": "onNoteIncoming", "eventType": "NoteScriptEvent", "eventFields": ["note:NoteSprite"], "cancellable": true }
+      },
+      "onNoteHoldDrop": {
+        "psych": null,
+        "codename": null,
+        "official": { "callback": "onNoteHoldDrop", "eventType": "HoldNoteScriptEvent", "eventFields": ["note:NoteSprite", "holdNote:SustainTrail"], "cancellable": true }
       }
     },
 
@@ -163,6 +193,11 @@
         "psych": { "callback": "onGameOver", "cancellable": true },
         "codename": { "callback": "onGameOver", "eventType": "GameOverEvent", "cancellable": true },
         "official": { "callback": "onGameOver", "eventType": "ScriptEvent", "cancellable": true }
+      },
+      "onSongRetry": {
+        "psych": null,
+        "codename": null,
+        "official": { "callback": "onSongRetry", "eventType": "SongRetryEvent", "cancellable": true }
       }
     },
 
@@ -182,6 +217,19 @@
     "rating": {
       "onRecalculateRating": {
         "psych": { "callback": "onRecalculateRating", "cancellable": true },
+        "codename": null,
+        "official": null
+      }
+    },
+
+    "score": {
+      "preUpdateScore": {
+        "psych": { "callback": "preUpdateScore", "params": ["miss:Bool"], "cancellable": true },
+        "codename": null,
+        "official": null
+      },
+      "onUpdateScore": {
+        "psych": { "callback": "onUpdateScore", "params": ["miss:Bool"] },
         "codename": null,
         "official": null
       }
