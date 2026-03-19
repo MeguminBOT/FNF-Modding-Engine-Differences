@@ -81,8 +81,7 @@ mods/MyMod/
 │   ├── scripts/                # Global gameplay scripts
 │   ├── splashes/               # Note splash configurations (XML)
 │   ├── states/                 # State override scripts
-│   ├── config/                 # discord.json, credits.xml, options.xml
-│   └── configs/
+│   └── config/                 # discord.json, credits.xml, options.xml
 │       └── modpack.ini         # Modpack metadata (v1.0+)
 ├── images/
 │   ├── characters/             # Character spritesheets
@@ -100,13 +99,13 @@ mods/MyMod/
 
 | Aspect                 | Official Funkin                 | Psych Engine                                    | Codename Engine                                             |
 | ---------------------- | ------------------------------- | ----------------------------------------------- | ----------------------------------------------------------- |
-| **Metadata file**      | `_polymod_meta.json` (required) | `pack.json` (optional)                          | `data/configs/modpack.ini` (optional, v1.0+)                |
+| **Metadata file**      | `_polymod_meta.json` (required) | `pack.json` (optional)                          | `data/config/modpack.ini` (optional, v1.0+)                 |
 | **Chart location**     | `data/songs/<id>/`              | `data/<Song>/`                                  | `songs/<song>/charts/`                                      |
 | **Character data dir** | `data/characters/`              | `characters/`                                   | `data/characters/`                                          |
 | **Stage data dir**     | `data/stages/`                  | `stages/`                                       | `data/stages/`                                              |
 | **Week data dir**      | `data/levels/`                  | `weeks/`                                        | `data/weeks/weeks/`                                         |
 | **Song audio dir**     | `songs/<id>/`                   | `songs/<Song>/`                                 | `songs/<song>/song/`                                        |
-| **Scripts location**   | `scripts/`                      | `scripts/` (global), per-song in `data/<Song>/` | `songs/<song>/scripts/` (per-song), `data/states/` (global) |
+| **Scripts location**   | `scripts/`                      | `scripts/` (global), per-song in `data/<Song>/` | `data/scripts/` (global), `songs/<song>/scripts/` (per-song) |
 | **Addons/Always-on**   | N/A                             | N/A                                             | `./addons/` folder                                          |
 
 ## Mod Metadata
@@ -140,9 +139,9 @@ mods/MyMod/
 }
 ```
 
-### Codename Engine — `data/configs/modpack.ini`
+### Codename Engine — `data/config/modpack.ini`
 
-As of v1.0+, Codename Engine supports an optional `modpack.ini` file located at `./data/configs/modpack.ini` for modpack metadata. Before v1.0, no metadata file was required — the mod was loaded simply by existing as a folder in `./mods/`.
+As of v1.0+, Codename Engine supports an optional `modpack.ini` file located at `./data/config/modpack.ini` for modpack metadata. Before v1.0, no metadata file was required — the mod was loaded simply by existing as a folder in `./mods/`.
 
 The file uses INI format with multiple sections. Fields in `[Common]` are automatically prefixed with `MOD_`, and fields in `[Discord]` are prefixed with `MOD_DISCORD_`.
 
