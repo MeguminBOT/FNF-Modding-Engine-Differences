@@ -22,6 +22,7 @@
     lines = fixGamePrefixOnLocalVars(lines);
     lines = fixGameRemoveForLocalObjects(lines);
     lines = addScrollFactorForHudElements(lines);
+    lines = fixDynamicTagNewObjects(lines);
     lines = fixConsecutiveTextProps(lines);
     lines = renameBorderSizeConflict(lines);
     lines = hoistVariablesToFunctionTop(lines);
@@ -309,7 +310,77 @@
   }
 
   // =============================================
-  // FIX 7: Merge consecutive text property assignments into setFormat()
+  // FIX 7: Rename dynamic-tag FlxText/FlxSprite objects
+  // =============================================
+  // When makeLuaText(variable, ...) uses a variable tag instead of a string
+  // literal, the converter produces `var tagName = new FlxText(...)` which
+  // redeclares an existing string variable. Rename the object variable to
+  // `textObj` (or `spriteObj`) and update all subsequent object references.
+  // The existing hoist fix (Fix 9) will move the declaration to function top.
+
+  function fixDynamicTagNewObjects(lines) {
+    // Collect first var declarations for each name
+    var firstDecl = {};
+    for (var i = 0; i < lines.length; i++) {
+      var m = lines[i].match(/^\s*var\s+(\w+)\b/);
+      if (m && !firstDecl.hasOwnProperty(m[1])) {
+        firstDecl[m[1]] = i;
+      }
+    }
+
+    // Find redeclarations as new FlxText/FlxSprite
+    var renames = [];
+    for (var i = 0; i < lines.length; i++) {
+      var m = lines[i].match(/^\s*var\s+(\w+)\s*=\s*new\s+(FlxText|FlxSprite)\s*\(/);
+      if (m && firstDecl.hasOwnProperty(m[1]) && firstDecl[m[1]] < i) {
+        renames.push({ lineIdx: i, varName: m[1], objType: m[2] });
+      }
+    }
+
+    if (renames.length === 0) return lines;
+
+    var result = lines.slice();
+
+    for (var r = 0; r < renames.length; r++) {
+      var oldName = renames[r].varName;
+      var newName = renames[r].objType === 'FlxText' ? 'textObj' : 'spriteObj';
+      if (firstDecl[newName]) newName = '_' + newName;
+
+      // Rename the redeclaration line: var oldName = new ... → var newName:Type = new ...
+      var typeAnnotation = renames[r].objType;
+      result[renames[r].lineIdx] = result[renames[r].lineIdx].replace(
+        new RegExp('var\\s+' + oldName + '\\s*=\\s*new\\s+'),
+        'var ' + newName + ':' + typeAnnotation + ' = new '
+      );
+
+      // From that line onwards, rename object references
+      for (var i = renames[r].lineIdx + 1; i < result.length; i++) {
+        var line = result[i];
+
+        // oldName.xxx → newName.xxx (dot property/method access)
+        line = line.replace(new RegExp('\\b' + oldName + '\\.', 'g'), newName + '.');
+
+        // game.add(oldName) / add(oldName) / remove(oldName) / game.remove(oldName)
+        line = line.replace(
+          new RegExp('((?:game\\.)?(?:add|remove))\\(\\s*' + oldName + '\\s*\\)', 'g'),
+          '$1(' + newName + ')'
+        );
+
+        // .set(oldName, oldName) → .set(oldName, newName) — value position in map storage
+        line = line.replace(
+          new RegExp('\\.set\\(\\s*' + oldName + '\\s*,\\s*' + oldName + '\\s*\\)', 'g'),
+          '.set(' + oldName + ', ' + newName + ')'
+        );
+
+        result[i] = line;
+      }
+    }
+
+    return result;
+  }
+
+  // =============================================
+  // FIX 8: Merge consecutive text property assignments into setFormat()
   // =============================================
 
   function fixConsecutiveTextProps(lines) {
@@ -378,7 +449,7 @@
   }
 
   // =============================================
-  // FIX 8: Rename borderSize variable to textBorderSize
+  // FIX 9: Rename borderSize variable to textBorderSize
   // =============================================
   // Avoids conflict with FlxText.borderSize property.
   // Only renames script-level variables, not property access like obj.borderSize.
@@ -414,7 +485,7 @@
   }
 
   // =============================================
-  // FIX 9: Hoist variable declarations to function scope top
+  // FIX 10: Hoist variable declarations to function scope top
   // =============================================
   // HScript Iris has flat variable scoping within functions.
   // Variables declared inside loops or if-blocks can cause issues.
@@ -432,7 +503,6 @@
       var funcMatch = trimmed.match(/^function\s+\w+\s*\([^)]*\)\s*\{$/);
       if (funcMatch) {
         var funcIndent = line.match(/^(\s*)/)[1];
-        var bodyIndent = funcIndent + "\t";
 
         // Collect the entire function body
         result.push(line);
@@ -451,6 +521,15 @@
             break;
           }
           i++;
+        }
+
+        // Derive body indent from first non-blank body line
+        var bodyIndent = funcIndent + "\t";
+        for (var b = 0; b < bodyLines.length; b++) {
+          if (bodyLines[b].trim()) {
+            bodyIndent = bodyLines[b].match(/^(\s*)/)[1];
+            break;
+          }
         }
 
         // Scan body for var declarations inside nested scopes (loops, if-blocks)
@@ -529,13 +608,13 @@
           for (var b = 0; b < bodyLines.length; b++) {
             var bt = bodyLines[b].trim();
             var nestedDeclMatch = bt.match(/^var\s+(\w+)(?::\w+)?\s*=\s*(.+?)\s*;$/);
-            if (nestedDeclMatch && nestedVars[nestedDeclMatch[1]] && b >= insertIdx + hoisted.length) {
+            if (nestedDeclMatch && nestedVars.hasOwnProperty(nestedDeclMatch[1]) && b >= insertIdx + hoisted.length) {
               var bIndent = bodyLines[b].match(/^(\s*)/)[1];
               bodyLines[b] = bIndent + nestedDeclMatch[1] + " = " + nestedDeclMatch[2] + ";";
             } else {
               // Also handle var-only declarations (no init) inside nested scopes — remove entirely
               var nestedDeclOnlyMatch = bt.match(/^var\s+(\w+)(?::\w+)?\s*;$/);
-              if (nestedDeclOnlyMatch && nestedVars[nestedDeclOnlyMatch[1]] && b >= insertIdx + hoisted.length) {
+              if (nestedDeclOnlyMatch && nestedVars.hasOwnProperty(nestedDeclOnlyMatch[1]) && b >= insertIdx + hoisted.length) {
                 bodyLines[b] = null; // mark for removal
               }
             }
