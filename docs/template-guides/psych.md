@@ -2,7 +2,7 @@
 
 A starter template for creating mods for **Friday Night Funkin': Psych Engine**.
 
-[:material-download: Download Template](https://github.com/MeguminBOT/FNF-Modding-Engine-Differences/raw/main/docs/templates/psych%20engine-script-template/Psych-Engine-Modpack-Template.zip){ .md-button }
+[:material-download: Download Template](https://github.com/MeguminBOT/FNF-Modding-Engine-Differences/raw/refs/heads/master/docs/templates/psych%20engine-script-template/Psych-Engine-Modpack-Template.zip){ .md-button }
 
 ---
 

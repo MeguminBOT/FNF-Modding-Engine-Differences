@@ -567,4 +567,4 @@ Here's the complete script with all the additions combined and specified to be a
 
 Download the example scripts from this page as ready-to-use files:
 
-[Download Lua examples :material-language-lua:](https://github.com/MeguminBOT/FNF-Modding-Engine-Differences/raw/main/docs/templates/psych%20engine-script-template/Note_Script_Psych_Engine_Lua_Examples.zip){ .md-button } [Download HScript examples :material-language-haskell:](https://github.com/MeguminBOT/FNF-Modding-Engine-Differences/raw/main/docs/templates/psych%20engine-script-template/Note_Script_Psych_Engine_HScript_Examples.zip){ .md-button }
+[Download Lua examples :material-language-lua:](https://github.com/MeguminBOT/FNF-Modding-Engine-Differences/raw/refs/heads/master/docs/templates/psych%20engine-script-template/Note_Script_Psych_Engine_Lua_Examples.zip){ .md-button } [Download HScript examples :material-language-haskell:](https://github.com/MeguminBOT/FNF-Modding-Engine-Differences/raw/refs/heads/master/docs/templates/psych%20engine-script-template/Note_Script_Psych_Engine_HScript_Examples.zip){ .md-button }
