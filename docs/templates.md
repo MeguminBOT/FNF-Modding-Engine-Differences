@@ -1,11 +1,15 @@
-# Mod Templates
+# Templates
 
 !!! warning "Under Construction"
     This page is under construction. Don't take anything on the template pages as finished.
 
-Starter templates with the correct folder structure, example data, and working scripts so you can jump straight into modding.
+Starter templates, example scripts, and working code to help you jump straight into modding.
 
-Pick your engine to get started:
+---
+
+## Modpack Templates
+
+Full starter templates with the correct folder structure, example data, and working scripts.
 
 <div class="grid cards" markdown>
 
@@ -35,9 +39,7 @@ Pick your engine to get started:
 
 </div>
 
----
-
-## At a Glance
+### At a Glance
 
 | | Official Funkin' (V-Slice) | Psych Engine | Codename Engine |
 |---|---|---|---|

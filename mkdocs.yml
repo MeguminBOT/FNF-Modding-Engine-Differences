@@ -65,9 +65,26 @@ nav:
       - Cross-Engine Conversion: cross-engine-conversion.md
   - Templates:
       - Overview: templates.md
-      - "Official Funkin' (V-Slice)": template-guides/vslice.md
-      - Psych Engine: template-guides/psych.md
-      - Codename Engine: template-guides/codename.md
+      - Modpack Templates:
+          - Psych Engine: template-guides/psych.md
+          - Codename Engine: template-guides/codename.md
+          - "Official Funkin'": template-guides/vslice.md
+      - Script Templates:
+          - Psych Engine:
+              - Note Scripts: script-templates/psych-note-scripts.md
+              - Event Scripts: script-templates/psych-event-scripts.md
+              - Stage Scripts: script-templates/psych-stage-scripts.md
+              - Global Scripts: script-templates/psych-global-scripts.md
+          - Codename Engine:
+              - Note Scripts: script-templates/codename-note-scripts.md
+              - Event Scripts: script-templates/codename-event-scripts.md
+              - Stage Scripts: script-templates/codename-stage-scripts.md
+              - Global Scripts: script-templates/codename-global-scripts.md
+          - "Official Funkin'":
+              - Note Scripts: script-templates/official-note-scripts.md
+              - Event Scripts: script-templates/official-event-scripts.md
+              - Stage Scripts: script-templates/official-stage-scripts.md
+              - Global Scripts: script-templates/official-global-scripts.md
   - Reference:
       - Overview: reference/index.md
       - Cross-Engine Class Map: reference/classes-map.md
