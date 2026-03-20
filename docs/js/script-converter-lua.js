@@ -94,13 +94,23 @@
     }
 
     var tableLiteralDepth = 0;
+    var inBlockComment = false;
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
 
       // Track table/array literal depth from pre-processed lines
       // In pre-processed Lua, { } [ ] are ONLY table/array literals (code blocks use then/do/end)
       var preTrim = line.trim();
-      if (!/^--/.test(preTrim)) {
+
+      // Track block comment state to avoid counting ]] as bracket closings
+      if (/^--\[\[/.test(preTrim)) {
+        inBlockComment = true;
+      }
+      if (inBlockComment) {
+        if (/\]\]/.test(preTrim)) {
+          inBlockComment = false;
+        }
+      } else if (!/^--/.test(preTrim)) {
         var noStrings = preTrim.replace(/'[^']*'|"[^"]*"/g, '');
         var tOpens = (noStrings.match(/[\[{]/g) || []).length;
         var tCloses = (noStrings.match(/[\]}]/g) || []).length;
