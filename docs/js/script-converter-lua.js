@@ -259,9 +259,9 @@
     var localMatch = codeContent.match(/^local\s+(\w+)\s*=\s*(.+)$/);
     if (localMatch) {
       declaredVars[localMatch[1]] = true;
-      var val = convertLuaExpr(localMatch[1] + " = " + localMatch[2]);
+      var val = convertLuaExpr(localMatch[2]);
       var localSemi = /[\{\[,]\s*$/.test(val) ? "" : ";";
-      return indent + "var " + val + localSemi + inlineComment;
+      return indent + "var " + localMatch[1] + " = " + val + localSemi + inlineComment;
     }
 
     // local var (no assignment)
