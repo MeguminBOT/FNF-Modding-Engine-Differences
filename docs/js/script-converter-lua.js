@@ -278,7 +278,7 @@
 
     // Generic statement - convert expressions and add semicolon
     var converted = convertLuaExpr(codeContent);
-    if (converted !== codeContent || /\w/.test(converted)) {
+    if (converted !== codeContent || /\w/.test(converted) || /^[\]}]\s*$/.test(codeContent)) {
       if (!/[{}\[;,]\s*$/.test(converted)) converted += ";";
       return indent + converted + inlineComment;
     }
